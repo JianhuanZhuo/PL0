@@ -259,6 +259,30 @@ public class Parser {
 			statePaser(endSybolsList);
 			jpcInst.seta(code.getIndex());
 		}
+		
+
+//		// TODO if”Ôæ‰Ω‚Œˆ
+//		else if (lexer.checkSymbolType(Symbol.IF_SYMBOL)) {
+//			lexer.getSymbol();
+//			conditionPaser(endSybolsList.with(Symbol.THEN_SYMBOL).with(Symbol.DO_SYMBOL));
+//
+//			if (lexer.checkSymbolType(Symbol.THEN_SYMBOL)) {
+//				lexer.getSymbol();
+//			} else {
+//				error(16);
+//			}
+//			Instruction jpcInst = new Instruction(FuncCode.jpc, 0, 0);
+//			try {
+//				code.gen(jpcInst);
+//			} catch (CompilerException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			statePaser(endSybolsList);
+//			jpcInst.seta(code.getIndex());
+//		}
+		
+		
 		// TODO ∏¥∫œ”Ôæ‰Ω‚Œˆ
 		else if (lexer.checkSymbolType(Symbol.BEGIN_SYMBOL)) {
 			lexer.getSymbol();
