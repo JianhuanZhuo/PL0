@@ -8,20 +8,19 @@ import java.util.Arrays;
 
 public class Lexer {
 
-	private BufferedReader sourceBuffer; // ¶ÁÈëµÄÔ´´úÂëµÄBuffer
-	private char currentChar = ' '; // µ±Ç°¶ÁÈ¡µÄ×Ö·û
+	private BufferedReader sourceBuffer; // ï¿½ï¿½ï¿½ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½ï¿½Buffer
+	private char currentChar = ' '; // ï¿½ï¿½Ç°ï¿½ï¿½È¡ï¿½ï¿½ï¿½Ö·ï¿½
 
-	private String currentLineString; // µ±Ç°¶ÁÈ¡µÄÒ»ÐÐÔ´´úÂë
-	private int currentLineStringLength = 0; // µ±Ç°¶ÁÈ¡µÄÒ»ÐÐÔ´´úÂëµÄµÄ³¤¶È
-	private int currentLineStringIndex = 0; // ¶ÁÈ¡µ½µÄÄ³¸ö¾ßÌå×Ö·ûÏÂ±ê
+	private String currentLineString; // ï¿½ï¿½Ç°ï¿½ï¿½È¡ï¿½ï¿½Ò»ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½
+	private int currentLineStringLength = 0; // ï¿½ï¿½Ç°ï¿½ï¿½È¡ï¿½ï¿½Ò»ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½ÄµÄ³ï¿½ï¿½ï¿½
+	private int currentLineStringIndex = 0; // ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½Ä³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½Â±ï¿½
 
 	private Symbol lastSymbol;
 	private String lastName;
-	// ?????????????????????????????????????????????????????????????????????????????????????????????????????
 	static public int lineNum = 0;
 
-	// ¼òµ¥µÄ²Ù×÷·û£¬¶ÁÈ¡µ½Ò»¸ö×Ö·ûºó¾ÍÄÜÈ·¶¨ÀàÐÍµÄ×Ö·û
-	// Ò²¾ÍÊÇ . , ; = + - ( ) * /
+	// ï¿½òµ¥µÄ²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½ï¿½ï¿½ï¿½Íµï¿½ï¿½Ö·ï¿½
+	// Ò²ï¿½ï¿½ï¿½ï¿½ . , ; = + - ( ) * /
 	private int[] simpleOperators;
 
 	public String getLastName() {
@@ -32,19 +31,18 @@ public class Lexer {
 	 * Constructor
 	 * 
 	 * @param filePath
-	 *            Ô´´úÂëµÄÎÄ¼þÂ·¾¶
+	 *            Ô´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½Â·ï¿½ï¿½
 	 */
 	public Lexer(String filePath) {
 		try {
 			sourceBuffer = new BufferedReader(new FileReader(filePath));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			System.out.println("´íÎó£¡ ÎÄ¼þ²»´æÔÚ");
+			System.out.println("ï¿½ï¿½ï¿½ï¿½ ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 		}
 
-		// ³õÊ¼»¯¼òµ¥²Ù×÷·û
-		simpleOperators = new int[256]; // ÒòÎªcharµÄ·¶Î§ÊÇ[0, 255]£¬ËùÒÔÊý×é´óÐ¡×î´óÖ»Ðè256
-		Arrays.fill(simpleOperators, Symbol.NUL); // ¶ÔÓÚÆäËû²»¿ÉÊ¶±ðµÄ×Ö·û£¬È«¶¼ÉèÖÃÎª[NULL]
+		simpleOperators = new int[256]; 
+		Arrays.fill(simpleOperators, Symbol.NUL); 
 		simpleOperators['.'] = Symbol.PERIOD;
 		simpleOperators[','] = Symbol.COMMA;
 		simpleOperators[';'] = Symbol.SEMICOLON;
@@ -58,7 +56,7 @@ public class Lexer {
 	}
 
 	/**
-	 * »ñµÃ×îÐÂÒ»´ÎµÄSymbol£¬µ¥´Ê
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½Îµï¿½Symbolï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * 
 	 * @return
 	 */
@@ -71,39 +69,39 @@ public class Lexer {
 	}
 
 	/**
-	 * ¼ì²é×îÐÂµÄsymbolµ¥´ÊÊÇ·ñÀàÐÍÊÇ·ñÎªÖ¸¶¨ÀàÐÍ
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½symbolï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ÎªÖ¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * 
 	 * @param requestType
-	 *            Ö¸¶¨ÀàÐÍ
-	 * @return ÊÇ·µ»Øtrue£¬·ñÔòÎªfalse
+	 *            Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	 * @return ï¿½Ç·ï¿½ï¿½ï¿½trueï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªfalse
 	 */
 	public boolean checkSymbolType(int requestType) {
 		return (requestType == lastSymbol.getSymbolType());
 	}
 
 	/**
-	 * ´Ê·¨·ÖÎöÖÐ»ñÈ¡Ò»¸öµ¥´Ê
+	 * ï¿½Ê·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð»ï¿½È¡Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * 
 	 * @return Symbol
 	 */
 	public Symbol getSymbol() {
 
-		// Ã¿´Î¶¼ÌáÇ°¶ÁÈ¡Ò»¸ö×Ö·û
+		// Ã¿ï¿½Î¶ï¿½ï¿½ï¿½Ç°ï¿½ï¿½È¡Ò»ï¿½ï¿½ï¿½Ö·ï¿½
 
-		// Ìø¹ý¿Õ¸ñ
+		// ï¿½ï¿½ï¿½ï¿½ï¿½Õ¸ï¿½
 		while (isSpace()) {
 			getChar();
 		}
 
 		if (isLetter()) {
-			// ±£Áô×Ö»òÕß±êÊ¶·û
+			// ï¿½ï¿½ï¿½ï¿½ï¿½Ö»ï¿½ï¿½ß±ï¿½Ê¶ï¿½ï¿½
 			lastSymbol = getKeywordOrIdentifier();
 			lastName = lastSymbol.getName();
 		} else if (isDigit()) {
-			// ÎÞ·ûºÅÕûÊý
+			// ï¿½Þ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			lastSymbol = getNumber();
 		} else {
-			// ·Ö½ç·û »òÕß ·Ç·¨×Ö·û
+			// ï¿½Ö½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ç·ï¿½ï¿½Ö·ï¿½
 			lastSymbol = getOperator();
 		}
 
@@ -111,36 +109,36 @@ public class Lexer {
 	}
 
 	/**
-	 * ¶ÁÈ¡ÏÂÒ»¸ö×Ö·û¡£ÎªÔö´ó¶ÁÈ¡´ÅÅÌIO£¬Êµ¼ÊÃ¿´Î¶ÁÈ¡Ò»ÐÐ
+	 * ï¿½ï¿½È¡ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½IOï¿½ï¿½Êµï¿½ï¿½Ã¿ï¿½Î¶ï¿½È¡Ò»ï¿½ï¿½
 	 * 
 	 */
 	private void getChar() {
-		if (currentLineStringIndex == currentLineStringLength) { // Èç¹û¶Áµ½ÁËÐÐÄ©Î²£¬ÔòÔÙ¶ÁÈ¡Ò»ÐÐ
+		if (currentLineStringIndex == currentLineStringLength) { // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä©Î²ï¿½ï¿½ï¿½ï¿½ï¿½Ù¶ï¿½È¡Ò»ï¿½ï¿½
 			try {
 				String readString = "";
 
-				// Ìø¹ý¿ÕÐÐ
+				// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 				while (readString.equals("")) {
 
 					readString = sourceBuffer.readLine();
 
 					if (readString == null) {
-						// ÎÄ¼þÒÑÈ«²¿¶ÁÈ¡£¬»¹Òª¼ÌÐø¶ÁÈ¡£¬³ö´í
+						// ï¿½Ä¼ï¿½ï¿½ï¿½È«ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 						System.out.println("EOF, ERROR!");
 						System.exit(0);
 					}
 					lineNum++;
 					System.out.println(readString);
-					// È¥³ý¿ªÍ·½áÎ²µÄ¿Õ°×·û
+					// È¥ï¿½ï¿½ï¿½ï¿½Í·ï¿½ï¿½Î²ï¿½Ä¿Õ°×·ï¿½
 					readString = readString.trim();
 				}
 
 				currentLineString = readString;
 
-				// ½«×Ö·û´®ÖÐµÄ[tab]Ìæ»»³É[¿Õ¸ñ]
+				// ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½Ðµï¿½[tab]ï¿½æ»»ï¿½ï¿½[ï¿½Õ¸ï¿½]
 				currentLineString = currentLineString.replaceAll("\t", " ");
 
-				// Îª·ÀÖ¹Ö±½ÓÌø¹ý[»»ÐÐ·û]£¬ÔÚ×îºó¼ÓÉÏ[¿Õ¸ñ]´úÌæ[»»ÐÐ·û]
+				// Îªï¿½ï¿½Ö¹Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½Ð·ï¿½]ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½Õ¸ï¿½]ï¿½ï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½Ð·ï¿½]
 				currentLineString += " ";
 
 				currentLineStringLength = currentLineString.length();
@@ -149,12 +147,12 @@ public class Lexer {
 				e.printStackTrace();
 			}
 		}
-		currentChar = currentLineString.charAt(currentLineStringIndex); // »ñÈ¡ÏÂÒ»¸ö×Ö·û
-		currentLineStringIndex++; // ÏÂ±êÏÂÒÆÒ»¸öÎ»ÖÃ
+		currentChar = currentLineString.charAt(currentLineStringIndex); // ï¿½ï¿½È¡ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ö·ï¿½
+		currentLineStringIndex++; // ï¿½Â±ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Î»ï¿½ï¿½
 	}
 
 	/**
-	 * ÅÐ¶Ïµ±Ç°¶ÁÈ¡µÄ×Ö·ûÊÇ·ñÊÇ[¿Õ¸ñ]
+	 * ï¿½Ð¶Ïµï¿½Ç°ï¿½ï¿½È¡ï¿½ï¿½ï¿½Ö·ï¿½ï¿½Ç·ï¿½ï¿½ï¿½[ï¿½Õ¸ï¿½]
 	 * 
 	 * @return boolean
 	 */
@@ -163,7 +161,7 @@ public class Lexer {
 	}
 
 	/**
-	 * ÅÐ¶Ïµ±Ç°¶ÁÈ¡µÄ×Ö·ûÊÇ·ñÊÇ[Êý×Ö]
+	 * ï¿½Ð¶Ïµï¿½Ç°ï¿½ï¿½È¡ï¿½ï¿½ï¿½Ö·ï¿½ï¿½Ç·ï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½]
 	 * 
 	 * @return boolean
 	 */
@@ -172,7 +170,7 @@ public class Lexer {
 	}
 
 	/**
-	 * ÅÐ¶Ïµ±Ç°¶ÁÈ¡µÄ×Ö·ûÊÇ·ñÊÇ[×ÖÄ¸]
+	 * ï¿½Ð¶Ïµï¿½Ç°ï¿½ï¿½È¡ï¿½ï¿½ï¿½Ö·ï¿½ï¿½Ç·ï¿½ï¿½ï¿½[ï¿½ï¿½Ä¸]
 	 * 
 	 * @return boolean
 	 */
@@ -181,27 +179,27 @@ public class Lexer {
 	}
 
 	/**
-	 * »ñÈ¡·ûºÅ¡ª¡ª±êÊ¶·û»òÕß±£Áô×Ö
+	 * ï¿½ï¿½È¡ï¿½ï¿½ï¿½Å¡ï¿½ï¿½ï¿½ï¿½ï¿½Ê¶ï¿½ï¿½ï¿½ï¿½ï¿½ß±ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * 
 	 * @return Symbol
 	 */
 	private Symbol getKeywordOrIdentifier() {
 		Symbol symbol;
-		String token = ""; // Ê¶±ðµÄµ¥´Ê
+		String token = ""; // Ê¶ï¿½ï¿½Äµï¿½ï¿½ï¿½
 
-		// ½«×Ö·ûÆ´½Ó³É×Ö·û´®
+		// ï¿½ï¿½ï¿½Ö·ï¿½Æ´ï¿½Ó³ï¿½ï¿½Ö·ï¿½ï¿½ï¿½
 		while (isLetter() || isDigit()) {
 			token += currentChar;
 			getChar();
 		}
 
-		// ¶þ·Ö²éÕÒ±£Áô×Ö
+		// ï¿½ï¿½ï¿½Ö²ï¿½ï¿½Ò±ï¿½ï¿½ï¿½ï¿½ï¿½
 		int index = Arrays.binarySearch(Symbol.WORD, token);
 
-		if (index < 0) { // Î´ÔÚ±£Áô×ÖÊý×éÖÐÕÒµ½token£¬ËµÃ÷tokenÊÇ±êÊ¶·û
+		if (index < 0) { // Î´ï¿½Ú±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òµï¿½tokenï¿½ï¿½Ëµï¿½ï¿½tokenï¿½Ç±ï¿½Ê¶ï¿½ï¿½
 			symbol = new Symbol(Symbol.IDENTIFIER);
 			symbol.setName(token);
-		} else { // ÔÚ±£Áô×ÖÊý×éÖÐÕÒµ½token£¬ËµÃ÷tokenÊÇ±£Áô×Ö
+		} else { // ï¿½Ú±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òµï¿½tokenï¿½ï¿½Ëµï¿½ï¿½tokenï¿½Ç±ï¿½ï¿½ï¿½ï¿½ï¿½
 			symbol = new Symbol(Symbol.WORD_SYMBOL[index]);
 		}
 
@@ -209,27 +207,27 @@ public class Lexer {
 	}
 
 	/**
-	 * »ñÈ¡·ûºÅ¡ª¡ªÎÞ·ûºÅÕûÊý
+	 * ï¿½ï¿½È¡ï¿½ï¿½ï¿½Å¡ï¿½ï¿½ï¿½ï¿½Þ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * 
 	 * @return Symbol
 	 */
 	private Symbol getNumber() {
 
 		Symbol symbol = new Symbol(Symbol.NUMBER);
-		// TODO ÊµÏÖ
+		// TODO Êµï¿½ï¿½
 		int value = 0;
 		do {
-			value = value * 10 + (currentChar - '0'); // ¼ÆËãÎÞ·ûºÅÕûÊýµÄÖµ
+			value = value * 10 + (currentChar - '0'); // ï¿½ï¿½ï¿½ï¿½ï¿½Þ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ
 			getChar();
 		} while (isDigit());
 
-		symbol.setNumber(value); // ÉèÖÃÎÞ·ûºÅÕûÊýµÄÖµ
+		symbol.setNumber(value); // ï¿½ï¿½ï¿½ï¿½ï¿½Þ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ
 
 		return symbol;
 	}
 
 	/**
-	 * »ñÈ¡·ûºÅ¡ª¡ª·Ö½ç·û»ò²Ù×÷·û
+	 * ï¿½ï¿½È¡ï¿½ï¿½ï¿½Å¡ï¿½ï¿½ï¿½ï¿½Ö½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * 
 	 * @return Symbol
 	 */
@@ -239,44 +237,43 @@ public class Lexer {
 		switch (currentChar) {
 			case ':':
 				getChar();
-				if (currentChar == '=') { // ¸³Öµ·ûºÅ :=
+				if (currentChar == '=') { // ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ :=
 					symbol = new Symbol(Symbol.BECOMES);
 					getChar();
 				} else {
-					// ERROR£¬ÉèÖÃsymbolÎªnull
 					symbol = new Symbol(Symbol.NUL);
 				}
 				break;
 			case '<':
 				getChar();
 				switch (currentChar) {
-					case '>': // ²»µÈÓÚ <>
+					case '>': // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ <>
 						symbol = new Symbol(Symbol.NOT_EQUAL);
 						getChar();
 						break;
-					case '=': // Ð¡ÓÚµÈÓÚ <=
+					case '=': // Ð¡ï¿½Úµï¿½ï¿½ï¿½ <=
 						symbol = new Symbol(Symbol.LESS_OR_EQUAL);
 						getChar();
 						break;
-					default: // Ð¡ÓÚ
+					default: // Ð¡ï¿½ï¿½
 						symbol = new Symbol(Symbol.LESS);
 						break;
 				}
 				break;
 			case '>':
 				getChar();
-				if (currentChar == '=') { // ´óÓÚµÈÓÚ >=
+				if (currentChar == '=') { // ï¿½ï¿½ï¿½Úµï¿½ï¿½ï¿½ >=
 					symbol = new Symbol(Symbol.GREATER_OR_EQUAL);
 					getChar();
-				} else { // ´óÓÚ
+				} else { // ï¿½ï¿½ï¿½ï¿½
 					symbol = new Symbol(Symbol.GREATER);
 				}
 				break;
 			default:
-				// Ö±½ÓÀûÓÃsimpleOperators[]Êý×éÌî³ä¼´¿É
+				// Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½simpleOperators[]ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ä¼´ï¿½ï¿½
 				symbol = new Symbol(simpleOperators[currentChar]);
 
-				// ÌáÇ°¶ÁÈ¡ÏÂÒ»¸ö×Ö·û
+				// ï¿½ï¿½Ç°ï¿½ï¿½È¡ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ö·ï¿½
 				getChar();
 				break;
 		}

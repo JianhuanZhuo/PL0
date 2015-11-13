@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Code {
 
 	private Table table;
-	private static final long CODE_MAX = 2000;	//Ö¸Áî×î´ó³¤¶È
+	private static final long CODE_MAX = 2000;	
 	
 	private ArrayList<Instruction> items;
 	
@@ -18,8 +18,8 @@ public class Code {
 	}
 
 	/**
-	 * ½«Ö¸Áîitem´úÂë¼ÓÈëµ½Ö¸Áî±íÖÐ
-	 *	@param item ÐÂ¼ÓÈëµÄÖ¸Áî
+	 * ï¿½ï¿½Ö¸ï¿½ï¿½itemï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ëµ½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½
+	 *	@param item ï¿½Â¼ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½
 	 */
 	public void gen(Instruction item) throws CompilerException{
 		if (items.size() > CODE_MAX) {
@@ -40,8 +40,8 @@ public class Code {
 	}
 	
 	/**
-	 * »ñµÃÖ¸¶¨Ë÷ÒýµÄÖ¸Áî
-	 *	@return Ö¸Áî
+	 * ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½
+	 *	@return Ö¸ï¿½ï¿½
 	 */
 	public Instruction getInstruction(int index){
 		return items.get(index);
