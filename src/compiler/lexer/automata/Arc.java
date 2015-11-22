@@ -1,4 +1,4 @@
-package com.e23.lexer;
+package compiler.lexer.automata;
 
 public class Arc {
 
