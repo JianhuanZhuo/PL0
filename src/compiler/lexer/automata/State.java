@@ -1,8 +1,6 @@
 package compiler.lexer.automata;
 
-import java.util.AbstractSet;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -104,5 +102,4 @@ public class State {
 	public boolean isEnd() {
 		return end;
 	}
-	
 }

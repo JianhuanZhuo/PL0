@@ -1,7 +1,9 @@
 package compiler.lexer.automata;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 自动机
@@ -18,11 +20,19 @@ public class Automata {
 	 */
 	Map<String, State> states = new HashMap<String, State>();
 
+	Set<Symbol> symbols = new HashSet<>();
+
 	/**
-	 * 输入字符表
+	 * 开始状态
 	 */
-	Symbol symbol = new Symbol();
-	
+	State startStm;
+
+	/**
+	 * 当前状态，用于状态控制<br />
+	 * 此属性应属于FSC(有限状态控制)部分
+	 */
+	State currentStm;
+
 	/**
 	 * 添加一个状态，不应该与现有的状态重名
 	 * 
@@ -38,5 +48,4 @@ public class Automata {
 		return stm;
 	}
 
-	
 }
