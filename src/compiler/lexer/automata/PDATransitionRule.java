@@ -19,7 +19,7 @@ public class PDATransitionRule implements Comparator<PDATransitionRule> {
 	/**
 	 * 栈顶符号
 	 */
-	Symbol NowPushStackTop;
+	Symbol NowStackTop;
 
 	/**
 	 * 不确定的映射像
@@ -56,9 +56,9 @@ public class PDATransitionRule implements Comparator<PDATransitionRule> {
 			} else if (o1.MatchSymbol.hashCode() < o2.MatchSymbol.hashCode()) {
 				return -1;
 			} else {
-				if (o1.NowPushStackTop.hashCode() > o2.NowPushStackTop.hashCode()) {
+				if (o1.NowStackTop.hashCode() > o2.NowStackTop.hashCode()) {
 					return 1;
-				} else if (o1.NowPushStackTop.hashCode() < o2.NowPushStackTop.hashCode()) {
+				} else if (o1.NowStackTop.hashCode() < o2.NowStackTop.hashCode()) {
 					return -1;
 				} else {
 					return 0;

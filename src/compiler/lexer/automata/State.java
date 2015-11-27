@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-public class State {
+public class State implements Comparable<State> {
 
 	private static int count;
 
@@ -34,7 +34,7 @@ public class State {
 	 */
 	public State() {
 		this(false);
-	}	
+	}
 
 	public State(boolean start) {
 		this(start, "STM" + (++count));
@@ -46,7 +46,7 @@ public class State {
 			this.name = name;
 		}
 	}
-	
+
 	public Set<Entry<String, Arc>> getArcs() {
 		return arcs.entrySet();
 	}
@@ -57,7 +57,7 @@ public class State {
 	public void setStart() {
 		start = true;
 	}
-	
+
 	/**
 	 * 设置该状态是否为开始状态
 	 */
@@ -102,4 +102,24 @@ public class State {
 	public boolean isEnd() {
 		return end;
 	}
+
+	/**
+	 * 按状态标志符、结束标识符、状态名Unicode值进行排序
+	 */
+	@Override
+	public int compareTo(State o) {
+		if (start && !o.start) {
+			return 1;
+		} else if (!start && o.start) {
+			return -1;
+		}
+
+		if (end && !o.end) {
+			return 1;
+		} else if (!end && o.end) {
+			return -1;
+		}
+		return name.compareTo(o.name);
+	}
+
 }

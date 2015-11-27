@@ -22,7 +22,7 @@ import compiler.paser.syntaxTree.SyntaxTree;
  * @author keepf
  *
  */
-public class PDA extends Automata {
+public class PDA extends StateAutomata {
 
 	/**
 	 * 下推符号栈<br/>
@@ -61,7 +61,7 @@ public class PDA extends Automata {
 		grammarPAD.add(singleState);
 		for (Iterator<GrammarItem_G2> iterator = grammarsList.iterator(); iterator.hasNext();) {
 			GrammarItem_G2 item = (GrammarItem_G2) iterator.next();
-			Rule r = new Rule();
+			MultiRule r = new MultiRule();
 			r.NowState = singleState;
 			r.NextState = singleState;
 			r.NowPushStackTop = item.getLeft();
@@ -124,13 +124,21 @@ public class PDA extends Automata {
 	 */
 	public boolean step(Symbol s) {
 		boolean res = true;
-		Rule r = new Rule();
+		MultiRule r = new MultiRule();
 		try {
 			r.NowState = currentStm;
 			r.NowPushStackTop = pushStack.peek();
 			r.MatchSymbol = s;
 			// TODO 查询该条件是否
-			r = rules.indexRule(r);
+			//
+			//
+			//
+			//
+			r = (MultiRule) rules.indexRule(r);
+			//
+			//
+			//
+			//
 			if (r == null) {
 				// TODO 无规则匹配，错误！
 				throw new RuntimeException("无规则匹配，错误！");

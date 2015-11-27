@@ -2,7 +2,7 @@ package compiler.lexer.automata;
 
 import compiler.paser.syntaxTree.SyntaxNode;
 
-public class Symbol implements Cloneable {
+public class Symbol implements Cloneable, Comparable<Symbol> {
 
 	public static final String Symbol_EscapeCharacter_NULL = "\\N"; // 表示空转义
 	public static final String Symbol_EscapeCharacter_END = "\\E"; // 结束符号
@@ -17,7 +17,7 @@ public class Symbol implements Cloneable {
 	/**
 	 * 是否为非终结符号
 	 */
-	boolean isVN;
+	private boolean isVN;
 
 	/**
 	 * 符号名
@@ -82,14 +82,6 @@ public class Symbol implements Cloneable {
 		return name;
 	}
 
-	/**
-	 * 重写hashCode用于唯一符号辨识
-	 */
-	@Override
-	public int hashCode() {
-		return new String("" + name + "+" + isVN).hashCode();
-	}
-
 	@Override
 	protected Object clone() {
 		Symbol c = new Symbol(name);
@@ -104,5 +96,15 @@ public class Symbol implements Cloneable {
 	 */
 	public SyntaxNode getRelateNode() {
 		return relateNode;
+	}
+
+	@Override
+	public int compareTo(Symbol o) {
+		if (isVN && !o.isVN) {
+			return 1;
+		} else if (!isVN && o.isVN) {
+			return -1;
+		}
+		return name.compareTo(o.name);
 	}
 }

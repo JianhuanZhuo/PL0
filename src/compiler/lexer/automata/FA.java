@@ -10,7 +10,7 @@ import java.util.Set;
  * @author keepf
  *
  */
-public class FA extends Automata {
+public class FA extends StateAutomata {
 
 	/**
 	 * 结束状态集

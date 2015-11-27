@@ -12,8 +12,14 @@ public class GrammarItem_G2 {
 	private Symbol left;
 	private Vector<Symbol> right;
 
-	public GrammarItem_G2() {
+	public GrammarItem_G2(Symbol left) {
+		this.left = left;
 		right = new Vector<>();
+	}
+
+	public GrammarItem_G2(Symbol left, Vector<Symbol> right) {
+		this.left = left;
+		this.right = right;
 	}
 
 	public Symbol getLeft() {
@@ -58,5 +64,16 @@ public class GrammarItem_G2 {
 		} else {
 			return null;
 		}
+	}
+
+	/**
+	 * 在右部添加符号r
+	 * 
+	 * @param r
+	 *            欲添加的符号
+	 */
+	public void addRight(Symbol r) {
+		right.add(r);
+
 	}
 }

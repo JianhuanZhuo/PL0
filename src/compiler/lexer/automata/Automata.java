@@ -1,51 +1,20 @@
 package compiler.lexer.automata;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 /**
- * 自动机
+ * <h>自动机模型类</h><br>
+ * 得到输入后将根据设定进行动作/输出 <br>
+ * 映射规则：(a)->()
+ * <hr>
+ * <b>不带控制器的自动机</b><br>
+ * 作为自动机的控制器，对自动机的启动，步进，快进，暂停等动作进行控制<br>
+ * 在不设置FSC的情况下，将由自动机自身实现控制器功能
  * 
  * @author keepf
  *
  */
-public class Automata {
+public abstract class Automata {
 
-	/**
-	 * 节点映射，表示状态及其弧 <br />
-	 * K：String 使用状态名作为检索键 <br />
-	 * V:State 欲存储的状态
-	 */
-	Map<String, State> states = new HashMap<String, State>();
+	public abstract boolean step(Symbol input);
 
-	Set<Symbol> symbols = new HashSet<>();
-
-	/**
-	 * 开始状态
-	 */
-	State startStm;
-
-	/**
-	 * 当前状态，用于状态控制<br />
-	 * 此属性应属于FSC(有限状态控制)部分
-	 */
-	State currentStm;
-
-	/**
-	 * 添加一个状态，不应该与现有的状态重名
-	 * 
-	 * @param stm
-	 *            欲加入的状态
-	 * @return 如果存在一个状态与新添加的状态的状态名相同，则取消此次调用，并返回当前状态引用，否则加入该元素并返回参数引用
-	 */
-	public State add(State stm) {
-		if (states.containsKey(stm.name)) {
-			return states.get(stm.name);
-		}
-		states.put(stm.name, stm);
-		return stm;
-	}
-
+	public abstract void restart();
 }

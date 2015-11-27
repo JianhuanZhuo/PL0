@@ -19,6 +19,9 @@ import compiler.lexer.gammar.GrammarItem_G2;
  *
  */
 public class DPDA extends PDA {
+	
+	
+	
 	/**
 	 * 初始化它的转换规则<br />
 	 * <NowState, MatchSymbol, NowPushStackTop, NextState, NextPushStackTop>
@@ -36,7 +39,7 @@ public class DPDA extends PDA {
 		grammarPAD.add(singleState);
 		for (Iterator<GrammarItem_G2> iterator = grammarsList.iterator(); iterator.hasNext();) {
 			GrammarItem_G2 item = (GrammarItem_G2) iterator.next();
-			Rule r = new Rule();
+			MultiRule r = new MultiRule();
 			r.NowState = singleState;
 			r.NextState = singleState;
 			r.NowPushStackTop = item.getLeft();

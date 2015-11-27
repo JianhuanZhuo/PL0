@@ -8,6 +8,7 @@ package compiler.lexer.gammar;
  */
 public class LL1_Grammar {
 
+	// 起始符号
 	// select集计算
 
 	// Follow集计算
