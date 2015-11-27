@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import compiler.lexer.automata.Symbol;
+
 /**
  * <b>GNF文法类</b><br>
  * 格雷巴赫标准式文法(Greibach Grammar)，格式如下所示：<br >
@@ -46,7 +48,7 @@ public class GNFGrammar {
 	 * 以字符串表的形式存储文法
 	 */
 	private List<String> grammarsList = new ArrayList<String>();
-	private List<GrammarItem_G2> grammarItemList;
+	private GrammarItemList_G2 grammarItemList;
 	private boolean isGNF = false;
 
 	/**
@@ -152,9 +154,28 @@ public class GNFGrammar {
 	 * 
 	 * @return 文法项表
 	 */
-	public List<GrammarItem_G2> getItemList() {
+	public GrammarItemList_G2 getItemList() {
+		if (!isGNF) {
+			return null;
+		}
 		if (null == grammarItemList) {
-			grammarItemList = new ArrayList<>();
+			grammarItemList = new GrammarItemList_G2();
+			Pattern pattern = GNFGrammar.getGrammarPattern();
+			for (int i = 0; i < grammarsList.size(); i++) {
+				String gString = grammarsList.get(i);
+				Matcher matcher = pattern.matcher(gString);
+				if (matcher.matches()) {
+					System.out.println("ident = " + matcher.group("ident"));
+					System.out.println("VT    = " + matcher.group("VT"));
+					System.out.println("VN    = " + matcher.group("VN"));
+					GrammarItem_G2 g2 = new GrammarItem_G2(new Symbol(matcher.group("ident")));
+					g2.addRight(new Symbol(matcher.group("VT")));
+					if (null != matcher.group("VN")) {
+						g2.parserRight(matcher.group("VN"));
+					}
+					grammarItemList.add(g2);
+				}
+			}
 		}
 		return grammarItemList;
 	}
@@ -173,5 +194,46 @@ public class GNFGrammar {
 		// System.out.println("VT= " + matcher.group("VT"));
 		// System.out.println("VN= " + matcher.group("VN"));
 		// }
+
+		// Pattern p1 = Pattern.compile("\\<[\\w\\d]+\\>");
+		// Pattern p2 = Pattern.compile("[\\d\\w]");
+		// String s = "a<1V>A<S2>D";
+		// Matcher matcher;
+		// while (!s.equals("")) {
+		// matcher = p1.matcher(s);
+		// if (matcher.find()) {
+		// if (matcher.start()==0) {
+		// System.out.println(matcher.group());
+		// s = s.substring(matcher.end());
+		// System.out.println(s);
+		// }
+		// }
+		// matcher = p2.matcher(s);
+		// if (matcher.find()) {
+		// if (matcher.start()==0) {
+		// System.out.println(matcher.group());
+		// s = s.substring(matcher.end());
+		// System.out.println(s);
+		// }
+		// }
+		// }
+
+		// Pattern pattern =
+		// Pattern.compile("(\\<[\\w\\d]+\\>)?([\\w\\d])?[\\d\\D]*");
+		// Matcher matcher = pattern.matcher("a<1V>A<S2>D");
+		// if (matcher.matches()) {
+		// if (null != matcher.group(1)) {
+		// System.out.println(matcher.group(1));
+		//
+		// }if (null != matcher.group(2)) {
+		// System.out.println(matcher.group(2));
+		// }
+		//
+		// }
+		String[] grammars = { " <FOR>-> for(<3B>)", "<C>->a<B1>a", "<B>->b" };
+		GNFGrammar gnf = new GNFGrammar(grammars);
+		System.out.println(gnf.checkGNF());
+		System.out.println(gnf.getItemList());
+		System.out.println("OK");
 	}
 }

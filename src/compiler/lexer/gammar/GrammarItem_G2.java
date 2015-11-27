@@ -1,7 +1,10 @@
 package compiler.lexer.gammar;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.sun.org.apache.regexp.internal.recompile;
 
@@ -74,6 +77,51 @@ public class GrammarItem_G2 {
 	 */
 	public void addRight(Symbol r) {
 		right.add(r);
+	}
 
+	/**
+	 * 解析一段字符串添加到文法条目的右部
+	 * 
+	 * @param s
+	 *            欲解析的字符串
+	 * @return 解析失败返回false，否则返回true
+	 */
+	public boolean parserRight(String s) {
+		Pattern p1 = Pattern.compile("\\<([\\w\\d]+)\\>");
+		Pattern p2 = Pattern.compile("[\\w\\W\\d\\)\\(]");
+		Matcher matcher;
+		while (!s.equals("")) {
+			s = s.trim();
+			matcher = p1.matcher(s);
+			if (matcher.find() && matcher.start() == 0) {
+				right.add(new Symbol(matcher.group(1)));
+				s = s.substring(matcher.end());
+//				System.out.println("P1");
+			} else {
+				matcher = p2.matcher(s);
+				if (matcher.find() && matcher.start() == 0) {
+					right.add(new Symbol(matcher.group()));
+					s = s.substring(matcher.end());
+//					System.out.println("P2");
+				} else {
+					return false;
+				}
+			}
+//			System.out.println(s);
+		}
+		return true;
+
+	}
+
+	@Override
+	public String toString() {
+		String res = "";
+		res += "left(" + left.getName() + ")->right( ";
+		for (Iterator<Symbol> iterator = right.iterator(); iterator.hasNext();) {
+			Symbol symbol = (Symbol) iterator.next();
+			res += symbol.getName() + " ";
+		}
+		res += ")\n";
+		return res;
 	}
 }
