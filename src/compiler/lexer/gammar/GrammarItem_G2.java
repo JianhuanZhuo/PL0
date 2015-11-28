@@ -10,6 +10,13 @@ import com.sun.org.apache.regexp.internal.recompile;
 
 import compiler.lexer.automata.Symbol;
 
+/**
+ * 2型文法context-free grammar的产生式Production表示类<br>
+ * 
+ * 
+ * @author keepf
+ *
+ */
 public class GrammarItem_G2 {
 
 	private Symbol left;
@@ -92,22 +99,24 @@ public class GrammarItem_G2 {
 		Matcher matcher;
 		while (!s.equals("")) {
 			s = s.trim();
+			// TODO 匹配非终结符
 			matcher = p1.matcher(s);
 			if (matcher.find() && matcher.start() == 0) {
-				right.add(new Symbol(matcher.group(1)));
+				right.add(new Symbol(matcher.group(1), true));
 				s = s.substring(matcher.end());
-//				System.out.println("P1");
+				// System.out.println("P1");
 			} else {
+				// TODO 匹配终结符
 				matcher = p2.matcher(s);
 				if (matcher.find() && matcher.start() == 0) {
 					right.add(new Symbol(matcher.group()));
 					s = s.substring(matcher.end());
-//					System.out.println("P2");
+					// System.out.println("P2");
 				} else {
 					return false;
 				}
 			}
-//			System.out.println(s);
+			// System.out.println(s);
 		}
 		return true;
 

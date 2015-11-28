@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import compiler.lexer.gammar.GNFGrammar;
+import compiler.lexer.gammar.GrammarItemList_G2;
 import compiler.lexer.gammar.GrammarItem_G2;
 
 /**
@@ -32,7 +33,7 @@ public class SDPDA extends Automata {
 	public boolean translateGNF(GNFGrammar grammars) {
 		boolean res = true;
 		// TODO 获得文法项列表
-		List<GrammarItem_G2> grammarsList = grammars.getItemList();
+		GrammarItemList_G2 grammarsList = grammars.getItemList();
 		// TODO 建立临时规则表
 		RuleSet<SDPDARule> rules = new RuleSet<SDPDARule>();
 		for (Iterator<GrammarItem_G2> iterator = grammarsList.iterator(); iterator.hasNext();) {
@@ -60,7 +61,7 @@ public class SDPDA extends Automata {
 		// TODO GNF文法转PDA无异常，则将临时PDA自动机更新入this对象的属性中
 		if (res) {
 			ruleSet = rules;
-			pdStack = new PushDownStack(grammars.getStartSymbol());
+			pdStack = new PushDownStack(grammarsList.getStartSymbol());
 		}
 
 		return res;

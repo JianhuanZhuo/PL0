@@ -1,0 +1,220 @@
+package compiler.lexer.gammar;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
+ * 对带有[a-zA-Z0-9]、括号()、或选择|
+ * 
+ * @author keepf
+ *
+ */
+public class CFGFormlize {
+
+	/**
+	 * 用于在符号检查时，替换一个转义符号
+	 */
+	private static char REPLACE_CHAR = '!';
+	private static char[] REPLACE_CHAR_CLOSE = { 0x01 }; // *的替换符，\*
+	private static char[] REPLACE_CHAR_LSQUARE = { 0x02 }; // [的替换符，\[
+	private static char[] REPLACE_CHAR_RSQUARE = { 0x03 }; // ]的替换符，\]
+	private static char[] REPLACE_CHAR_OR = { 0x04 }; // |的替换符，\|
+	private static char[] REPLACE_CHAR_LPRES = { 0x05 }; // (的替换符，\(
+	private static char[] REPLACE_CHAR_RPRES = { 0x06 }; // )的替换符，\)
+	private static char[] REPLACE_CHAR_CLOSE_P = { 0x07 }; // +的替换符，\+
+	private static char[] REPLACE_CHAR_ESC = { 0x1B }; // \的替换符，\\
+
+	/**
+	 * 对CFG文法进行形式化<br>
+	 * 该函数仅对CFG文法中的[a-z][A-Z][0-9]|处理，使其转换为形式化的CFG文法<br>
+	 * 对于
+	 * 
+	 * @param grammars
+	 *            欲形式化的CFG文法
+	 * @return 转换成功返回形式化后的文法，否则返回null
+	 */
+	static String[] formalize(String[] grammars) {
+		String[] res = null;
+		List<String> fGrammars = new ArrayList<>();
+		res = (String[]) fGrammars.toArray();
+		return res;
+	}
+
+	/**
+	 * 对于下面的情况将：<br>
+	 * "<A>->a\\[1-2\\]b\\[1-2\\]"<br>
+	 * 分解为： 只允许[a-z]
+	 * 
+	 * @param g
+	 * @return
+	 */
+	static String[] formalizeBrackets(String g) {
+		String[] res = null;
+		List<String> fGrammars = new ArrayList<>();
+		CFGrammar simple = new CFGrammar();
+		String sp = simple.getPart(g, "rightPart").trim();
+		sp = sp.replaceAll("\\\\", new String(REPLACE_CHAR_ESC));
+		sp = sp.replaceAll("\\\\\\[", new String(REPLACE_CHAR_LSQUARE));
+		sp = sp.replaceAll("\\\\\\]", new String(REPLACE_CHAR_RSQUARE));
+		g = simple.getPart(g, "ident");
+		Pattern p = Pattern.compile(
+				"(?<front>[\\S\\s]*?)(\\[(?<centerS>\\w)-(?<centerE>\\w)\\])(?<end>[\\S\\s]*?)");
+		Matcher m = p.matcher(sp);
+		if (m.matches()) {
+			System.out.println(m.group("front"));
+			System.out.println(m.group("centerS"));
+			System.out.println(m.group("centerE"));
+			System.out.println(m.group("end"));
+			char s = m.group("centerS").charAt(0);
+			char e = m.group("centerE").charAt(0);
+			if ((('a' <= s && e <= 'z') || ('A' <= s && e <= 'Z') || ('0' <= s && e <= '9')) && (s < e)) {
+				String headStr = "<" + g + ">->" + m.group("front");
+				headStr = headStr.replaceAll(new String(REPLACE_CHAR_LSQUARE), "\\\\[");
+				headStr = headStr.replaceAll(new String(REPLACE_CHAR_RSQUARE), "\\\\]");
+				headStr = headStr.replaceAll(new String(REPLACE_CHAR_ESC), "\\\\");
+				int index = headStr.length();
+				StringBuffer sb = new StringBuffer(headStr + "0" + m.group("end"));
+				for (char c = s; c <= e; c++) {
+					sb.setCharAt(index, c);
+					fGrammars.add(sb.toString());
+				}
+			}
+		}
+		if (!fGrammars.isEmpty()) {
+			res = new String[fGrammars.size()];
+			res = fGrammars.toArray(res);
+		}
+		return res;
+	}
+
+	/**
+	 * 将使用‘|’的文法形式化表示
+	 * 
+	 * <pre>
+	 * "&lt;A>->s\\|\\|a\\|"
+	 * 
+	 * 上述文法在分解后将得到：
+	 * 
+	 * &lt;A>->s
+	 * &lt;A>->\N
+	 * &lt;A>->a
+	 * &lt;A>->\N
+	 * </pre>
+	 * 
+	 * @param g
+	 * @return
+	 */
+	static String[] formalizeOr(String g) {
+		String[] res = null;
+		CFGrammar simple = new CFGrammar();
+		String sp = simple.getPart(g, "rightPart");
+		g = "<" + simple.getPart(g, "ident") + ">->";
+		sp = sp.trim();
+		// TODO 将可能引起干扰的"\|"转义字符进行替换
+		sp = sp.replaceAll("\\\\", new String(REPLACE_CHAR_ESC));
+		sp = sp.replaceAll("\\\\\\|", new String(REPLACE_CHAR_OR)) + " ";
+		res = sp.split("\\|");
+		for (int i = 0; i < res.length; i++) {
+			// TODO 将字符替换回
+			res[i] = res[i].replaceAll(new String(REPLACE_CHAR_OR), "\\\\\\|");
+			res[i] = res[i].replaceAll(new String(REPLACE_CHAR_ESC), "\\\\").trim();
+			if (res[i].equals("")) {
+				res[i] = g + "\\N";
+			} else {
+				res[i] = g + res[i];
+			}
+		}
+		return res;
+	}
+
+	/**
+	 * 
+	 * 
+	 * @param grammars
+	 * @return
+	 */
+	static String[] formalizeGroup(String g) {
+		String[] res = null;
+		Pattern p = Pattern.compile("(?<qian>[\\S\\s]*?)\\|");
+		Matcher m = p.matcher("");
+		return res;
+	}
+
+	/**
+	 * 是否已进行规范化，将检查文法是否包含不规范的用法。<br>
+	 * 这里的不规范用法是指存在不规范的转义，如()分组、|或、[a-zA-Z0-9]选择、*闭包、+正闭包
+	 * 
+	 * <hr>
+	 * 
+	 * 此处需要注意的是，不检查正常转义符<>是否正常搭配使用<br>
+	 * 返回的无干扰的文法字符串将<b>仅</b>用于匹配文法类型。
+	 * 
+	 * @param g
+	 *            欲进行检查的文法字符串
+	 * @return 规范返回无干扰的文法字符串，否则返回null
+	 */
+	public static String hasFormlize(String g) {
+		if (null == g) {
+			return null;
+		}
+		StringBuffer sb = new StringBuffer(g);
+		for (int i = 0; i < sb.length(); i++) {
+			try {
+				switch (sb.charAt(i)) {
+				// TODO 存在转义字符：
+				case '(':
+				case ')':
+				case '*':
+				case '+':
+				case '[':
+				case ']':
+				case '|':
+					if ('\\' != sb.charAt(i - 1)) {
+						return null;
+					} else {
+						sb.delete(i - 1, i + 1);
+						sb.insert(i - 1, REPLACE_CHAR);
+						i--;
+					}
+					break;
+
+				// TODO 正常的转义：<、>、\、N(空)
+				case '<':
+				case '>':
+				case '\\':
+				case 'N':
+					if ('\\' == sb.charAt(i - 1)) {
+						sb.delete(i - 1, i + 1);
+						sb.insert(i - 1, REPLACE_CHAR);
+						i--;
+					}
+					break;
+
+				default:
+					if ('\\' == sb.charAt(i - 1)) {
+						return null;
+					}
+					break;
+				}
+			} catch (IndexOutOfBoundsException e) {
+				// TODO 第一个字符就会发生下溢
+			}
+		}
+		return sb.toString();
+	}
+
+	public static void main(String[] args) {
+		System.out.println(CFGFormlize.hasFormlize("<a> ->\\\\\\*d"));
+		String[] kk = CFGFormlize.formalizeOr("<a> ->\\[[1-9]dsd\\\\|pp|");
+		for (int i = 0; i < kk.length; i++) {
+			System.out.println(kk[i]);
+		}
+		kk = CFGFormlize.formalizeBrackets("<a> ->\\[\\\\[1-9]dsd|pp|");
+		for (int i = 0; i < kk.length; i++) {
+			System.out.println(kk[i]);
+		}
+	}
+
+}

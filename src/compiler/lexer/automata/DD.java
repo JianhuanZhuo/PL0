@@ -1,6 +1,12 @@
 package compiler.lexer.automata;
 
-public class DD extends AA{
+public class DD extends AA {
+
+	static String k="xxxx";
+	public void s() {
+
+		System.out.println(k);
+	}
 
 	public DD() {
 		System.out.println("D");
@@ -11,16 +17,26 @@ public class DD extends AA{
 		DD b = new DD();
 		if (a.hashCode() == b.hashCode()) {
 			System.out.println("s");
-		}else {
+		} else {
 			System.out.println("x");
 		}
+
+		AA.name();
 	}
-	
+
 }
 
-class AA{
+class AA {
+	static String k="xx";
+	public void s() {
+		System.out.println(k);
+	}
+
 	public AA() {
 		System.out.println("AA");
 	}
-}
 
+	public static void name() {
+		System.out.println("xxxsss");
+	}
+}

@@ -12,18 +12,18 @@ import compiler.lexer.automata.Symbol;
  */
 public class SyntaxNode {
 
-	// 节点名
-	String nodeName;
+	// 节点标号
+	String label;
 
 	/**
 	 * 孩子节点集合
 	 */
 	Vector<SyntaxNode> childs = new Vector<>();
 
-	private SyntaxNode fatherNode;
+	private SyntaxNode parentNode;
 
-	public void setFatherNode(SyntaxNode fatherNode) {
-		this.fatherNode = fatherNode;
+	public void setParentNode(SyntaxNode pNode) {
+		this.parentNode = pNode;
 	}
 
 	/**
@@ -50,7 +50,7 @@ public class SyntaxNode {
 	 */
 	public void addChild(SyntaxNode child) {
 		childs.add(child);
-		child.setFatherNode(this);
+		child.setParentNode(this);
 	}
 
 	/**
@@ -58,8 +58,8 @@ public class SyntaxNode {
 	 * 
 	 * @return 父亲节点，可能该节点未设置父亲节点则返回null
 	 */
-	public SyntaxNode getFatherNode() {
-		return fatherNode;
+	public SyntaxNode getParentNode() {
+		return parentNode;
 	}
 
 }

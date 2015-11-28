@@ -27,6 +27,5 @@ public class SDPDA_LL1 extends SDPDA {
 	@Override
 	public void restart() {
 		super.restart();
-		
 	}
 }

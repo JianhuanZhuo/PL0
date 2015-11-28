@@ -15,7 +15,7 @@ public class Symbol implements Cloneable, Comparable<Symbol> {
 	static Symbol Symbol_ESCAPE = new Symbol(Symbol_EscapeCharacter_ESCAPE);
 
 	/**
-	 * 是否为非终结符号
+	 * 是否为非终结符号 nonterminal
 	 */
 	private boolean isVN;
 
