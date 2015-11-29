@@ -5,7 +5,7 @@ import java.util.EmptyStackException;
 import java.util.Iterator;
 import java.util.List;
 
-import compiler.lexer.gammar.GNFGrammar;
+import compiler.lexer.gammar.CFGrammar;
 import compiler.lexer.gammar.GrammarItemList_G2;
 import compiler.lexer.gammar.GrammarItem_G2;
 
@@ -30,7 +30,7 @@ public class SDPDA extends Automata {
 	 * 翻译GNF文法作为下推机的转换规则<br />
 	 * 构造一个单态下推机
 	 */
-	public boolean translateGNF(GNFGrammar grammars) {
+	public boolean translateGNF(CFGrammar grammars) {
 		boolean res = true;
 		// TODO 获得文法项列表
 		GrammarItemList_G2 grammarsList = grammars.getItemList();

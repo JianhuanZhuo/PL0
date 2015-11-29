@@ -40,7 +40,7 @@ public class Grammar {
 	 * 以字符串表的形式存储文法
 	 */
 	private List<String> grammarsList = new ArrayList<String>();
-
+	private String start;
 	private static String Grammar_MatchExpression = "^\\s*(?<left>[^\\n]+)\\s*-\\>\\s*(?<rightPart>[^\\n]+)\\s*$";
 
 	private static Pattern grammarPattern;
@@ -93,6 +93,16 @@ public class Grammar {
 	}
 
 	/**
+	 * 指定起始符号
+	 * 
+	 * @param start
+	 *            起始符号
+	 */
+	public Grammar(String start) {
+		this.start = start;
+	}
+
+	/**
 	 * 添加文法字符串，将可能改变文法的类型<br>
 	 * 若继承该类，应该在子类中进行检查<br>
 	 * 该处将进行一个是否规范化的检查
@@ -123,6 +133,15 @@ public class Grammar {
 			grammarsList.add(gs[i]);
 		}
 		return true;
+	}
+
+	/**
+	 * 获得起始符号
+	 * 
+	 * @return 起始符号
+	 */
+	public String getStart() {
+		return start;
 	}
 
 	/**
@@ -182,8 +201,7 @@ public class Grammar {
 	// }
 
 	public static void main(String[] args) {
-		String[] s ={
-				"	   <constant> 				-> <integer-constant>",
+		String[] s = { "	   <constant> 				-> <integer-constant>",
 				"	   <constant> 				-> <floating-constant>",
 				"	   <constant> 				-> <enumeration-constant>",
 				"	   <constant> 				-> <character-constant>",
@@ -194,15 +212,12 @@ public class Grammar {
 				"	   <integer-constant>		-> <hexadecimal-constant><integer-suffix>",
 				"	   <integer-constant>		-> <hexadecimal-constant>",
 				"	   <decimal-constant>		-> <nonzero-digit>",
-				"	   <decimal-constant>		-> <decimal-constant><digit>",
-				"	   <octal-constant>			-> 0",
+				"	   <decimal-constant>		-> <decimal-constant><digit>", "	   <octal-constant>			-> 0",
 				"	   <octal-constant>			-> <octal-constant><octal-digit>",
 				"	   <hexadecimal-constant>	-> <hexadecimal-prefix><hexadecimal-digit>",
 				"	   <hexadecimal-constant>	-> <hexadecimal-constant><hexadecimal-digit>",
-				"	   <hexadecimal-prefix>		-> 0x",
-				"	   <hexadecimal-prefix>		-> 0X",
-				"	   <nonzero-digit>			-> \\[1-9\\]",
-				"	   <octal-digit>			-> \\[0-7\\]",
+				"	   <hexadecimal-prefix>		-> 0x", "	   <hexadecimal-prefix>		-> 0X",
+				"	   <nonzero-digit>			-> \\[1-9\\]", "	   <octal-digit>			-> \\[0-7\\]",
 				"	   <hexadecimal-digit>		-> \\[0-9\\]\\[a-f\\]\\[A-F\\]",
 				"	   <integer-suffix>			-> <unsigned-suffix><long-suffix>",
 				"	   <integer-suffix>			-> <unsigned-suffix>",
@@ -212,13 +227,9 @@ public class Grammar {
 				"	   <integer-suffix>			-> <long-suffix><unsigned-suffix>",
 				"	   <integer-suffix>			-> <long-long-suffix>",
 				"	   <integer-suffix>			-> <long-long-suffix><unsigned-suffix>",
-				"	   <unsigned-suffix>		-> u",
-				"	   <unsigned-suffix>		-> U",
-				"	   <long-suffix>			-> l",
-				"	   <long-suffix>			-> L",
-				"	   <long-long-suffix>		-> ll",
-				"	   <long-long-suffix>		-> LL"
-		};
+				"	   <unsigned-suffix>		-> u", "	   <unsigned-suffix>		-> U",
+				"	   <long-suffix>			-> l", "	   <long-suffix>			-> L",
+				"	   <long-long-suffix>		-> ll", "	   <long-long-suffix>		-> LL" };
 		Grammar gm = new Grammar();
 		System.out.println(gm.add(s));
 	}

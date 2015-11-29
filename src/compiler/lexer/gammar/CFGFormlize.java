@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.sun.org.apache.regexp.internal.REUtil;
+
 /**
  * 对带有[a-zA-Z0-9]、括号()、或选择|
  * 
@@ -26,6 +28,12 @@ public class CFGFormlize {
 	private static char[] REPLACE_CHAR_CLOSE_P = { 0x07 }; // +的替换符，\+
 	private static char[] REPLACE_CHAR_ESC = { 0x1B }; // \的替换符，\\
 
+	private static int tempCount = 0;
+
+	public static int getTempCount() {
+		return tempCount++;
+	}
+
 	/**
 	 * 对CFG文法进行形式化<br>
 	 * 该函数仅对CFG文法中的[a-z][A-Z][0-9]|处理，使其转换为形式化的CFG文法<br>
@@ -38,7 +46,47 @@ public class CFGFormlize {
 	static String[] formalize(String[] grammars) {
 		String[] res = null;
 		List<String> fGrammars = new ArrayList<>();
-		res = (String[]) fGrammars.toArray();
+		for (int i = 0; i < grammars.length; i++) {
+			fGrammars.add(grammars[i]);
+		}
+		int count = 0;
+		while (count < fGrammars.size()) {
+			count = fGrammars.size();
+			for (int j = 0; j < fGrammars.size(); j++) {
+				String gs = fGrammars.get(j);
+				String[] resGrammars = formalizeGroup(gs);
+				if (null != resGrammars) {
+					fGrammars.remove(gs);
+					for (int i = 0; i < resGrammars.length; i++) {
+						fGrammars.add(resGrammars[i]);
+					}
+					System.out.println("1" + gs);
+					j--;
+					continue;
+				}
+				resGrammars = formalizeOr(gs);
+				if (null != resGrammars) {
+					fGrammars.remove(gs);
+					for (int i = 0; i < resGrammars.length; i++) {
+						fGrammars.add(resGrammars[i]);
+					}
+					System.out.println("2" + gs);
+					j--;
+					continue;
+				}
+				resGrammars = formalizeBrackets(gs);
+				if (null != resGrammars) {
+					fGrammars.remove(gs);
+					for (int i = 0; i < resGrammars.length; i++) {
+						fGrammars.add(resGrammars[i]);
+					}
+					System.out.println("3" + gs);
+					j--;
+					continue;
+				}
+			}
+		}
+		res = fGrammars.toArray(new String[fGrammars.size()]);
 		return res;
 	}
 
@@ -54,26 +102,25 @@ public class CFGFormlize {
 		String[] res = null;
 		List<String> fGrammars = new ArrayList<>();
 		CFGrammar simple = new CFGrammar();
-		String sp = simple.getPart(g, "rightPart").trim();
-		sp = sp.replaceAll("\\\\", new String(REPLACE_CHAR_ESC));
-		sp = sp.replaceAll("\\\\\\[", new String(REPLACE_CHAR_LSQUARE));
-		sp = sp.replaceAll("\\\\\\]", new String(REPLACE_CHAR_RSQUARE));
+		String sp = simple.getPart(g, "rightPart");
+		if (null == sp) {
+			System.err.println("文法不匹配："+g);
+			return null;
+		}
+		sp = escapeChar(sp.trim());
 		g = simple.getPart(g, "ident");
-		Pattern p = Pattern.compile(
-				"(?<front>[\\S\\s]*?)(\\[(?<centerS>\\w)-(?<centerE>\\w)\\])(?<end>[\\S\\s]*?)");
+		Pattern p = Pattern.compile("(?<front>[\\S\\s]*?)(\\[(?<centerS>\\w)-(?<centerE>\\w)\\])(?<end>[\\S\\s]*?)");
 		Matcher m = p.matcher(sp);
 		if (m.matches()) {
-			System.out.println(m.group("front"));
-			System.out.println(m.group("centerS"));
-			System.out.println(m.group("centerE"));
-			System.out.println(m.group("end"));
+			// System.out.println(m.group("front"));
+			// System.out.println(m.group("centerS"));
+			// System.out.println(m.group("centerE"));
+			// System.out.println(m.group("end"));
 			char s = m.group("centerS").charAt(0);
 			char e = m.group("centerE").charAt(0);
 			if ((('a' <= s && e <= 'z') || ('A' <= s && e <= 'Z') || ('0' <= s && e <= '9')) && (s < e)) {
 				String headStr = "<" + g + ">->" + m.group("front");
-				headStr = headStr.replaceAll(new String(REPLACE_CHAR_LSQUARE), "\\\\[");
-				headStr = headStr.replaceAll(new String(REPLACE_CHAR_RSQUARE), "\\\\]");
-				headStr = headStr.replaceAll(new String(REPLACE_CHAR_ESC), "\\\\");
+				headStr = reEscape(headStr);
 				int index = headStr.length();
 				StringBuffer sb = new StringBuffer(headStr + "0" + m.group("end"));
 				for (char c = s; c <= e; c++) {
@@ -110,22 +157,30 @@ public class CFGFormlize {
 		String[] res = null;
 		CFGrammar simple = new CFGrammar();
 		String sp = simple.getPart(g, "rightPart");
+		if (null == sp) {
+			System.err.println("文法不匹配："+g);
+			return null;
+		}
 		g = "<" + simple.getPart(g, "ident") + ">->";
 		sp = sp.trim();
 		// TODO 将可能引起干扰的"\|"转义字符进行替换
-		sp = sp.replaceAll("\\\\", new String(REPLACE_CHAR_ESC));
-		sp = sp.replaceAll("\\\\\\|", new String(REPLACE_CHAR_OR)) + " ";
+		sp = escapeChar(sp) + " ";
 		res = sp.split("\\|");
-		for (int i = 0; i < res.length; i++) {
-			// TODO 将字符替换回
-			res[i] = res[i].replaceAll(new String(REPLACE_CHAR_OR), "\\\\\\|");
-			res[i] = res[i].replaceAll(new String(REPLACE_CHAR_ESC), "\\\\").trim();
-			if (res[i].equals("")) {
-				res[i] = g + "\\N";
-			} else {
-				res[i] = g + res[i];
+		if (res.length > 1) {
+
+			for (int i = 0; i < res.length; i++) {
+				// TODO 将字符替换回
+				res[i] = reEscape(res[i]);
+				if (res[i].equals("")) {
+					res[i] = g + "\\N";
+				} else {
+					res[i] = g + res[i];
+				}
 			}
+		}else {
+			res = null;
 		}
+		
 		return res;
 	}
 
@@ -137,9 +192,97 @@ public class CFGFormlize {
 	 */
 	static String[] formalizeGroup(String g) {
 		String[] res = null;
-		Pattern p = Pattern.compile("(?<qian>[\\S\\s]*?)\\|");
-		Matcher m = p.matcher("");
+		List<String> fGrammars = new ArrayList<>();
+		CFGrammar simple = new CFGrammar();
+		String sp = simple.getPart(g, "rightPart");
+		if (null == sp) {
+			System.err.println("文法不匹配："+g);
+			return null;
+		}
+		g = "<" + simple.getPart(g, "ident") + ">->";
+		sp = escapeChar(sp);
+		int leftCount = 0;
+		int beginIndex = 0;
+		int endIndex = 0;
+		for (int i = 0; i < sp.length(); i++) {
+			char c = sp.charAt(i);
+			switch (c) {
+			case '(':
+				if (0 == leftCount) {
+					beginIndex = i;
+				}
+				leftCount++;
+				break;
+			case ')':
+				leftCount--;
+				if (0 == leftCount) {
+					endIndex = i;
+					// TODO 跳出for循环
+					int ctp = getTempCount();
+					String sub = "<TEMP_VN_" + ctp + ">->" + reEscape(sp.substring(beginIndex + 1, endIndex));
+					// System.out.println(sub);
+					String[] subStr = formalizeGroup(sub);
+					if (null == subStr) {
+						fGrammars.add(sub);
+					} else {
+						for (int j = 0; j < subStr.length; j++) {
+							fGrammars.add(subStr[j]);
+						}
+					}
+					sp = new StringBuffer(reEscape(sp)).replace(beginIndex, endIndex + 1, "<TEMP_VN_" + ctp + ">")
+							.toString();
+					i = 0;
+				}
+				break;
+			default:
+				break;
+			}
+		} // end of for()
+
+		if (!fGrammars.isEmpty()) {
+			fGrammars.add(g + sp);
+			res = fGrammars.toArray(new String[fGrammars.size()]);
+		}
+
 		return res;
+	}
+
+	/**
+	 * 将输入字符串sp进行转义，顺序必须是先进行Esc转义。
+	 * 
+	 * @param sp
+	 *            欲进行转义的字符
+	 * @return 转义后的字符
+	 */
+	public static String escapeChar(String sp) {
+		sp = sp.replaceAll("\\\\", new String(REPLACE_CHAR_ESC));
+		sp = sp.replaceAll("\\\\\\(", new String(REPLACE_CHAR_LPRES));
+		sp = sp.replaceAll("\\\\\\)", new String(REPLACE_CHAR_RPRES));
+		sp = sp.replaceAll("\\\\\\[", new String(REPLACE_CHAR_LSQUARE));
+		sp = sp.replaceAll("\\\\\\]", new String(REPLACE_CHAR_RSQUARE));
+		sp = sp.replaceAll("\\\\\\+", new String(REPLACE_CHAR_CLOSE_P));
+		sp = sp.replaceAll("\\\\\\*", new String(REPLACE_CHAR_CLOSE));
+		sp = sp.replaceAll("\\\\\\|", new String(REPLACE_CHAR_OR));
+		return sp;
+	}
+
+	/**
+	 * 将被替换后的转义字符进行还原
+	 * 
+	 * @param sp
+	 *            欲进行还原的字符串
+	 * @return 还原后的字符串
+	 */
+	public static String reEscape(String sp) {
+		sp = sp.replaceAll(new String(REPLACE_CHAR_OR), "\\\\\\|");
+		sp = sp.replaceAll(new String(REPLACE_CHAR_LPRES), "\\\\\\(");
+		sp = sp.replaceAll(new String(REPLACE_CHAR_RPRES), "\\\\\\)");
+		sp = sp.replaceAll(new String(REPLACE_CHAR_LSQUARE), "\\\\\\[");
+		sp = sp.replaceAll(new String(REPLACE_CHAR_RSQUARE), "\\\\\\]");
+		sp = sp.replaceAll(new String(REPLACE_CHAR_CLOSE), "\\\\\\*");
+		sp = sp.replaceAll(new String(REPLACE_CHAR_CLOSE_P), "\\\\\\+");
+		sp = sp.replaceAll(new String(REPLACE_CHAR_ESC), "\\\\").trim();
+		return sp;
 	}
 
 	/**
@@ -207,13 +350,60 @@ public class CFGFormlize {
 
 	public static void main(String[] args) {
 		System.out.println(CFGFormlize.hasFormlize("<a> ->\\\\\\*d"));
-		String[] kk = CFGFormlize.formalizeOr("<a> ->\\[[1-9]dsd\\\\|pp|");
+		String[] kk = CFGFormlize.formalizeOr("<nonzeroDigit>->[1-9]|2");
 		for (int i = 0; i < kk.length; i++) {
 			System.out.println(kk[i]);
 		}
-		kk = CFGFormlize.formalizeBrackets("<a> ->\\[\\\\[1-9]dsd|pp|");
+		kk = CFGFormlize.formalizeBrackets("<nonzeroDigit>->[1-9]");
 		for (int i = 0; i < kk.length; i++) {
 			System.out.println(kk[i]);
+		}
+
+		kk = CFGFormlize.formalizeGroup("<a> ->\\[sdd\\\\(x(x)xsx)sdf(x)");
+		for (int i = 0; i < kk.length; i++) {
+			System.out.println(kk[i]);
+		}
+
+		String[] ss = {
+				"	   <constant> 				-> <integer-constant>",
+				"	   <constant> 				-> <floating-constant>",
+				"	   <constant> 				-> <enumeration-constant>",
+				"	   <constant> 				-> <character-constant>",
+				"	   <integer-constant>		-> <decimal-constant><integer-suffix>",
+				"	   <integer-constant>		-> <decimal-constant>",
+				"	   <integer-constant>		-> <octal-constant><integer-suffix>",
+				"	   <integer-constant>		-> <octal-constant>",
+				"	   <integer-constant>		-> <hexadecimal-constant><integer-suffix>",
+				"	   <integer-constant>		-> <hexadecimal-constant>",
+				"	   <decimal-constant>		-> <nonzero-digit>",
+				"	   <decimal-constant>		-> <decimal-constant><digit>",
+				"	   <octal-constant>			-> 0",
+				"	   <octal-constant>			-> <octal-constant><octal-digit>",
+				"	   <hexadecimal-constant>	-> <hexadecimal-prefix><hexadecimal-digit>",
+				"	   <hexadecimal-constant>	-> <hexadecimal-constant><hexadecimal-digit>",
+				"	   <hexadecimal-prefix>		-> 0x",
+				"	   <hexadecimal-prefix>		-> 0X",
+				"	   <nonzero-digit>			-> [1-9]",
+				"	   <octal-digit>			-> [0-7]",
+				"	   <hexadecimal-digit>		-> [0-9]|[a-f]|[A-F]",
+				"	   <integer-suffix>			-> <unsigned-suffix><long-suffix>",
+				"	   <integer-suffix>			-> <unsigned-suffix>",
+				"	   <integer-suffix>			-> <unsigned-suffix><long-suffix>",
+				"	   <integer-suffix>			-> <unsigned-suffix><long-long-suffix>",
+				"	   <integer-suffix>			-> <long-suffix>",
+				"	   <integer-suffix>			-> <long-suffix><unsigned-suffix>",
+				"	   <integer-suffix>			-> <long-long-suffix>",
+				"	   <integer-suffix>			-> <long-long-suffix><unsigned-suffix>",
+				"	   <unsigned-suffix>		-> u",
+				"	   <unsigned-suffix>		-> U",
+				"	   <long-suffix>			-> l",
+				"	   <long-suffix>			-> L",
+				"	   <long-long-suffix>		-> ll",
+				"	   <long-long-suffix>		-> LL"
+		};
+		ss = CFGFormlize.formalize(ss);
+		for (int i = 0; i < ss.length; i++) {
+			System.out.println(ss[i]);
 		}
 	}
 

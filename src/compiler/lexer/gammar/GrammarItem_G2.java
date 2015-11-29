@@ -94,41 +94,34 @@ public class GrammarItem_G2 {
 	 * @return 解析失败返回false，否则返回true
 	 */
 	public boolean parserRight(String s) {
-		Pattern p1 = Pattern.compile("\\<([\\w\\d]+)\\>");
-		Pattern p2 = Pattern.compile("[\\w\\W\\d\\)\\(]");
-		Matcher matcher;
-		while (!s.equals("")) {
-			s = s.trim();
-			// TODO 匹配非终结符
-			matcher = p1.matcher(s);
-			if (matcher.find() && matcher.start() == 0) {
-				right.add(new Symbol(matcher.group(1), true));
-				s = s.substring(matcher.end());
-				// System.out.println("P1");
+		boolean res = false;
+		Matcher m = CFGrammar.CFGRightPattern.matcher(s);
+		while (m.find()) {
+			if (null == m.group("VN")) {
+				System.out.println(m.group("VT"));
+				addRight(new Symbol(m.group("VT")));
 			} else {
-				// TODO 匹配终结符
-				matcher = p2.matcher(s);
-				if (matcher.find() && matcher.start() == 0) {
-					right.add(new Symbol(matcher.group()));
-					s = s.substring(matcher.end());
-					// System.out.println("P2");
-				} else {
-					return false;
-				}
+				System.out.println(m.group("VN"));
+				addRight(new Symbol(m.group("VN"), true));
 			}
-			// System.out.println(s);
+			res = true;
+		}
+		if (!res) {
+			addRight(new Symbol("\\N"));
 		}
 		return true;
-
 	}
 
 	@Override
 	public String toString() {
 		String res = "";
 		res += "left(" + left.getName() + ")->right( ";
-		for (Iterator<Symbol> iterator = right.iterator(); iterator.hasNext();) {
-			Symbol symbol = (Symbol) iterator.next();
-			res += symbol.getName() + " ";
+		for (Symbol s : right) {
+			if (s.getIsVN()) {
+				res += "<"+s.getName() + "> ";
+			}else {
+				res += s.getName() + " ";
+			}
 		}
 		res += ")\n";
 		return res;

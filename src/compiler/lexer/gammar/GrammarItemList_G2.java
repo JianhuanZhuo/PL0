@@ -20,7 +20,7 @@ public class GrammarItemList_G2 {
 	}
 
 	public GrammarItem_G2[] toArray() {
-		return (GrammarItem_G2[]) grammarItemList.toArray();
+		return grammarItemList.toArray(new GrammarItem_G2[grammarItemList.size()]);
 	}
 
 	public Iterator<GrammarItem_G2> iterator() {
@@ -29,9 +29,9 @@ public class GrammarItemList_G2 {
 
 	public String toString() {
 		String res = "";
-		for (Iterator<GrammarItem_G2> iterator = grammarItemList.iterator(); iterator.hasNext();) {
-			GrammarItem_G2 grammarItem_G2 = (GrammarItem_G2) iterator.next();
-			res += grammarItem_G2;
+		res += "start with : " + startSymbol.getName() + "\n";
+		for (GrammarItem_G2 g : grammarItemList) {
+			res += g;
 		}
 		return res;
 	}

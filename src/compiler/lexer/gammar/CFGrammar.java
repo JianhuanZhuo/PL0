@@ -1,5 +1,10 @@
 package compiler.lexer.gammar;
 
+import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import compiler.lexer.automata.Symbol;
 
 /**
  * <h1>Context-Free Grammars</h1> <br>
@@ -16,8 +21,60 @@ package compiler.lexer.gammar;
  */
 public class CFGrammar extends Grammar {
 
-	public static final String Grammar_MatchExpression = "^\\s*\\<(?<ident>[\\w\\d]+)\\>\\s*-\\>\\s*(?<rightPart>[^\\n]+)\\s*$";
+	public static final String Grammar_PartName_Ident = "ident";
+	public static final String Grammar_PartName_RightPart = "rightPart";
+	public static final String Grammar_MatchExpression = "^\\s*\\<(?<" + Grammar_PartName_Ident
+			+ ">[\\w-]+?)\\>\\s*-\\>\\s*(?<" + Grammar_PartName_RightPart + ">[^\\n]+?)\\s*$";
 
+	GrammarItemList_G2 grammarItemList;
+
+	public static Pattern CFGRightPattern = Pattern
+			.compile("(\\<(?<VN>[\\w-]+?)\\>)|(?<VT>(\\\\[\\(\\)\\[\\]\\*\\+\\|\\<\\>])|([\\S]))");
+
+	public CFGrammar() {
+	}
+
+	public CFGrammar(String start) {
+		super(start);
+	}
+
+	/**
+	 * 获得文法项列表，可能用于自动机的规则初始化
+	 * 
+	 * @return 文法项列表，可能转换失败则返回null
+	 */
+	public GrammarItemList_G2 getItemList() {
+		if (null == grammarItemList) {
+			grammarItemList = transform();
+		}
+		return grammarItemList;
+	}
+
+	protected GrammarItemList_G2 transform() {
+		GrammarItemList_G2 tempList = new GrammarItemList_G2();
+		for (int i = 0; i < getGrammarLen(); i++) {
+			String s = getgrammar(i);
+			String ident = getPart(s, Grammar_PartName_Ident);
+			String rightPart = getPart(s, Grammar_PartName_RightPart);
+			GrammarItem_G2 gItem = new GrammarItem_G2(new Symbol(ident));
+			Matcher m = CFGRightPattern.matcher(rightPart);
+			while (m.find()) {
+				if (null == m.group("VN")) {
+					System.out.println(m.group("VT"));
+					gItem.addRight(new Symbol(m.group("VT")));
+				} else {
+					System.out.println(m.group("VN"));
+					gItem.addRight(new Symbol(m.group("VN"), true));
+				}
+			}
+			if (null == gItem.getRightFirstSymbol()) {
+				gItem.addRight(new Symbol("\\N"));
+			}
+			tempList.add(gItem);
+		}
+		tempList.setStartSymbol(new Symbol(getStart(), true));
+		return tempList;
+	}
 
 	/**
 	 * 该文法将
@@ -27,23 +84,13 @@ public class CFGrammar extends Grammar {
 		return Grammar_MatchExpression;
 	}
 
-
 	public static void main(String[] args) {
 
-//		String[] grammars = { "<AD1>->s<AD1>s<AD  " };
-//		for (int i = 0; i < grammars.length; i++) {
-//			System.out.println(new CFGrammar(null).getPart(grammars[i], "ident"));
-//			System.out.println(new CFGrammar(null).getPart(grammars[i], "rightPart"));
-//		}
-//
-//		String[] res = CFGrammar.formalizeOr("<A>->sa\\|[a-c\\]");
-//		for (int i = 0; i < res.length; i++) {
-//			System.out.println(res[i]);
-//		}
-//		String[] res2 = CFGrammar.formalizeBrackets("<A>->a");
-//		for (int i = 0; i < res2.length; i++) {
-//			System.out.println(res2[i]);
-//		}
-		
+		String[] s = { "	   <constant> 				-> \\<ss<integer-constant><ss>",
+				"	   <constant> 				-> <floating-constant>" };
+		CFGrammar gm = new CFGrammar("constant");
+		gm.add(s);
+		System.out.println(gm.transform().toString());
+		;
 	}
 }

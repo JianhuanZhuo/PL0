@@ -6,7 +6,7 @@ package compiler.lexer.gammar;
  * @author keepf
  *
  */
-public class LL1_Grammar {
+public class GrammarItemList_LL1 {
 
 	// 起始符号
 	// select集计算
