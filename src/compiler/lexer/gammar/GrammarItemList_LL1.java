@@ -1,7 +1,8 @@
 package compiler.lexer.gammar;
 
 /**
- * LL(1)文法
+ * <h1>LL(1)文法类</h1><br>
+ * LL1文法是对
  * 
  * @author keepf
  *

@@ -1,6 +1,5 @@
 package compiler.lexer.gammar;
 
-import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,10 +25,10 @@ public class CFGrammar extends Grammar {
 	public static final String Grammar_MatchExpression = "^\\s*\\<(?<" + Grammar_PartName_Ident
 			+ ">[\\w-]+?)\\>\\s*-\\>\\s*(?<" + Grammar_PartName_RightPart + ">[^\\n]+?)\\s*$";
 
-	GrammarItemList_G2 grammarItemList;
+	private GrammarItemList_G2 grammarItemList;
 
 	public static Pattern CFGRightPattern = Pattern
-			.compile("(\\<(?<VN>[\\w-]+?)\\>)|(?<VT>(\\\\[\\(\\)\\[\\]\\*\\+\\|\\<\\>])|([\\S]))");
+			.compile("(\\<(?<VN>[\\w-]+?)\\>)|(?<VT>(\\\\[\\(\\)\\[\\]\\*\\+\\|\\<\\>])|([\\S&&[^\\(\\)\\[\\]\\*\\+\\|\\<\\>]]))");
 
 	public CFGrammar() {
 	}
@@ -56,7 +55,7 @@ public class CFGrammar extends Grammar {
 			String s = getgrammar(i);
 			String ident = getPart(s, Grammar_PartName_Ident);
 			String rightPart = getPart(s, Grammar_PartName_RightPart);
-			GrammarItem_G2 gItem = new GrammarItem_G2(new Symbol(ident));
+			GrammarItem_G2 gItem = new GrammarItem_G2(new Symbol(ident, true));
 			Matcher m = CFGRightPattern.matcher(rightPart);
 			while (m.find()) {
 				if (null == m.group("VN")) {
@@ -87,7 +86,7 @@ public class CFGrammar extends Grammar {
 	public static void main(String[] args) {
 
 		String[] s = { "	   <constant> 				-> \\<ss<integer-constant><ss>",
-				"	   <constant> 				-> <floating-constant>" };
+				"	   <constant> 				-><floating-constant>" };
 		CFGrammar gm = new CFGrammar("constant");
 		gm.add(s);
 		System.out.println(gm.transform().toString());

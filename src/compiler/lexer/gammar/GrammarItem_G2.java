@@ -1,12 +1,8 @@
 package compiler.lexer.gammar;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import com.sun.org.apache.regexp.internal.recompile;
 
 import compiler.lexer.automata.Symbol;
 
@@ -112,14 +108,69 @@ public class GrammarItem_G2 {
 		return true;
 	}
 
+	/**
+	 * 检索该文法项中是否存在指定的符号
+	 * 
+	 * @param target
+	 *            指定的匹配符号
+	 * @return 存在返回true，否则返回false
+	 */
+	public boolean contain(Symbol target) {
+		for (Symbol s : right) {
+			if (0 == s.compareTo(target)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 检查该文法项中是否存在自引用
+	 * 
+	 * @return 存在自引用返回true，否则返回false
+	 */
+	public boolean selfRefer() {
+		Symbol target = getLeft();
+		for (Symbol s : right) {
+			if (0 == s.compareTo(target)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 使用指定的符号串替换文法项右部的指定符号
+	 * 
+	 * @param target
+	 *            目标符号
+	 * @param replacement
+	 *            用于替换的符号串，传入null表示删除目标符号
+	 * @return 若目标符号不存在于文法项右部，则返回false，否则替换符号并返回true
+	 */
+	public boolean replace(Symbol target, List<Symbol> replacement) {
+
+		for (int i = 0; i < right.size(); i++) {
+			if (0 == right.get(i).compareTo(target)) {
+				right.remove(i);
+				if (null != replacement) {
+					return right.addAll(i, replacement);
+				} else {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	@Override
 	public String toString() {
 		String res = "";
 		res += "left(" + left.getName() + ")->right( ";
 		for (Symbol s : right) {
 			if (s.getIsVN()) {
-				res += "<"+s.getName() + "> ";
-			}else {
+				res += "<" + s.getName() + "> ";
+			} else {
 				res += s.getName() + " ";
 			}
 		}
