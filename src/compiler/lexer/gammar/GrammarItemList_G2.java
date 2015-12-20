@@ -8,8 +8,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.sun.org.apache.regexp.internal.REUtil;
-
 import compiler.lexer.automata.Symbol;
 
 /**
@@ -38,8 +36,6 @@ public class GrammarItemList_G2 {
 		// 创建等长容量
 		grammarItemList = new ArrayList<>((Arrays.asList(new GrammarItem_G2[g.grammarItemList.size()])));
 		// COPY
-		System.out.println(g.grammarItemList.size());
-		System.out.println(grammarItemList.size());
 		Collections.copy(grammarItemList, g.grammarItemList);
 		startSymbol = g.getStartSymbol();
 	}
@@ -276,16 +272,16 @@ public class GrammarItemList_G2 {
 	}
 
 	/**
-	 * 以非终结符的符号名为索引，检索文法项的条目数
+	 * 检索非终结符在文法项的产生式条目数
 	 * 
 	 * @param VNname
-	 *            非终结符的符号名
+	 *            非终结符
 	 * @return 以该符号名为左部的文法项数
 	 */
-	public int getVNListNum(String VNname) {
+	public int getVNListNum(Symbol VN) {
 		int grammarCount = 0;
 		for (GrammarItem_G2 g : grammarItemList) {
-			if (g.getLeft().getName().equals(VNname)) {
+			if (g.getLeft().equals(VN)) {
 				grammarCount++;
 			}
 		}
@@ -297,12 +293,29 @@ public class GrammarItemList_G2 {
 	 * 
 	 * @return 符号名集合
 	 */
-	public Set<String> getVNNameSet() {
-		Set<String> VNNameSet = new HashSet<>();
+	public Set<Symbol> getVNSet() {
+		Set<Symbol> VNSet = new HashSet<>();
 		for (GrammarItem_G2 g : grammarItemList) {
-			VNNameSet.add(g.getLeft().getName());
+			VNSet.add(g.getLeft());
 		}
-		return VNNameSet;
+		return VNSet;
+	}
+
+	/**
+	 * 获得该文法的终结符符号集合
+	 * 
+	 * @return 该文法的终结符符号集合
+	 */
+	public Set<Symbol> getNTSet() {
+		Set<Symbol> VTNameSet = new HashSet<>();
+		for (GrammarItem_G2 g : grammarItemList) {
+			for (Symbol s : g.getRightList()) {
+				if (!s.getIsVN()) {
+					VTNameSet.add(s);
+				}
+			}
+		}
+		return VTNameSet;
 	}
 
 	public static void main(String[] args) {
