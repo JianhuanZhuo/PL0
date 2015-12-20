@@ -22,6 +22,10 @@ public class SDPDA extends Automata {
 	 * 确定下推规则集
 	 */
 	RuleSet<SDPDARule> ruleSet;
+	
+	/**
+	 * 下推栈
+	 */
 	PushDownStack pdStack;
 
 	/**
@@ -123,5 +127,4 @@ public class SDPDA extends Automata {
 	public void restart() {
 		pdStack.restart();
 	}
-
 }

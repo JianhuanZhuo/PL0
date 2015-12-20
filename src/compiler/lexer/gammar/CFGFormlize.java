@@ -1,11 +1,13 @@
 package compiler.lexer.gammar;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.sun.org.apache.regexp.internal.REUtil;
 
 /**
  * 对带有[a-zA-Z0-9]、括号()、或选择|
@@ -60,7 +62,6 @@ public class CFGFormlize {
 					for (int i = 0; i < resGrammars.length; i++) {
 						fGrammars.add(resGrammars[i]);
 					}
-					System.out.println("1" + gs);
 					j--;
 					continue;
 				}
@@ -70,7 +71,6 @@ public class CFGFormlize {
 					for (int i = 0; i < resGrammars.length; i++) {
 						fGrammars.add(resGrammars[i]);
 					}
-					System.out.println("2" + gs);
 					j--;
 					continue;
 				}
@@ -80,7 +80,6 @@ public class CFGFormlize {
 					for (int i = 0; i < resGrammars.length; i++) {
 						fGrammars.add(resGrammars[i]);
 					}
-					System.out.println("3" + gs);
 					j--;
 					continue;
 				}
@@ -104,7 +103,7 @@ public class CFGFormlize {
 		CFGrammar simple = new CFGrammar();
 		String sp = simple.getPart(g, "rightPart");
 		if (null == sp) {
-			System.err.println("文法不匹配："+g);
+			System.err.println("文法不匹配：" + g);
 			return null;
 		}
 		sp = escapeChar(sp.trim());
@@ -158,7 +157,7 @@ public class CFGFormlize {
 		CFGrammar simple = new CFGrammar();
 		String sp = simple.getPart(g, "rightPart");
 		if (null == sp) {
-			System.err.println("文法不匹配："+g);
+			System.err.println("文法不匹配：" + g);
 			return null;
 		}
 		g = "<" + simple.getPart(g, "ident") + ">->";
@@ -177,15 +176,15 @@ public class CFGFormlize {
 					res[i] = g + res[i];
 				}
 			}
-		}else {
+		} else {
 			res = null;
 		}
-		
+
 		return res;
 	}
 
 	/**
-	 * 
+	 * 括号
 	 * 
 	 * @param grammars
 	 * @return
@@ -196,7 +195,7 @@ public class CFGFormlize {
 		CFGrammar simple = new CFGrammar();
 		String sp = simple.getPart(g, "rightPart");
 		if (null == sp) {
-			System.err.println("文法不匹配："+g);
+			System.err.println("文法不匹配：" + g);
 			return null;
 		}
 		g = "<" + simple.getPart(g, "ident") + ">->";
@@ -348,62 +347,57 @@ public class CFGFormlize {
 		return sb.toString();
 	}
 
+	public static String[] loadGrammarsFile(String fileName) {
+		List<String> grammars = new ArrayList<>();
+		BufferedReader bfReader = null;
+		try {
+			bfReader = new BufferedReader(new FileReader(new File(fileName)));
+			String line;
+			while ((line = bfReader.readLine()) != null) {
+				if (line.length() > 0 && line.charAt(0) != '#') {
+					grammars.add(line);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				bfReader.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return grammars.toArray(new String[grammars.size()]);
+	}
+
 	public static void main(String[] args) {
-		System.out.println(CFGFormlize.hasFormlize("<a> ->\\\\\\*d"));
-		String[] kk = CFGFormlize.formalizeOr("<nonzeroDigit>->[1-9]|2");
-		for (int i = 0; i < kk.length; i++) {
-			System.out.println(kk[i]);
-		}
-		kk = CFGFormlize.formalizeBrackets("<nonzeroDigit>->[1-9]");
-		for (int i = 0; i < kk.length; i++) {
-			System.out.println(kk[i]);
-		}
-
-		kk = CFGFormlize.formalizeGroup("<a> ->\\[sdd\\\\(x(x)xsx)sdf(x)");
-		for (int i = 0; i < kk.length; i++) {
-			System.out.println(kk[i]);
-		}
-
-		String[] ss = {
-				"	   <constant> 				-> <integer-constant>",
-				"	   <constant> 				-> <floating-constant>",
-				"	   <constant> 				-> <enumeration-constant>",
-				"	   <constant> 				-> <character-constant>",
-				"	   <integer-constant>		-> <decimal-constant><integer-suffix>",
-				"	   <integer-constant>		-> <decimal-constant>",
-				"	   <integer-constant>		-> <octal-constant><integer-suffix>",
-				"	   <integer-constant>		-> <octal-constant>",
-				"	   <integer-constant>		-> <hexadecimal-constant><integer-suffix>",
-				"	   <integer-constant>		-> <hexadecimal-constant>",
-				"	   <decimal-constant>		-> <nonzero-digit>",
-				"	   <decimal-constant>		-> <decimal-constant><digit>",
-				"	   <octal-constant>			-> 0",
-				"	   <octal-constant>			-> <octal-constant><octal-digit>",
-				"	   <hexadecimal-constant>	-> <hexadecimal-prefix><hexadecimal-digit>",
-				"	   <hexadecimal-constant>	-> <hexadecimal-constant><hexadecimal-digit>",
-				"	   <hexadecimal-prefix>		-> 0x",
-				"	   <hexadecimal-prefix>		-> 0X",
-				"	   <nonzero-digit>			-> [1-9]",
-				"	   <octal-digit>			-> [0-7]",
-				"	   <hexadecimal-digit>		-> [0-9]|[a-f]|[A-F]",
-				"	   <integer-suffix>			-> <unsigned-suffix><long-suffix>",
-				"	   <integer-suffix>			-> <unsigned-suffix>",
-				"	   <integer-suffix>			-> <unsigned-suffix><long-suffix>",
-				"	   <integer-suffix>			-> <unsigned-suffix><long-long-suffix>",
-				"	   <integer-suffix>			-> <long-suffix>",
-				"	   <integer-suffix>			-> <long-suffix><unsigned-suffix>",
-				"	   <integer-suffix>			-> <long-long-suffix>",
-				"	   <integer-suffix>			-> <long-long-suffix><unsigned-suffix>",
-				"	   <unsigned-suffix>		-> u",
-				"	   <unsigned-suffix>		-> U",
-				"	   <long-suffix>			-> l",
-				"	   <long-suffix>			-> L",
-				"	   <long-long-suffix>		-> ll",
-				"	   <long-long-suffix>		-> LL"
-		};
-		ss = CFGFormlize.formalize(ss);
-		for (int i = 0; i < ss.length; i++) {
-			System.out.println(ss[i]);
+		// System.out.println(CFGFormlize.hasFormlize("<a> ->\\\\\\*d"));
+		// String[] kk = CFGFormlize.formalizeOr("<nonzeroDigit>->[1-9]|2");
+		// for (int i = 0; i < kk.length; i++) {
+		// System.out.println(kk[i]);
+		// }
+		// kk = CFGFormlize.formalizeBrackets("<nonzeroDigit>->[1-9]");
+		// for (int i = 0; i < kk.length; i++) {
+		// System.out.println(kk[i]);
+		// }
+		//
+		// kk = CFGFormlize.formalizeGroup("<a> ->\\[sdd\\\\(x(x)xsx)sdf(x)");
+		// for (int i = 0; i < kk.length; i++) {
+		// System.out.println(kk[i]);
+		// }
+		//
+		// String[] ss = { "<identifier> -> <nondigit>", "<identifier> ->
+		// <identifier><digit>",
+		// "<nondigit> -> _|[a-z]|[A-Z]", "<digit> -> [0-9]" };
+		// ss = CFGFormlize.formalize(ss);
+		// for (int i = 0; i < ss.length; i++) {
+		// System.out.println(ss[i]);
+		// }
+		String[] tokenGrammars = CFGFormlize.loadGrammarsFile("Token_LL1");
+		tokenGrammars = CFGFormlize.formalize(tokenGrammars);
+		for (int i = 0; i < tokenGrammars.length; i++) {
+			System.out.println(tokenGrammars[i]);
 		}
 	}
 

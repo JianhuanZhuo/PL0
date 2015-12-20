@@ -3,6 +3,8 @@ package compiler.lexer.accidence;
 /**
  * <h1>词法单元</h1><br>
  * 
+ * Token，作为Lexer阶段的输出
+ * 
  * <ol>
  * <li>词法单元：一个</li>
  * <li>模式：词法单元的词素可能具备的<b>形式描述</b></li>
@@ -42,58 +44,6 @@ package compiler.lexer.accidence;
  */
 public class Token {
 
-	// 标识符的组成
-	/**
-	 * <pre>
-	 * <identifier>				-> <identifier-nondigit>
-	 * <identifier>				-> <identifier><identifier-nondigit>
-	 * <identifier>				-> <identifier><digit>
-	 * <identifier-nondigit>	-> <nondigit>
-	 * <identifier-nondigit>	-> <universal-character-name>
-	 * <identifier-nondigit>	-> <other implementation-defined characters>
-	 * <nondigit>				-> _[a-zA-Z]
-	 * <digit>					-> [0-9]
-	 * </pre>
-	 */
-
-	/**
-	 * <pre>
-	 * <constant> 				-> <integer-constant>
-	 * <constant> 				-> <floating-constant>
-	 * <constant> 				-> <enumeration-constant>
-	 * <constant> 				-> <character-constant>
-	 * <integer-constant>		-> <decimal-constant><integer-suffix>
-	 * <integer-constant>		-> <decimal-constant>
-	 * <integer-constant>		-> <octal-constant><integer-suffix>
-	 * <integer-constant>		-> <octal-constant>
-	 * <integer-constant>		-> <hexadecimal-constant><integer-suffix>
-	 * <integer-constant>		-> <hexadecimal-constant>
-	 * <decimal-constant>		-> <nonzero-digit>
-	 * <decimal-constant>		-> <decimal-constant><digit>
-	 * <octal-constant>			-> 0
-	 * <octal-constant>			-> <octal-constant><octal-digit>
-	 * <hexadecimal-constant>	-> <hexadecimal-prefix><hexadecimal-digit>
-	 * <hexadecimal-constant>	-> <hexadecimal-constant><hexadecimal-digit>
-	 * <hexadecimal-prefix>		-> 0x
-	 * <hexadecimal-prefix>		-> 0X
-	 * <nonzero-digit>			-> [1-9]
-	 * <octal-digit>			-> [0-7]
-	 * <hexadecimal-digit>		-> [0-9][a-f][A-F]
-	 * <integer-suffix>			-> <unsigned-suffix><long-suffix>
-	 * <integer-suffix>			-> <unsigned-suffix>
-	 * <integer-suffix>			-> <unsigned-suffix><long-suffix>
-	 * <integer-suffix>			-> <unsigned-suffix><long-long-suffix>
-	 * <integer-suffix>			-> <long-suffix>
-	 * <integer-suffix>			-> <long-suffix><unsigned-suffix>
-	 * <integer-suffix>			-> <long-long-suffix>
-	 * <integer-suffix>			-> <long-long-suffix><unsigned-suffix>
-	 * <unsigned-suffix>		-> u
-	 * <unsigned-suffix>		-> U
-	 * <long-suffix>			-> l
-	 * <long-suffix>			-> L
-	 * <long-long-suffix>		-> ll
-	 * <long-long-suffix>		-> LL
-	 * 
-	 * </pre>
-	 */
+	//类型
+	
 }

@@ -1,8 +1,11 @@
 package compiler.lexer.gammar;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 import java.util.regex.Matcher;
+
+import com.sun.prism.Texture;
 
 import compiler.lexer.automata.Symbol;
 
@@ -137,6 +140,34 @@ public class GrammarItem_G2 {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * 检查该文法项中的右部是否存在终结符
+	 * 
+	 * @return 若存在则返回true，否则返回false
+	 */
+	public boolean hasTermial() {
+		for (Iterator<Symbol> iterator = right.iterator(); iterator.hasNext();) {
+			Symbol symbol = (Symbol) iterator.next();
+			if (!symbol.getIsVN()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 文法项右部为空的检查
+	 * 
+	 * @return 为空返回true，否则返回false
+	 */
+	public boolean rightNull() {
+		if (right.firstElement().compareTo(new Symbol("\\N")) == 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**

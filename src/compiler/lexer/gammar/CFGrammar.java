@@ -27,8 +27,8 @@ public class CFGrammar extends Grammar {
 
 	private GrammarItemList_G2 grammarItemList;
 
-	public static Pattern CFGRightPattern = Pattern
-			.compile("(\\<(?<VN>[\\w-]+?)\\>)|(?<VT>(\\\\[\\(\\)\\[\\]\\*\\+\\|\\<\\>])|([\\S&&[^\\(\\)\\[\\]\\*\\+\\|\\<\\>]]))");
+	public static Pattern CFGRightPattern = Pattern.compile(
+			"(\\<(?<VN>[\\w-]+?)\\>)|(?<VT>(\\\\[N\\(\\)\\[\\]\\*\\+\\|\\<\\>])|([\\S&&[^\\(\\)\\[\\]\\*\\+\\|\\<\\>]]))");
 
 	public CFGrammar() {
 	}
@@ -49,6 +49,12 @@ public class CFGrammar extends Grammar {
 		return grammarItemList;
 	}
 
+	/**
+	 * 将文法字符串转换成文法项（规范的）<br />
+	 * 即该过程是一个识别文法字符串的过程
+	 * 
+	 * @return
+	 */
 	protected GrammarItemList_G2 transform() {
 		GrammarItemList_G2 tempList = new GrammarItemList_G2();
 		for (int i = 0; i < getGrammarLen(); i++) {
@@ -59,10 +65,10 @@ public class CFGrammar extends Grammar {
 			Matcher m = CFGRightPattern.matcher(rightPart);
 			while (m.find()) {
 				if (null == m.group("VN")) {
-					System.out.println(m.group("VT"));
+					//System.out.println(m.group("VT"));
 					gItem.addRight(new Symbol(m.group("VT")));
 				} else {
-					System.out.println(m.group("VN"));
+					//System.out.println(m.group("VN"));
 					gItem.addRight(new Symbol(m.group("VN"), true));
 				}
 			}
@@ -85,11 +91,10 @@ public class CFGrammar extends Grammar {
 
 	public static void main(String[] args) {
 
-		String[] s = { "	   <constant> 				-> \\<ss<integer-constant><ss>",
+		String[] s = { "	   <constant> 				-> \\+\\<ss<integer-constant><ss>",
 				"	   <constant> 				-><floating-constant>" };
 		CFGrammar gm = new CFGrammar("constant");
 		gm.add(s);
 		System.out.println(gm.transform().toString());
-		;
 	}
 }

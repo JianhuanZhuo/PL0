@@ -124,6 +124,7 @@ public class Grammar {
 		}
 		for (int i = 0; i < gs.length; i++) {
 			if (!match(gs[i])) {
+				System.out.println("Unable to match "+gs[i]);
 				return false;
 			}
 		}

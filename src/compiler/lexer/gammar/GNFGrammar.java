@@ -1,11 +1,5 @@
 package compiler.lexer.gammar;
 
-import java.util.Iterator;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import compiler.lexer.automata.Symbol;
-
 /**
  * <b>GNF文法类</b><br>
  * 格雷巴赫标准式文法(Greibach Grammar)，格式如下所示：<br >

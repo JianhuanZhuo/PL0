@@ -1,20 +1,47 @@
 package compiler.lexer.gammar;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.sun.org.apache.regexp.internal.REUtil;
+
 import compiler.lexer.automata.Symbol;
 
+/**
+ * <h1>2型文法的文法项表列类</h1>
+ * 
+ * @author keepf
+ *
+ */
 public class GrammarItemList_G2 {
 
-	private List<GrammarItem_G2> grammarItemList;
+	protected List<GrammarItem_G2> grammarItemList;
+	protected List<String> VNList;
 	private Symbol startSymbol;
 
 	public GrammarItemList_G2() {
 		grammarItemList = new ArrayList<>();
+	}
+
+	/**
+	 * 复制一个目标文法项列表
+	 * 
+	 * @param g
+	 *            目标文法项列表
+	 */
+	public GrammarItemList_G2(GrammarItemList_G2 g) {
+		// 创建等长容量
+		grammarItemList = new ArrayList<>((Arrays.asList(new GrammarItem_G2[g.grammarItemList.size()])));
+		// COPY
+		System.out.println(g.grammarItemList.size());
+		System.out.println(grammarItemList.size());
+		Collections.copy(grammarItemList, g.grammarItemList);
+		startSymbol = g.getStartSymbol();
 	}
 
 	public void add(GrammarItem_G2 e) {
@@ -90,6 +117,17 @@ public class GrammarItemList_G2 {
 	}
 
 	/**
+	 * 删除指定文法项
+	 * 
+	 * @param g
+	 *            指定文法项
+	 * @return 删除是否成功
+	 */
+	public boolean remove(GrammarItem_G2 g) {
+		return grammarItemList.remove(g);
+	}
+
+	/**
 	 * 重构文法项列表
 	 */
 	public boolean refactor() {
@@ -133,16 +171,17 @@ public class GrammarItemList_G2 {
 							return false;
 						} else {
 							rela[leftIndex][NVindex] = true;
-							System.out.println(g.getLeft().getName() + " -> " + s.getName());
+							// System.out.println(g.getLeft().getName() + " -> "
+							// + s.getName());
 						}
 					}
 				} // end of for(rightList)
 			}
 		} // end of for(GrammarItemList)
-		System.out.println();
-		// TODO 删除无法到达的产生式
-		// TODO 首先，先找到哪些产生式的左部非终结符是无法到达的
-		// 删除标志位，该标志告诉循环该行的VN已被删除
+			// System.out.println();
+			// TODO 删除无法到达的产生式
+			// TODO 首先，先找到哪些产生式的左部非终结符是无法到达的
+			// 删除标志位，该标志告诉循环该行的VN已被删除
 		boolean[] dele = new boolean[rela.length];
 		// 修剪标志位，这用于循环，直到数组没有被修剪(删除)为止
 		boolean trimFlag = true;
@@ -180,72 +219,96 @@ public class GrammarItemList_G2 {
 				removeVN(VNNameList.get(i));
 			}
 		}
-		// TODO 只有单个产生式，将产生式直接替换到每一个应用的子式中(起始符号除外)，并删除该符号
-		// 将该变量使用于产生式计数
-		int[] singleProduct = new int[dele.length];
-		for (GrammarItem_G2 g : grammarItemList) {
-			singleProduct[VNNameList.indexOf(g.getLeft().getName())]++;
-		}
-		for (String i : VNNameList) {
-			System.out.println(" ident " + i);
-		}
-		// TODO i=1起计数，表示忽略起始符号
-		for (int i = 1; i < singleProduct.length; i++) {
-			System.out.println("count " + i + " " + VNNameList.get(i) + " = " + singleProduct[i]);
-			if (1 == singleProduct[i]) {
-				// TODO 检查是否存在自我循环引用，存在自我引用则不适合替换
-				String singleName = VNNameList.get(i);
-				System.out.println(singleName);
-				GrammarItem_G2 singleG = findItemWithLeftName(singleName)[0];
-				if (!singleG.selfRefer()) {
-					// TODO 单产生式，进行替换
-					Symbol singleGleft = singleG.getLeft();
-					List<Symbol> singleGList = singleG.getRightList();
-					// TODO 删除产生式本身
-					grammarItemList.remove(singleG);
-					// TODO 替换其他所有的存在该非终结符的产生式
-					for (GrammarItem_G2 g : grammarItemList) {
-						g.replace(singleGleft, singleGList);
-					}
-				}
-			}
-		}
+		/****************************************************************************************
+		 * 
+		 * 
+		 * 
+		 * //TODO 单产生式的剃减，可能会破坏其语义
+		 * 
+		 * 
+		 * 
+		 * // TODO 只有单个产生式，将产生式直接替换到每一个应用的子式中(起始符号除外)，并删除该符号 // 将该变量使用于产生式计数
+		 * int[] singleProduct = new int[dele.length]; for (GrammarItem_G2 g :
+		 * grammarItemList) {
+		 * singleProduct[VNNameList.indexOf(g.getLeft().getName())]++; } // for
+		 * (String i : VNNameList) { // System.out.println(" ident " + i); // }
+		 * // TODO i=1起计数，表示忽略起始符号 for (int i = 1; i < singleProduct.length;
+		 * i++) { // System.out.println("count " + i + " " + VNNameList.get(i) +
+		 * " = " // + singleProduct[i]); if (1 == singleProduct[i]) { // TODO
+		 * 检查是否存在自我循环引用，存在自我引用则不适合替换 String singleName = VNNameList.get(i); //
+		 * System.out.println(singleName); GrammarItem_G2 singleG =
+		 * findItemWithLeftName(singleName)[0]; if (!singleG.selfRefer()) { //
+		 * TODO 单产生式，进行替换 Symbol singleGleft = singleG.getLeft(); List
+		 * <Symbol> singleGList = singleG.getRightList(); // TODO 删除产生式本身
+		 * grammarItemList.remove(singleG); // TODO 替换其他所有的存在该非终结符的产生式 for
+		 * (GrammarItem_G2 g : grammarItemList) { g.replace(singleGleft,
+		 * singleGList); } } } }
+		 *
+		 * end of 单产生式的剃减，可能会破坏其语义
+		 *
+		 *
+		 *************************************************************************/
+		VNList = VNNameList;
 		return true;
 	}
 
+	/**
+	 * 以非终结符的符号名为索引，检索出所有的文法项，并作为文法项表列返回，若不存在文法项，则返回null
+	 * 
+	 * @param VNname
+	 *            非终结符的符号名
+	 * @return 文法项表或null，若不存在文法项，则返回null
+	 */
+	public GrammarItemList_G2 getVNList(String VNname) {
+		GrammarItemList_G2 res = new GrammarItemList_G2();
+		int grammarCount = 0;
+		for (GrammarItem_G2 g : grammarItemList) {
+			if (g.getLeft().getName().equals(VNname)) {
+				res.add(g);
+				grammarCount++;
+			}
+		}
+		if (grammarCount == 0) {
+			return null;
+		} else {
+			return res;
+		}
+	}
+
+	/**
+	 * 以非终结符的符号名为索引，检索文法项的条目数
+	 * 
+	 * @param VNname
+	 *            非终结符的符号名
+	 * @return 以该符号名为左部的文法项数
+	 */
+	public int getVNListNum(String VNname) {
+		int grammarCount = 0;
+		for (GrammarItem_G2 g : grammarItemList) {
+			if (g.getLeft().getName().equals(VNname)) {
+				grammarCount++;
+			}
+		}
+		return grammarCount;
+	}
+
+	/**
+	 * 返回非终结符的符号名集合
+	 * 
+	 * @return 符号名集合
+	 */
+	public Set<String> getVNNameSet() {
+		Set<String> VNNameSet = new HashSet<>();
+		for (GrammarItem_G2 g : grammarItemList) {
+			VNNameSet.add(g.getLeft().getName());
+		}
+		return VNNameSet;
+	}
+
 	public static void main(String[] args) {
-		String[] gs = { "	   <digit> 					-> [0-9]",
-				"	   <constant> 				-> <integer-constant>", "	   <conxnt> 				-> <intetant>",
-				"	   <intetant> 				-> 13",
-				// " <constant> -> <floating-constant>",
-				// " <constant> -> <enumeration-constant>",
-				// " <constant> -> <character-constant>",
-				"	   <integer-constant>		-> <decimal-constant><integer-suffix>",
-				"	   <integer-constant>		-> <decimal-constant>",
-				"	   <integer-constant>		-> <octal-constant><integer-suffix>",
-				"	   <integer-constant>		-> <octal-constant>",
-				"	   <integer-constant>		-> <hexadecimal-constant><integer-suffix>",
-				"	   <integer-constant>		-> <hexadecimal-constant>",
-				"	   <decimal-constant>		-> <nonzero-digit>",
-				"	   <decimal-constant>		-> <decimal-constant><digit>", "	   <octal-constant>			-> 0",
-				"	   <octal-constant>			-> <octal-constant><octal-digit>",
-				"	   <hexadecimal-constant>	-> <hexadecimal-prefix><hexadecimal-digit>",
-				"	   <hexadecimal-constant>	-> <hexadecimal-constant><hexadecimal-digit>", "<x>-><k>", "<k>->0",
-				"	   <hexadecimal-prefix>		-> (<x>)x", "	   <hexadecimal-prefix>		-> 0X",
-				"	   <nonzero-digit>			-> [1-9]", "	   <octal-digit>			-> [0-7]",
-				"	   <hexadecimal-digit>		-> [0-9]|[a-f]|[A-F]",
-				"	   <integer-suffix>			-> <unsigned-suffix><long-suffix>",
-				"	   <integer-suffix>			-> <unsigned-suffix>",
-				"	   <integer-suffix>			-> <unsigned-suffix><long-suffix>",
-				"	   <integer-suffix>			-> <unsigned-suffix><long-long-suffix>",
-				"	   <integer-suffix>			-> <long-suffix>",
-				"	   <integer-suffix>			-> <long-suffix><unsigned-suffix>",
-				"	   <integer-suffix>			-> <long-long-suffix>",
-				"	   <integer-suffix>			-> <long-long-suffix><unsigned-suffix>",
-				"	   <unsigned-suffix>		-> u", "	   <unsigned-suffix>		-> U",
-				"	   <long-suffix>			-> l", "	   <long-suffix>			-> L",
-				"	   <long-long-suffix>		-> ll", "	   <long-long-suffix>		-> (LL)" };
-		CFGrammar constantG = new CFGrammar("constant");
+
+		String[] gs = CFGFormlize.loadGrammarsFile("Token_LL1");
+		CFGrammar constantG = new CFGrammar("token");
 		constantG.add(CFGFormlize.formalize(gs));
 		GrammarItemList_G2 gl = constantG.getItemList();
 		gl.refactor();
