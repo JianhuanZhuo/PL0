@@ -190,6 +190,7 @@ public class CFGFormlize {
 	 * @return
 	 */
 	static String[] formalizeGroup(String g) {
+		//System.out.println("g : "+g);
 		String[] res = null;
 		List<String> fGrammars = new ArrayList<>();
 		CFGrammar simple = new CFGrammar();
@@ -200,6 +201,7 @@ public class CFGFormlize {
 		}
 		g = "<" + simple.getPart(g, "ident") + ">->";
 		sp = escapeChar(sp);
+		//System.out.println("sp : "+sp);
 		int leftCount = 0;
 		int beginIndex = 0;
 		int endIndex = 0;
@@ -219,7 +221,7 @@ public class CFGFormlize {
 					// TODO 跳出for循环
 					int ctp = getTempCount();
 					String sub = "<TEMP_VN_" + ctp + ">->" + reEscape(sp.substring(beginIndex + 1, endIndex));
-					// System.out.println(sub);
+					//System.out.println("sub : "+sub);
 					String[] subStr = formalizeGroup(sub);
 					if (null == subStr) {
 						fGrammars.add(sub);
@@ -228,8 +230,11 @@ public class CFGFormlize {
 							fGrammars.add(subStr[j]);
 						}
 					}
-					sp = new StringBuffer(reEscape(sp)).replace(beginIndex, endIndex + 1, "<TEMP_VN_" + ctp + ">")
+					
+					//System.out.println("reEscape   : "+reEscape(sp));
+					sp = new StringBuffer(sp).replace(beginIndex, endIndex + 1, "<TEMP_VN_" + ctp + ">")
 							.toString();
+					//System.out.println("replace sp : "+sp);
 					i = 0;
 				}
 				break;
@@ -238,6 +243,8 @@ public class CFGFormlize {
 			}
 		} // end of for()
 
+		sp = reEscape(sp);
+		
 		if (!fGrammars.isEmpty()) {
 			fGrammars.add(g + sp);
 			res = fGrammars.toArray(new String[fGrammars.size()]);
@@ -254,7 +261,7 @@ public class CFGFormlize {
 	 * @return 转义后的字符
 	 */
 	public static String escapeChar(String sp) {
-		sp = sp.replaceAll("\\\\", new String(REPLACE_CHAR_ESC));
+		sp = sp.replaceAll("\\\\\\\\", new String(REPLACE_CHAR_ESC));
 		sp = sp.replaceAll("\\\\\\(", new String(REPLACE_CHAR_LPRES));
 		sp = sp.replaceAll("\\\\\\)", new String(REPLACE_CHAR_RPRES));
 		sp = sp.replaceAll("\\\\\\[", new String(REPLACE_CHAR_LSQUARE));
@@ -373,7 +380,7 @@ public class CFGFormlize {
 
 	public static void main(String[] args) {
 		// System.out.println(CFGFormlize.hasFormlize("<a> ->\\\\\\*d"));
-		// String[] kk = CFGFormlize.formalizeOr("<nonzeroDigit>->[1-9]|2");
+//		String[] kk = CFGFormlize.formalizeOr("<nonzeroDigit>->[1-9]|2");
 		// for (int i = 0; i < kk.length; i++) {
 		// System.out.println(kk[i]);
 		// }
@@ -382,10 +389,10 @@ public class CFGFormlize {
 		// System.out.println(kk[i]);
 		// }
 		//
-		// kk = CFGFormlize.formalizeGroup("<a> ->\\[sdd\\\\(x(x)xsx)sdf(x)");
-		// for (int i = 0; i < kk.length; i++) {
-		// System.out.println(kk[i]);
-		// }
+//		kk = CFGFormlize.formalizeGroup("<a> ->\\[sdd\\(x(x\\)xsx)sdf(x)\\\\");
+//		for (int i = 0; i < kk.length; i++) {
+//			System.out.println(kk[i]);
+//		}
 		//
 		// String[] ss = { "<identifier> -> <nondigit>", "<identifier> ->
 		// <identifier><digit>",
@@ -394,7 +401,8 @@ public class CFGFormlize {
 		// for (int i = 0; i < ss.length; i++) {
 		// System.out.println(ss[i]);
 		// }
-		String[] tokenGrammars = CFGFormlize.loadGrammarsFile("Token_LL1");
+		String[] tokenGrammars = CFGFormlize.loadGrammarsFile("PL0");
+		// String[] tokenGrammars =CFGFormlize.loadGrammarsFile("Token_LL1");
 		tokenGrammars = CFGFormlize.formalize(tokenGrammars);
 		for (int i = 0; i < tokenGrammars.length; i++) {
 			System.out.println(tokenGrammars[i]);

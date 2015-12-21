@@ -1,5 +1,7 @@
 package compiler.lexer.accidence;
 
+import compiler.lexer.automata.SDPDA_LL1;
+
 /**
  * <h1>词法分析器</h1><br />
  * 过滤空白，换行，记录行数（错误时，赋予行号）<br />
@@ -27,11 +29,13 @@ public class Lexer implements LexerServer {
 	
 	// 输出
 	
-
-	// 标识符的组成
-	/**
-	 * <pre>
-	 * </pre>
-	 */
-
+	//分析器
+	SDPDA_LL1 sdpda_LL1 = new SDPDA_LL1();
+	
+	
+	public void name() {
+		sdpda_LL1.translateGNF(grammars);
+		sdpda_LL1.restart();
+		sdpda_LL1.step(input);
+	}
 }

@@ -1,0 +1,56 @@
+#符合LL(1)文法，Token文法
+<token>					->	<identifier>
+<token>					->	<constant>
+<token>					->	<punctuator>
+
+#标识符
+<identifier>			->	<nondigit>(<identifier-left>|\N)
+<identifier-left>		->	(<nondigit>|<digit>)(<identifier-left>|\N)
+<nondigit>				->	_|[a-z]|[A-Z]
+<digit>					->	[0-9]
+
+#常量，此仅包含10进制整型常量
+<constant>				->	<decimal-constant>
+<decimal-constant>		->	<nonzero-digit>(<decimal-constant-left>|\N)
+<decimal-constant-left>	->	<digit>(<decimal-constant-left>|\N)
+<nonzero-digit>			->	[1-9]
+
+#操作符
+#+号作为正闭包的表示符，正常使用需要加\转义
+<punctuator>			->	<op-Relational>
+<punctuator>			->	<op-Aditive>
+<punctuator>			->	<op-Multiplicative>
+<punctuator>			->	<op-Equality>
+#<punctuator>			->	<op-Assignment>
+<punctuator>			->	<program-period>
+<punctuator>			->	<program-comma>
+<punctuator>			->	<program-semicolom>
+<punctuator>			->	<program-become>
+<punctuator>			->	<program-lparent>
+<punctuator>			->	<program-rparent>
+#关系运算符
+<op-Relational>			-> 	\<<op-Relational-left>
+<op-Relational>			-> 	\><op-Relational-left>
+<op-Relational-left>	->	\N
+<op-Relational-left>	->	=
+#加减运算符
+<op-Aditive> 			-> 	(\+|-)<op-Aditive-left>
+<op-Aditive-left>		->	\N
+<op-Aditive-left>		->	=
+#乘除取模运算符
+<op-Multiplicative>		->	(\*|/|%)<op-Multiplicative-left>
+<op-Multiplicative-left>->	\N
+<op-Multiplicative-left>->	=
+#等值运算符
+<op-Equality>			->	!=|<>|=<op-Equality-left>
+<op-Equality-left>		->	\N
+<op-Equality-left>		->	=
+#赋值运算符
+#<op-Assignment>			->	=
+#程序标点符号
+<program-period>		->	.
+<program-comma>			->	,
+<program-semicolom>		->	;
+<program-become>		->	:=
+<program-lparent>		->	\(
+<program-rparent>		->	\)

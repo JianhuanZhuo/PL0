@@ -1,8 +1,6 @@
 #符合LL(1)文法，Token文法
 <token>					->	<identifier>
 <token>					->	<constant>
-#不包含字符串量
-#<token>					->	<string-literal>
 <token>					->	<punctuator>
 
 #标识符
@@ -21,4 +19,21 @@
 
 #操作符
 #+号作为正闭包的表示符，正常使用需要加\转义
-<punctuator>			-> \+|-
+<punctuator>			->	<op-Relational>
+<punctuator>			->	<op-Aditive>
+<punctuator>			->	<op-Multiplicative>
+<punctuator>			->	<op-Equality>
+<punctuator>			->	<op-Assignment>
+#关系运算符
+<op-Relational>			-> 	\<
+<op-Relational>			-> 	\>
+<op-Relational>			-> 	\<=
+<op-Relational>			-> 	\>=
+#加减运算符
+<op-Aditive> 			-> 	\+|-
+#乘除取模运算符
+<op-Multiplicative>		->	\*|/|%
+#等值运算符
+<op-Equality>			->	==|!=|<>
+#赋值运算符
+<op-Assignment>			->	=

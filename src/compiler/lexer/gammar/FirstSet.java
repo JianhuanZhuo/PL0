@@ -129,7 +129,7 @@ public class FirstSet {
 
 	@Override
 	public String toString() {
-		String res = s+" :\n";
+		String res = s + " :\n";
 		if (s.getIsVN()) {
 			for (FirstSet f : firstSet) {
 				res += "\t" + f.getSymbol() + "\n";
@@ -137,14 +137,18 @@ public class FirstSet {
 		}
 		return res;
 	}
-	
+
 	@Override
 	public int hashCode() {
-		return s.hashCode()*2;
+		return s.hashCode() * 2;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
-		return s.equals(((FirstSet)obj).getSymbol());
+		if (getClass().equals(obj.getClass())) {
+			return s.equals(((FirstSet) obj).getSymbol());
+		}
+		return false;
+
 	}
 }

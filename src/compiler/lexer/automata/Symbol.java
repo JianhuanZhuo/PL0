@@ -110,21 +110,22 @@ public class Symbol implements Cloneable, Comparable<Symbol> {
 
 	@Override
 	public boolean equals(Object obj) {
-		Symbol target = (Symbol) obj;
-		if (isVN == target.isVN && name.equals(target.name)) {
-			return true;
-		}else {
-			return false;
+		if (null != obj) {
+			Symbol target = (Symbol) obj;
+			if (isVN == target.isVN && name.equals(target.name)) {
+				return true;
+			}
 		}
+		return false;
 	}
 
 	@Override
 	public String toString() {
 		return (isVN ? "_VN_" : "_VT_") + name;
 	}
-	
+
 	@Override
 	public int hashCode() {
-		return (isVN?-1:1)*name.hashCode();
+		return (isVN ? -1 : 1) * name.hashCode();
 	}
 }

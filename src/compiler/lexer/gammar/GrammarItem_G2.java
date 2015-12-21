@@ -16,7 +16,7 @@ import compiler.lexer.automata.Symbol;
  * @author keepf
  *
  */
-public class GrammarItem_G2 {
+public class GrammarItem_G2{
 
 	private Symbol left;
 	private Vector<Symbol> right;
@@ -205,7 +205,13 @@ public class GrammarItem_G2 {
 				res += s.getName() + " ";
 			}
 		}
-		res += ")\n";
+		res += ")";
 		return res;
+	}
+	
+	public GrammarItem_G2 copy() {
+		GrammarItem_G2 c = new GrammarItem_G2(this.left);
+		c.right = new Vector<Symbol>(right);
+		return c;
 	}
 }

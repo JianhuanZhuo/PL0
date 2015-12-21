@@ -1,0 +1,11 @@
+<token>					->	<identifier>
+<token>					->	<number>
+
+#标识符
+<identifier>			->	<alpha><identifier-right>
+<identifier-right>		->	(<alpha>|<digit>)(<identifier-right>|\N)
+<alpha>					->	[a-z]|[A-Z]
+<digit>					->	[0-9]
+
+#数字
+<number>				->	<digit>(<number>|\N)

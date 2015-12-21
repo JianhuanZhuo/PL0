@@ -1,13 +1,12 @@
 package compiler.lexer.gammar;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
-import com.sun.org.apache.xalan.internal.xsltc.compiler.sym;
 
 import compiler.lexer.automata.Symbol;
 
@@ -38,6 +37,12 @@ public class GrammarItemList_LL1 extends GrammarItemList_G2 {
 
 	// first集
 	Map<Symbol, FirstSet> firstS = new HashMap<Symbol, FirstSet>();
+
+	// Follow集
+	Map<Symbol, FollowSet> followS = new HashMap<Symbol, FollowSet>();
+
+	// Select集
+	Map<GrammarItem_G2, SelectSet> selectS = new HashMap<GrammarItem_G2, SelectSet>();
 
 	// 起始符号
 
@@ -129,7 +134,7 @@ public class GrammarItemList_LL1 extends GrammarItemList_G2 {
 		FirstSet nullFirstSet = new FirstSet(nullSym);
 		for (Symbol vN : vNSet) {
 			FirstSet f = new FirstSet(vN);
-			System.out.println("VN : " + vN);
+//			System.out.println("VN : " + vN);
 			if (emptySet.get(vN)) {
 				f.add(nullFirstSet);
 			}
@@ -146,7 +151,8 @@ public class GrammarItemList_LL1 extends GrammarItemList_G2 {
 		// TODO 对于首符号为终结符的，该符号加入First集中
 		for (Iterator<GrammarItem_G2> iterator = gramTempList.iterator(); iterator.hasNext();) {
 			GrammarItem_G2 g = (GrammarItem_G2) iterator.next();
-			g.getRightFirstSymbol();
+			// TODO 这需要用到take右部符号的操作，由于复制只达到文法项集合级别的浅复制，所以需要进行一次深复制。
+			g = g.copy();
 			// 添加左部的符号直到非空
 			Symbol firstRight;
 			while ((firstRight = g.takeRightFirstSymbol()) != null) {
@@ -164,15 +170,117 @@ public class GrammarItemList_LL1 extends GrammarItemList_G2 {
 				}
 			}
 		} // end of for(iterator)
-
 	}
+
 	// Follow集计算
 	public void calcFollowSet() {
-		
+		// 初始化一个用于计算空集的临时表列
+		GrammarItemList_G2 gramTempList = new GrammarItemList_G2(this);
+		Symbol start = gramTempList.getStartSymbol();
+
+		Set<Symbol> vNSet = gramTempList.getVNSet();
+		for (Symbol s : vNSet) {
+			followS.put(s, new FollowSet(s));
+		}
+		// 添加起始符号到#的指向
+		followS.get(start).add(new FirstSet(new Symbol("\\#")));
+		for (Iterator<GrammarItem_G2> iterator = gramTempList.iterator(); iterator.hasNext();) {
+			GrammarItem_G2 g = (GrammarItem_G2) iterator.next();
+			// TODO 这需要用到take右部符号的操作，由于复制只达到文法项集合级别的浅复制，所以需要进行一次深复制。
+			g = g.copy();
+
+			Symbol t = g.takeRightFirstSymbol();
+			Symbol r = g.getRightFirstSymbol();
+			Symbol l = g.getLeft();
+			while (null != t) {
+				if (null == r) {
+					// 尾部处理
+					if (null != t && t.getIsVN() && !t.equals(new Symbol("\\N"))) {
+						// 在末尾的那个非终结符的Follow集中添加该产生式的Follow集
+						followS.get(t).add(followS.get(l));
+					}
+				} else if (t.getIsVN()) {
+					// 在前一个符号的Follow集中添加下一个符号First集
+					followS.get(t).add(firstS.get(r));
+					// 可推出空的拼接处理
+					if (t.getIsVN() && r.getIsVN() && emptySet.get(r) != null && emptySet.get(r) == true) {
+						// 在前一符号的Follow集中添加下一个符号的Follow集
+						followS.get(t).add(followS.get(r));
+					}
+				}
+				t = g.takeRightFirstSymbol();
+				r = g.getRightFirstSymbol();
+			} // end of while(null != t)
+		}
 	}
 
-	// select集计算
+	/**
+	 * <h2>select集计算</h2>
+	 * 
+	 * 单个公式为：
+	 */
+	public void calcSelect() {
+		// 初始化一个用于计算空集的临时表列
+		GrammarItemList_G2 gramTempList = new GrammarItemList_G2(this);
 
+		// 针对每个产生式生成一个select集
+		for (Iterator<GrammarItem_G2> iterator = gramTempList.iterator(); iterator.hasNext();) {
+			GrammarItem_G2 g = (GrammarItem_G2) iterator.next();
+
+			// TODO 添加一个选择集
+			SelectSet ss = new SelectSet(g);
+			selectS.put(g, ss);
+
+			List<Symbol> rList = g.getRightList();
+			int i;
+			if (g.rightNull()) {
+				// TODO 直接跳出
+				i = rList.size();
+			} else {
+				for (i = 0; i < rList.size(); i++) {
+					Symbol s = rList.get(i);
+					// TODO 加入其去空的First集
+					ss.add(firstS.get(s).getFirstSetNoNull());
+					// TODO 非空符号跳出
+					if (emptySet.get(s) == null || emptySet.get(s) != true) {
+						break;
+					}
+				}
+			}
+			// TODO 跳出检查
+			if (rList.size() == i) {
+				// 添加Follow集
+				ss.add(followS.get(g.getLeft()).getFollowSet());
+			}
+		}
+	}
+
+	/**
+	 * 计算Select集的交集，检查是否存在冲突，<br />
+	 * 即检查同一左部的产生式的Select集间是否存在交集
+	 * 
+	 * @return 无冲突返回true，存在冲突返回false
+	 */
+	public boolean calcIntersertion() {
+		// TODO 用于计算交集的临时set集合，并初始化
+		Map<Symbol, Set<Symbol>> intersertion = new HashMap<>();
+		Set<Symbol> vNSet = getVNSet();
+		for (Symbol vN : vNSet) {
+			intersertion.put(vN, new HashSet<Symbol>());
+		}
+
+		for (Entry<GrammarItem_G2, SelectSet> e : selectS.entrySet()) {
+			Set<Symbol> ss = intersertion.get(e.getKey().getLeft());
+			int len = ss.size();
+			ss.addAll(e.getValue().getSelectSet());
+			if (ss.size() < (len + e.getValue().getSelectSet().size())) {
+				// 存在交集，返回false
+				System.out.println("this not interserction : "+e.getKey());
+				return false;
+			}
+		}
+		return true;
+	}
 
 	// 预测分析表
 
@@ -183,12 +291,17 @@ public class GrammarItemList_LL1 extends GrammarItemList_G2 {
 
 	public static void main(String[] args) {
 
-		String[] gs = CFGFormlize.loadGrammarsFile("LL1_Test");
-		CFGrammar constantG = new CFGrammar("S");
+		String[] gs = CFGFormlize.loadGrammarsFile("Token_LL1_correct");
+		CFGrammar constantG = new CFGrammar("token");
 		// String[] gs = CFGFormlize.loadGrammarsFile("Token_LL1");
 		// CFGrammar constantG = new CFGrammar("token");
-		constantG.add(CFGFormlize.formalize(gs));
-		// System.out.println(constantG);
+		gs = CFGFormlize.formalize(gs);
+
+		for (int i = 0; i < gs.length; i++) {
+			System.out.println(gs[i]);
+		}
+		constantG.add(gs);
+		System.out.println("constantG : "+constantG);
 		System.out.println(constantG.getItemList());
 		GrammarItemList_LL1 gl = new GrammarItemList_LL1(constantG.getItemList());
 		// gl.refactor();
@@ -213,5 +326,18 @@ public class GrammarItemList_LL1 extends GrammarItemList_G2 {
 				System.out.println("\t" + s);
 			}
 		}
+
+		System.out.println("\nFollow set:");
+		gl.calcFollowSet();
+		for (Entry<Symbol, FollowSet> e : gl.followS.entrySet()) {
+			System.out.println(e.getValue());
+		}
+
+		System.out.println("\nSelect set:");
+		gl.calcSelect();
+		for (Entry<GrammarItem_G2, SelectSet> e : gl.selectS.entrySet()) {
+			System.out.println(e.getValue());
+		}
+		System.out.println("check intersertion ："+gl.calcIntersertion());
 	}
 }
