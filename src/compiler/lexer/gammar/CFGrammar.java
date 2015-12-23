@@ -27,6 +27,8 @@ public class CFGrammar extends Grammar {
 
 	private GrammarItemList_G2 grammarItemList;
 
+//	public static Pattern CFGRightPattern = Pattern.compile(
+//			"(\\<(?<VN>[\\w-]+?)\\>)|(?<VT>(\\\\[N\\(\\)\\[\\]\\*\\+\\|\\<\\>])|([\\S&&[^\\(\\)\\[\\]\\*\\+\\|\\<\\>]]))");
 	public static Pattern CFGRightPattern = Pattern.compile(
 			"(\\<(?<VN>[\\w-]+?)\\>)|(?<VT>(\\\\[N\\(\\)\\[\\]\\*\\+\\|\\<\\>])|([\\S&&[^\\(\\)\\[\\]\\*\\+\\|\\<\\>]]))");
 
@@ -37,6 +39,7 @@ public class CFGrammar extends Grammar {
 		super(start);
 	}
 
+	
 	/**
 	 * 获得文法项列表，可能用于自动机的规则初始化
 	 * 
@@ -80,6 +83,8 @@ public class CFGrammar extends Grammar {
 		tempList.setStartSymbol(new Symbol(getStart(), true));
 		return tempList;
 	}
+	
+	
 
 	/**
 	 * 该文法将

@@ -1,5 +1,6 @@
 package compiler.lexer.gammar;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -68,11 +69,20 @@ public class GrammarItem_G2{
 	 * @return 右部表为空，返回null，否则返回该表
 	 */
 	public List<Symbol> getRightList() {
+		
 		if (0 != right.size()) {
-			return right.subList(0, right.size());
+			return new ArrayList<>(right.subList(0, right.size()));
 		} else {
 			return null;
 		}
+	}
+	
+	public List<Symbol> getRightList_Forss() {
+		List<Symbol> res = new ArrayList<>();
+		if (!rightNull()) {
+			res = new ArrayList<>(right);
+		}
+		return res;
 	}
 
 	/**
@@ -163,10 +173,26 @@ public class GrammarItem_G2{
 	 * @return 为空返回true，否则返回false
 	 */
 	public boolean rightNull() {
-		if (right.firstElement().compareTo(new Symbol("\\N")) == 0) {
+		if (right.size()>0 && right.firstElement().compareTo(new Symbol("\\N")) == 0) {
 			return true;
 		} else {
 			return false;
+		}
+	}
+	
+	/**
+	 * 检查该产生式右部是否符合GNF范式
+	 * @return 符合返回true，否则返回false
+	 */
+	public boolean meetGNF() {
+		if (rightNull()) {
+			return true;
+		}else {
+			if (getRightFirstSymbol().getIsVN()) {
+				return false;
+			}else {
+				return true;
+			}
 		}
 	}
 
@@ -213,5 +239,31 @@ public class GrammarItem_G2{
 		GrammarItem_G2 c = new GrammarItem_G2(this.left);
 		c.right = new Vector<Symbol>(right);
 		return c;
+	}
+
+	@Override
+	public int hashCode() {
+		int c = left.hashCode() * 2;
+		for (Symbol s : right) {
+			c += s.hashCode();
+		}
+		return c;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		GrammarItem_G2 g = (GrammarItem_G2)obj;
+		if (!g.left.equals(left)) {
+			return false;
+		}
+		List<Symbol> gRight = g.getRightList();
+		List<Symbol> tRight = getRightList();
+		for (int i = 0; i < gRight.size(); i++) {
+			if(!gRight.get(i).equals(tRight.get(i))) {
+				return false;
+			}
+		}
+		return true;
+
 	}
 }

@@ -1,24 +1,21 @@
 package compiler.lexer.automata;
 
-import java.util.List;
-
-public class SDPDARule_LL1 implements Comparable<SDPDARule_LL1> {
-
-	protected Symbol nowStackTop;
-	protected Symbol matchSymbol;
-	protected List<Symbol> nextStackTop;
-	protected boolean isNullAccept;			//不接受
+public class SDPDARule_LL1 extends SDPDARule {
+	protected boolean isNullAccept = false;			//不接受
+	public void setNullAccept(boolean isNullAccept) {
+		this.isNullAccept = isNullAccept;
+	}
 	
+	public void nullAccept() {
+		isNullAccept = true;
+	}
 	
-	/**
-	 * 按当前下推栈栈顶符号、输入符号进行比较
-	 */
+	public boolean isNullAccept() {
+		return isNullAccept;
+	}
+	
 	@Override
-	public final int compareTo(SDPDARule_LL1 o) {
-		if (nowStackTop.compareTo(o.nowStackTop) != 0) {
-			return nowStackTop.compareTo(o.nowStackTop);
-		} else {
-			return matchSymbol.compareTo(o.matchSymbol);
-		}
+	public String toString() {
+		return super.toString()+"\tisNullAccept"+isNullAccept;
 	}
 }

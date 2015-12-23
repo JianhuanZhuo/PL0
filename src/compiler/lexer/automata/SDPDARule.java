@@ -26,4 +26,13 @@ public class SDPDARule implements Comparable<SDPDARule> {
 			return matchSymbol.compareTo(o.matchSymbol);
 		}
 	}
+	
+	@Override
+	public String toString() {
+		String res = "stackTop: "+nowStackTop+"\n\tmatchSymbol: "+matchSymbol+"\n\tnextStackTop: ";
+		for (Symbol s : nextStackTop) {
+			res += " "+s;
+		}
+		return res+"\n";
+	}
 }

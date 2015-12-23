@@ -1,8 +1,14 @@
 package compiler.lexer.automata;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import compiler.lexer.gammar.GrammarItemList_LL1;
+import compiler.lexer.gammar.GrammarItem_G2;
+import compiler.lexer.gammar.SelectSet;
 
 /**
  * <h1>使用于LL(1)文法的单态确定型下推自动机子类</h1><br>
@@ -14,20 +20,42 @@ import compiler.lexer.gammar.GrammarItemList_LL1;
 public class SDPDA_LL1 extends SDPDA {
 
 	/**
-	 * 初始化它的转换规则<br />
+	 * <h2>使用LL1文法的select集初始化它的转换规则</h2><br />
 	 * 
-	 * @return
+	 * @return 
 	 */
 	public boolean translateLL1(GrammarItemList_LL1 gLL1) {
 
 		boolean res = true;
 		// TODO 建立临时规则表
-		RuleSet<SDPDARule_LL1> rules = new RuleSet<SDPDARule_LL1>();
+		RuleSet rules = new RuleSet();
+		Map<GrammarItem_G2, SelectSet> selectS = gLL1.getSelectS();
+
+		for (Iterator<GrammarItem_G2> iterator = gLL1.iterator(); iterator.hasNext();) {
+			GrammarItem_G2 item = (GrammarItem_G2) iterator.next();
+			item = item.copy();
+			Set<Symbol> selectSym = selectS.get(item).getSelectSet();
+			List<Symbol> ls = new ArrayList<>(selectSym);
+			for (int i = 0; i < ls.size(); i++) {
+				SDPDARule_LL1 r = new SDPDARule_LL1();
+				r.nowStackTop = item.getLeft();
+				r.matchSymbol = ls.get(i);
+				r.nextStackTop = new ArrayList<>();
+				if (!item.meetGNF()) {
+					r.nullAccept();
+				}else {
+					//终结符开头，则需消耗一个
+					item.takeRightFirstSymbol();
+				}
+				r.nextStackTop = item.getRightList_Forss();
+				rules.add(r);
+			}
+		}
 
 		// TODO GNF文法转PDA无异常，则将临时PDA自动机更新入this对象的属性中
 		if (res) {
 			ruleSet = rules;
-			pdStack = new PushDownStack(grammarsList.getStartSymbol());
+			pdStack = new PushDownStack(gLL1.getStartSymbol());
 		}
 
 		return res;
@@ -40,14 +68,13 @@ public class SDPDA_LL1 extends SDPDA {
 	public void replaceStack(SDPDARule r, Symbol input) {
 		// TODO 下推栈状态替换
 		pdStack.pop();
-		for (Iterator<Symbol> iterator = r.nextStackTop.iterator(); iterator.hasNext();) {
-			Symbol symbolInList = (Symbol) iterator.next();
-			pdStack.push(symbolInList);
+		int t = r.nextStackTop.size();
+		for (int i = 1; i <= t; i++) {
+			Symbol e = r.nextStackTop.get(t-i);
+			pdStack.push(e);
 		}
-	}
-
-	@Override
-	public void restart() {
-		super.restart();
+		if (((SDPDARule_LL1)r).isNullAccept) {
+			step(input);
+		}
 	}
 }

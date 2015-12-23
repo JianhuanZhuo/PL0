@@ -4,16 +4,6 @@ import compiler.paser.syntaxTree.SyntaxNode;
 
 public class Symbol implements Cloneable, Comparable<Symbol> {
 
-	public static final String Symbol_EscapeCharacter_NULL = "\\N"; // 表示空转义
-	public static final String Symbol_EscapeCharacter_END = "\\E"; // 结束符号
-	public static final String Symbol_EscapeCharacter_START = "\\S"; // 开始符号
-	public static final String Symbol_EscapeCharacter_ESCAPE = "\\\\"; // 转义斜杠
-
-	static Symbol Symbol_NULL = new Symbol(Symbol_EscapeCharacter_NULL);
-	static Symbol Symbol_END = new Symbol(Symbol_EscapeCharacter_END);
-	static Symbol Symbol_START = new Symbol(Symbol_EscapeCharacter_START);
-	static Symbol Symbol_ESCAPE = new Symbol(Symbol_EscapeCharacter_ESCAPE);
-
 	/**
 	 * 是否为非终结符号 nonterminal
 	 */
@@ -52,10 +42,26 @@ public class Symbol implements Cloneable, Comparable<Symbol> {
 	public Symbol(String name, boolean isVN) {
 		this.isVN = isVN;
 		this.name = name;
+		if (!isVN) {
+			formlize();
+		}
 	}
 
 	public boolean getIsVN() {
 		return isVN;
+	}
+
+	/**
+	 * 检查该符号是否为空符号
+	 * 
+	 * @return 是返回true，否则返回false
+	 */
+	public boolean empty() {
+		if (!isVN && (name.charAt(0) == 0x18)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -98,6 +104,24 @@ public class Symbol implements Cloneable, Comparable<Symbol> {
 		return relateNode;
 	}
 
+	public void formlize() {
+		if (!isVN) {
+			if ('\\' == name.charAt(0)) {
+				switch (name.charAt(1)) {
+				case 'N':
+					name = new String("" + new Character((char) 0x18));
+					break;
+				case '#':
+					name = new String("" + new Character((char) 0x19));
+					break;
+				default:
+					name = name.substring(1);
+					break;
+				}
+			}
+		}
+	}
+
 	@Override
 	public int compareTo(Symbol o) {
 		if (isVN && !o.isVN) {
@@ -127,5 +151,11 @@ public class Symbol implements Cloneable, Comparable<Symbol> {
 	@Override
 	public int hashCode() {
 		return (isVN ? -1 : 1) * name.hashCode();
+	}
+
+	public static void main(String[] args) {
+		for (int i = 0; i < 0xff; i++) {
+			System.out.println(i + " : " + new Character((char) i));
+		}
 	}
 }

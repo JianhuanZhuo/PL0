@@ -21,8 +21,8 @@ public class SDPDA extends Automata {
 	/**
 	 * 确定下推规则集
 	 */
-	RuleSet<SDPDARule> ruleSet;
-	
+	RuleSet ruleSet;
+
 	/**
 	 * 下推栈
 	 */
@@ -39,7 +39,7 @@ public class SDPDA extends Automata {
 		// TODO 获得文法项列表
 		GrammarItemList_G2 grammarsList = grammars.getItemList();
 		// TODO 建立临时规则表
-		RuleSet<SDPDARule> rules = new RuleSet<SDPDARule>();
+		RuleSet rules = new RuleSet();
 		for (Iterator<GrammarItem_G2> iterator = grammarsList.iterator(); iterator.hasNext();) {
 			GrammarItem_G2 item = (GrammarItem_G2) iterator.next();
 			SDPDARule r = new SDPDARule();
@@ -55,7 +55,7 @@ public class SDPDA extends Automata {
 			List<Symbol> nextPushStackTop;
 			if (null == (nextPushStackTop = item.getRightList())) {
 				nextPushStackTop = new ArrayList<>();
-				nextPushStackTop.add(new Symbol(Symbol.Symbol_EscapeCharacter_NULL));
+				nextPushStackTop.add(new Symbol("\\#"));
 			}
 			r.nextStackTop = nextPushStackTop;
 			// TODO 添加该规则
@@ -84,23 +84,43 @@ public class SDPDA extends Automata {
 	 */
 	@Override
 	public boolean step(Symbol input) {
-		boolean res = true;
 		SDPDARule r = new SDPDARule();
+
+		if (isEmpty()) {
+			return true;
+		}
+
 		try {
 			r.nowStackTop = pdStack.getStackTop();
 			r.matchSymbol = input;
 			// TODO 查询该条件是否
 			if (null == (r = ruleSet.indexRule(r))) {
-				// TODO 无规则匹配，错误！
-				throw new RuntimeException("无规则匹配，错误！");
+				// 无规则，先尝试一下是否有空匹配
+				r = new SDPDARule();
+				r.nowStackTop = pdStack.getStackTop();
+				r.matchSymbol = new Symbol("\\#");
+				if (null == (r = ruleSet.indexRule(r))) {
+					// TODO 无规则匹配，错误！
+					throw new RuntimeException("无规则匹配，错误！");
+				}else {
+					return true;
+				}
 			}
 			// TODO 替换下推栈状态
 			replaceStack(r, input);
 		} catch (EmptyStackException e) {
-			e.printStackTrace();
-			res = false;
+			throw new RuntimeException("error for empty stack!");
 		}
-		return res;
+		return false;
+	}
+
+	/**
+	 * 检查栈是否为空
+	 * 
+	 * @return 空返回true，非空返回false
+	 */
+	public boolean isEmpty() {
+		return pdStack.isEmpty();
 	}
 
 	/**
@@ -126,5 +146,9 @@ public class SDPDA extends Automata {
 	@Override
 	public void restart() {
 		pdStack.restart();
+	}
+	
+	public static void main(String[] args) {
+		
 	}
 }

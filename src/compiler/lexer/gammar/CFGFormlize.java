@@ -29,6 +29,8 @@ public class CFGFormlize {
 	private static char[] REPLACE_CHAR_RPRES = { 0x06 }; // )的替换符，\)
 	private static char[] REPLACE_CHAR_CLOSE_P = { 0x07 }; // +的替换符，\+
 	private static char[] REPLACE_CHAR_ESC = { 0x1B }; // \的替换符，\\
+	private static char[] REPLACE_CHAR_NULL = { 0x18 }; // \N的替换符，
+	private static char[] REPLACE_CHAR_END = { 0x19 }; // \#的替换符，\\
 
 	private static int tempCount = 0;
 
@@ -45,7 +47,7 @@ public class CFGFormlize {
 	 *            欲形式化的CFG文法
 	 * @return 转换成功返回形式化后的文法，否则返回null
 	 */
-	static String[] formalize(String[] grammars) {
+	public static String[] formalize(String[] grammars) {
 		String[] res = null;
 		List<String> fGrammars = new ArrayList<>();
 		for (int i = 0; i < grammars.length; i++) {
@@ -86,7 +88,7 @@ public class CFGFormlize {
 			}
 		}
 		res = fGrammars.toArray(new String[fGrammars.size()]);
-		return res;
+		return noEscape(res);
 	}
 
 	/**
@@ -190,7 +192,7 @@ public class CFGFormlize {
 	 * @return
 	 */
 	static String[] formalizeGroup(String g) {
-		//System.out.println("g : "+g);
+		// System.out.println("g : "+g);
 		String[] res = null;
 		List<String> fGrammars = new ArrayList<>();
 		CFGrammar simple = new CFGrammar();
@@ -201,7 +203,7 @@ public class CFGFormlize {
 		}
 		g = "<" + simple.getPart(g, "ident") + ">->";
 		sp = escapeChar(sp);
-		//System.out.println("sp : "+sp);
+		// System.out.println("sp : "+sp);
 		int leftCount = 0;
 		int beginIndex = 0;
 		int endIndex = 0;
@@ -221,7 +223,7 @@ public class CFGFormlize {
 					// TODO 跳出for循环
 					int ctp = getTempCount();
 					String sub = "<TEMP_VN_" + ctp + ">->" + reEscape(sp.substring(beginIndex + 1, endIndex));
-					//System.out.println("sub : "+sub);
+					// System.out.println("sub : "+sub);
 					String[] subStr = formalizeGroup(sub);
 					if (null == subStr) {
 						fGrammars.add(sub);
@@ -230,11 +232,10 @@ public class CFGFormlize {
 							fGrammars.add(subStr[j]);
 						}
 					}
-					
-					//System.out.println("reEscape   : "+reEscape(sp));
-					sp = new StringBuffer(sp).replace(beginIndex, endIndex + 1, "<TEMP_VN_" + ctp + ">")
-							.toString();
-					//System.out.println("replace sp : "+sp);
+
+					// System.out.println("reEscape : "+reEscape(sp));
+					sp = new StringBuffer(sp).replace(beginIndex, endIndex + 1, "<TEMP_VN_" + ctp + ">").toString();
+					// System.out.println("replace sp : "+sp);
 					i = 0;
 				}
 				break;
@@ -244,7 +245,7 @@ public class CFGFormlize {
 		} // end of for()
 
 		sp = reEscape(sp);
-		
+
 		if (!fGrammars.isEmpty()) {
 			fGrammars.add(g + sp);
 			res = fGrammars.toArray(new String[fGrammars.size()]);
@@ -378,9 +379,49 @@ public class CFGFormlize {
 		return grammars.toArray(new String[grammars.size()]);
 	}
 
+	/**
+	 * 去除文法内的转义符
+	 * 
+	 * @param grammars
+	 * @return
+	 */
+	public static String[] noEscape(String[] grammars) {
+		/**********************************************************
+		 * 
+		 *     这里的东西搬迁到Symbol.java中做
+		 * 
+		 *
+		// for (int i = 0; i < grammars.length; i++) {
+		// String sp = grammars[i];
+		// sp = sp.replaceAll("\\\\\\\\", new String(REPLACE_CHAR_ESC));
+		// sp = sp.replaceAll("\\\\\\(", "(");
+		// sp = sp.replaceAll("\\\\\\)", ")");
+		// sp = sp.replaceAll("\\\\\\[", "[");
+		// sp = sp.replaceAll("\\\\\\]", "]");
+		// sp = sp.replaceAll("\\\\\\+", "+");
+		// sp = sp.replaceAll("\\\\\\*", "*");
+		// sp = sp.replaceAll("\\\\\\|", "|");
+		// sp = sp.replaceAll("\\\\\\>", ">");
+		// sp = sp.replaceAll("\\\\\\<", "<");
+		// //TODO 将空\N转为'18'，特殊字符表示空，字符显示为一个方框：
+		// sp = sp.replaceAll("\\\\N", new String(REPLACE_CHAR_NULL));
+		//
+		// sp = sp.replaceAll(new String(REPLACE_CHAR_ESC), "\\");
+		// grammars[i] = sp;
+		// }
+		 * 
+		 * 
+		 * 
+		 * 
+		 * 
+		 * 
+		 */
+		return grammars;
+	}
+
 	public static void main(String[] args) {
 		// System.out.println(CFGFormlize.hasFormlize("<a> ->\\\\\\*d"));
-//		String[] kk = CFGFormlize.formalizeOr("<nonzeroDigit>->[1-9]|2");
+		// String[] kk = CFGFormlize.formalizeOr("<nonzeroDigit>->[1-9]|2");
 		// for (int i = 0; i < kk.length; i++) {
 		// System.out.println(kk[i]);
 		// }
@@ -389,10 +430,11 @@ public class CFGFormlize {
 		// System.out.println(kk[i]);
 		// }
 		//
-//		kk = CFGFormlize.formalizeGroup("<a> ->\\[sdd\\(x(x\\)xsx)sdf(x)\\\\");
-//		for (int i = 0; i < kk.length; i++) {
-//			System.out.println(kk[i]);
-//		}
+		// kk = CFGFormlize.formalizeGroup("<a>
+		// ->\\[sdd\\(x(x\\)xsx)sdf(x)\\\\");
+		// for (int i = 0; i < kk.length; i++) {
+		// System.out.println(kk[i]);
+		// }
 		//
 		// String[] ss = { "<identifier> -> <nondigit>", "<identifier> ->
 		// <identifier><digit>",
@@ -401,6 +443,7 @@ public class CFGFormlize {
 		// for (int i = 0; i < ss.length; i++) {
 		// System.out.println(ss[i]);
 		// }
+//		String[] tokenGrammars = {"<a> ->\\*d"};
 		String[] tokenGrammars = CFGFormlize.loadGrammarsFile("PL0");
 		// String[] tokenGrammars =CFGFormlize.loadGrammarsFile("Token_LL1");
 		tokenGrammars = CFGFormlize.formalize(tokenGrammars);

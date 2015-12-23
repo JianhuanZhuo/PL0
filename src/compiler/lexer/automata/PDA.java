@@ -38,7 +38,7 @@ public class PDA extends StateAutomata {
 	/**
 	 * 动作转换映射集
 	 */
-	RuleSet rules = new RuleSet();
+	RuleSet_NONONONONO rules = new RuleSet_NONONONONO();
 
 	/**
 	 * 构造下推自动机

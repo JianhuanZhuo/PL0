@@ -1,5 +1,7 @@
 package compiler.lexer.accidence;
 
+import compiler.lexer.automata.Symbol;
+
 /**
  * <h1>词法单元</h1><br>
  * 
@@ -42,8 +44,12 @@ package compiler.lexer.accidence;
  * @author keepf
  *
  */
-public class Token {
+public class Token extends Symbol{
 
+	public Token(String name) {
+		super(name);
+		// TODO Auto-generated constructor stub
+	}
 	//类型
 	
 }

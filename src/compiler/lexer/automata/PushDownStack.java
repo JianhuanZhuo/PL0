@@ -64,4 +64,8 @@ public class PushDownStack {
 	public Symbol push(Symbol item) {
 		return symbolStack.push(item);
 	}
+	
+	public boolean isEmpty() {
+		return symbolStack.isEmpty();
+	}
 }

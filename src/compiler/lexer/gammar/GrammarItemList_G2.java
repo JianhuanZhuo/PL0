@@ -56,7 +56,7 @@ public class GrammarItemList_G2 {
 		String res = "";
 		res += "start with : " + startSymbol.getName() + "\n";
 		for (GrammarItem_G2 g : grammarItemList) {
-			res += g;
+			res += "\t" + g + "\n";
 		}
 		return res;
 	}

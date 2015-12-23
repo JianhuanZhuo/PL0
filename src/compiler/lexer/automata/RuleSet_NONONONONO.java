@@ -1,8 +1,11 @@
 package compiler.lexer.automata;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+
+import javafx.scene.control.Tab;
 
 /**
  * <h1>规则集类</h1>
@@ -12,17 +15,23 @@ import java.util.Set;
  * @param <Rule>
  *            继承有自然比较接口的规则接口，也就是说该规则集里的规则都是可比较的
  */
-public class RuleSet{
+public class RuleSet_NONONONONO<T extends Comparable<T>> {
 
 	/**
 	 * 规则表
 	 */
-	Set<SDPDARule> rules = new HashSet<SDPDARule>();
+	Set<T> rules = new HashSet<T>();
 
 	/**
 	 * 排序好的规则缓存
 	 */
-	SDPDARule[] arrayOfRules;
+	T[] arrayOfRules;
+	
+	Class<T> t;
+
+	public RuleSet_NONONONONO(Class<T> t) {
+		this.t = t;
+	}
 
 	/**
 	 * 添加一个规则
@@ -31,7 +40,7 @@ public class RuleSet{
 	 *            欲添加的规则
 	 * @return 存在等价规则返回false，否则返回true
 	 */
-	public boolean add(SDPDARule r) {
+	public boolean add(T r) {
 		return rules.add(r);
 	}
 
@@ -40,12 +49,13 @@ public class RuleSet{
 	 * 
 	 * @return 查找到对应的参照规则，返回该规则；否则返回null
 	 */
-	public SDPDARule indexRule(SDPDARule r) {
-		SDPDARule res = null;
+	public T indexRule(T r) {
+		T res = null;
 		// TODO 检查是否存在规则缓存，无则生成它
 		if (null == arrayOfRules) {
 			
-			arrayOfRules = rules.toArray((new SDPDARule[rules.size()]));
+			arrayOfRules = rules.toArray((T[])Array.newInstance(t,rules.size()));
+			
 			
 			Arrays.sort(arrayOfRules);
 		}
