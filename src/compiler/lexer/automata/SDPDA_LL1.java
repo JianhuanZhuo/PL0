@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.tomKit.printOut.PO;
+
 import compiler.lexer.gammar.GrammarItemList_LL1;
 import compiler.lexer.gammar.GrammarItem_G2;
 import compiler.lexer.gammar.SelectSet;
@@ -40,14 +42,14 @@ public class SDPDA_LL1 extends SDPDA {
 				SDPDARule_LL1 r = new SDPDARule_LL1();
 				r.nowStackTop = item.getLeft();
 				r.matchSymbol = ls.get(i);
-				r.nextStackTop = new ArrayList<>();
+				r.setNextStackTop(new ArrayList<>());
 				if (!item.meetGNF()) {
 					r.nullAccept();
 				}else {
 					//终结符开头，则需消耗一个
 					item.takeRightFirstSymbol();
 				}
-				r.nextStackTop = item.getRightList_Forss();
+				r.setNextStackTop(item.getRightList_Forss());
 				rules.add(r);
 			}
 		}
@@ -68,9 +70,9 @@ public class SDPDA_LL1 extends SDPDA {
 	public void replaceStack(SDPDARule r, Symbol input) {
 		// TODO 下推栈状态替换
 		pdStack.pop();
-		int t = r.nextStackTop.size();
+		int t = r.getNextStackTop().size();
 		for (int i = 1; i <= t; i++) {
-			Symbol e = r.nextStackTop.get(t-i);
+			Symbol e = r.getNextStackTop().get(t-i);
 			pdStack.push(e);
 		}
 		if (((SDPDARule_LL1)r).isNullAccept) {

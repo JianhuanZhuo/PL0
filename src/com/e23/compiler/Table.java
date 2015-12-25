@@ -7,7 +7,7 @@ import com.e23.compiler.Item.ObjectKind;
 public class Table implements  Cloneable{
 
 	/**
-	 * ×î´óÇ¶Ì×²ãÊı
+	 * æœ€å¤§åµŒå¥—å±‚æ•°
 	 */
 	public static final int LEVEL_MAX = 3;		
 		
@@ -31,15 +31,15 @@ public class Table implements  Cloneable{
 	
 	
 	/**
-	 * Ìí¼ÓÒ»¸öItem¶ÔÏóÖÁtable
-	 *	@param item ÓûÌí¼ÓµÄItem¶ÔÏó
+	 * æ·»åŠ ä¸€ä¸ªItemå¯¹è±¡è‡³table
+	 *	@param item æ¬²æ·»åŠ çš„Itemå¯¹è±¡
 	 */
 	public void enter(Item item) throws CompilerException{
 		items.add(item);
 		if (item.getKind() == ObjectKind.PROC) {
 			level++;
 			
-			//TODO Ç¶Ì×²ãÊı¼ì²é
+			//TODO åµŒå¥—å±‚æ•°æ£€æŸ¥
 			if (level > Table.LEVEL_MAX) {
 				throw new CompilerException(32);
 			}
@@ -54,9 +54,9 @@ public class Table implements  Cloneable{
 	}
 
 	/**
-	 * ²éÕÒÖ¸¶¨IDÊÇ·ñÊÇtableÄÚµÄÒ»¸ö¶ÔÏó
-	 *	@param ID Óû²éÕÒµÄID×Ö·û´®
-	 *	@return Æ¥Åäµ½µÄ¶ÔÏóÒıÓÃ£¬²»Æ¥Åä½«·µ»Ø¿Õ
+	 * æŸ¥æ‰¾æŒ‡å®šIDæ˜¯å¦æ˜¯tableå†…çš„ä¸€ä¸ªå¯¹è±¡
+	 *	@param ID æ¬²æŸ¥æ‰¾çš„IDå­—ç¬¦ä¸²
+	 *	@return åŒ¹é…åˆ°çš„å¯¹è±¡å¼•ç”¨ï¼Œä¸åŒ¹é…å°†è¿”å›ç©º
 	 *	@throws NullPointerException
 	 */
 	public Item position(String ID)throws CompilerException{
@@ -71,7 +71,7 @@ public class Table implements  Cloneable{
 		}//end of for(:)
 		
 		if (null == resItem) {
-			System.out.println("ID:"+ID+" ÎŞ·¨²éµ½");
+			System.out.println("ID:"+ID+" æ— æ³•æŸ¥åˆ°");
 			listTable();
 			throw new CompilerException(11);
 		}
@@ -81,9 +81,9 @@ public class Table implements  Cloneable{
 	
 	
 //	/**
-//	 * ¸Ãº¯Êı½«ÓÃÓÚ»ñµÃtableÎ²°ÍµÄ¶ÔÏó
-//	 *	@return ¶ËÎ²µÄ¶ÔÏó»ò¿Õ
-//	 *	@throws NullPointerException TableÄÚÈİÎª¿ÕÊ±
+//	 * è¯¥å‡½æ•°å°†ç”¨äºè·å¾—tableå°¾å·´çš„å¯¹è±¡
+//	 *	@return ç«¯å°¾çš„å¯¹è±¡æˆ–ç©º
+//	 *	@throws NullPointerException Tableå†…å®¹ä¸ºç©ºæ—¶
 //	 */
 //	Item getLastItem()throws NullPointerException{
 //		
@@ -95,7 +95,7 @@ public class Table implements  Cloneable{
 //	}
 	
 	/**
-	 * ±£´æµ±Ç°×´Ì¬¸±±¾
+	 * ä¿å­˜å½“å‰çŠ¶æ€å‰¯æœ¬
 	 *	@return
 	 */
 	public Table getTable() {
@@ -113,7 +113,7 @@ public class Table implements  Cloneable{
 	
 	
 	/**
-	 * ÉèÖÃ
+	 * è®¾ç½®
 	 *	@param items
 	 */
 	protected void setItems(ArrayList<Item> items) {
@@ -121,7 +121,7 @@ public class Table implements  Cloneable{
 	}
 	
 	/**
-	 * Éî¿ËÂ¡·½·¨
+	 * æ·±å…‹éš†æ–¹æ³•
 	 */
 	protected Object clone() throws CloneNotSupportedException {
 		// TODO 

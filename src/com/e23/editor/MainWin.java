@@ -35,66 +35,66 @@ public class MainWin extends JFrame {
 	Compiler compiler;
 	ConsoleFrame consoleFrame = new ConsoleFrame();
 
-	// ²¼¾ÖÉùÃ÷
+	// å¸ƒå±€å£°æ˜
 	private GridBagLayout editGridBagLayout = new GridBagLayout();
 	private GridBagConstraints gbc = new GridBagConstraints();
 	private File fileEditing = null;
 
-	// Ö¸¶¨´°Ìå¾àÕû¸öÆÁÄ»µÄ¼äÏ¶
+	// æŒ‡å®šçª—ä½“è·æ•´ä¸ªå±å¹•çš„é—´éš™
 	private int inset = 50;
 
-	// TODO ²Ëµ¥¶ÔÏóÉùÃ÷
+	// TODO èœå•å¯¹è±¡å£°æ˜
 	private MenuBar menuBar = new MenuBar();
 
-	Menu file = new Menu("ÎÄ¼ş");
-	Menu edit = new Menu("±à¼­");
-	Menu format = new Menu("¸ñÊ½");
-	Menu run = new Menu("ÔËĞĞ");
-	Menu debug = new Menu("µ÷ÊÔ");
-	Menu help = new Menu("°ïÖú");
+	Menu file = new Menu("æ–‡ä»¶");
+	Menu edit = new Menu("ç¼–è¾‘");
+	Menu format = new Menu("æ ¼å¼");
+	Menu run = new Menu("è¿è¡Œ");
+	Menu debug = new Menu("è°ƒè¯•");
+	Menu help = new Menu("å¸®åŠ©");
 
-	MenuItem newItem = new MenuItem("ĞÂ½¨", new MenuShortcut(KeyEvent.VK_N));
-	MenuItem openItem = new MenuItem("´ò¿ª...", new MenuShortcut(KeyEvent.VK_O));
-	MenuItem saveItem = new MenuItem("±£´æ", new MenuShortcut(KeyEvent.VK_S));
-	MenuItem saveAsItem = new MenuItem("Áí´æÎª...");
-	MenuItem exitItem = new MenuItem("ÍË³ö", new MenuShortcut(KeyEvent.VK_Q));
-	// CheckboxMenuItem autoWrap = new CheckboxMenuItem("×Ô¶¯»»ĞĞ");
-	MenuItem undoItem = new MenuItem("³·Ïú", new MenuShortcut(KeyEvent.VK_Z));
-	MenuItem redoItem = new MenuItem("ÖØ×ö", new MenuShortcut(KeyEvent.VK_Y));
-	MenuItem cutItem = new MenuItem("¼ôÇĞ", new MenuShortcut(KeyEvent.VK_X));
-	MenuItem copyItem = new MenuItem("¸´ÖÆ", new MenuShortcut(KeyEvent.VK_C));
-	MenuItem pasteItem = new MenuItem("Õ³Ìù", new MenuShortcut(KeyEvent.VK_V));
-	// ´´½¨commentItem²Ëµ¥Ïî£¬Ö¸¶¨Ê¹ÓÃ Ctrl+Shift+/ ¿ì½İ¼ü
-	MenuItem commentItem = new MenuItem("×¢ÊÍ", new MenuShortcut(KeyEvent.VK_SLASH));
-	MenuItem cancelItem = new MenuItem("È¡Ïû×¢ÊÍ", new MenuShortcut(KeyEvent.VK_SLASH, true));
+	MenuItem newItem = new MenuItem("æ–°å»º", new MenuShortcut(KeyEvent.VK_N));
+	MenuItem openItem = new MenuItem("æ‰“å¼€...", new MenuShortcut(KeyEvent.VK_O));
+	MenuItem saveItem = new MenuItem("ä¿å­˜", new MenuShortcut(KeyEvent.VK_S));
+	MenuItem saveAsItem = new MenuItem("å¦å­˜ä¸º...");
+	MenuItem exitItem = new MenuItem("é€€å‡º", new MenuShortcut(KeyEvent.VK_Q));
+	// CheckboxMenuItem autoWrap = new CheckboxMenuItem("è‡ªåŠ¨æ¢è¡Œ");
+	MenuItem undoItem = new MenuItem("æ’¤é”€", new MenuShortcut(KeyEvent.VK_Z));
+	MenuItem redoItem = new MenuItem("é‡åš", new MenuShortcut(KeyEvent.VK_Y));
+	MenuItem cutItem = new MenuItem("å‰ªåˆ‡", new MenuShortcut(KeyEvent.VK_X));
+	MenuItem copyItem = new MenuItem("å¤åˆ¶", new MenuShortcut(KeyEvent.VK_C));
+	MenuItem pasteItem = new MenuItem("ç²˜è´´", new MenuShortcut(KeyEvent.VK_V));
+	// åˆ›å»ºcommentItemèœå•é¡¹ï¼ŒæŒ‡å®šä½¿ç”¨ Ctrl+Shift+/ å¿«æ·é”®
+	MenuItem commentItem = new MenuItem("æ³¨é‡Š", new MenuShortcut(KeyEvent.VK_SLASH));
+	MenuItem cancelItem = new MenuItem("å–æ¶ˆæ³¨é‡Š", new MenuShortcut(KeyEvent.VK_SLASH, true));
 
-	MenuItem buildItem = new MenuItem("¹¹½¨", new MenuShortcut(KeyEvent.VK_F5));
-	MenuItem execItem = new MenuItem("ÔËĞĞ", new MenuShortcut(KeyEvent.VK_F5, true));
-	MenuItem clearItem = new MenuItem("Çå¿Õ¿ØÖÆÌ¨");
+	MenuItem buildItem = new MenuItem("æ„å»º", new MenuShortcut(KeyEvent.VK_F5));
+	MenuItem execItem = new MenuItem("è¿è¡Œ", new MenuShortcut(KeyEvent.VK_F5, true));
+	MenuItem clearItem = new MenuItem("æ¸…ç©ºæ§åˆ¶å°");
 
-	MenuItem debugController = new MenuItem("Æô¶¯µ÷ÊÔ");
-	MenuItem stepInto = new MenuItem("µ¥²½", new MenuShortcut(KeyEvent.VK_F9));
-	MenuItem stepOver = new MenuItem("µ¥ĞĞ", new MenuShortcut(KeyEvent.VK_F10));
+	MenuItem debugController = new MenuItem("å¯åŠ¨è°ƒè¯•");
+	MenuItem stepInto = new MenuItem("å•æ­¥", new MenuShortcut(KeyEvent.VK_F9));
+	MenuItem stepOver = new MenuItem("å•è¡Œ", new MenuShortcut(KeyEvent.VK_F10));
 
-	MenuItem helpItem = new MenuItem("°ïÖú", new MenuShortcut(KeyEvent.VK_F1));
-	MenuItem aboutItem = new MenuItem("¹ØÓÚ");
+	MenuItem helpItem = new MenuItem("å¸®åŠ©", new MenuShortcut(KeyEvent.VK_F1));
+	MenuItem aboutItem = new MenuItem("å…³äº");
 
-	private FileDialog openDia = new FileDialog(this, "´ò¿ªÎÄ¼ş", FileDialog.LOAD); // ´ò¿ª¶Ô»°¿ò
-	private FileDialog saveDia = new FileDialog(this, "ÎÄ¼ş±£´æ", FileDialog.SAVE); // ±£´æ¶Ô»°¿ò
+	private FileDialog openDia = new FileDialog(this, "æ‰“å¼€æ–‡ä»¶", FileDialog.LOAD); // æ‰“å¼€å¯¹è¯æ¡†
+	private FileDialog saveDia = new FileDialog(this, "æ–‡ä»¶ä¿å­˜", FileDialog.SAVE); // ä¿å­˜å¯¹è¯æ¡†
 
 	/**
-	 * ¹¹Ôìº¯Êı£¬
+	 * æ„é€ å‡½æ•°ï¼Œ
 	 * 
 	 * @param title
-	 *            ´°ÌåµÄ±êÌâÃû
+	 *            çª—ä½“çš„æ ‡é¢˜å
 	 */
 	public MainWin(String title) {
 		super(title);
 
-		// TODO ²Ëµ¥ÉèÖÃ
+		// TODO èœå•è®¾ç½®
 		configMenu();
 		setMenuBar(menuBar);
-		// TODO ´°Ìå×é¼şÌí¼ÓÉèÖÃ
+		// TODO çª—ä½“ç»„ä»¶æ·»åŠ è®¾ç½®
 		setLayout(editGridBagLayout);
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.weightx = 1;
@@ -106,7 +106,7 @@ public class MainWin extends JFrame {
 		add(scrollPane);
 
 		gbc.weighty = 0;
-		Label label = new Label("±àÒëÈÕÖ¾ - log");
+		Label label = new Label("ç¼–è¯‘æ—¥å¿— - log");
 		editGridBagLayout.setConstraints(label, gbc);
 		add(label);
 
@@ -116,7 +116,7 @@ public class MainWin extends JFrame {
 		editGridBagLayout.setConstraints(scrollPane, gbc);
 		add(scrollPane);
 
-		// TODO ´°ÌåÉèÖÃ
+		// TODO çª—ä½“è®¾ç½®
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		setBounds(inset, inset, screenSize.width - inset * 2, screenSize.height - inset * 2);
@@ -132,7 +132,7 @@ public class MainWin extends JFrame {
 			String text = mainTextPane.getText();
 
 			if (text.equals("")) {
-				logOutPut.setText(logOutPut.getText() + "\n´íÎó£ºÎŞÔ´ÎÄ¼ş¿É±àÒë£¡");
+				logOutPut.setText(logOutPut.getText() + "\né”™è¯¯ï¼šæ— æºæ–‡ä»¶å¯ç¼–è¯‘ï¼");
 				bufw.close();
 				return false;
 			}
@@ -140,13 +140,13 @@ public class MainWin extends JFrame {
 
 			bufw.close();
 		} catch (IOException ex) {
-			throw new RuntimeException("ÎÄ¼ş±£´æÊ§°Ü£¡");
+			throw new RuntimeException("æ–‡ä»¶ä¿å­˜å¤±è´¥ï¼");
 		}
 
 		compiler = new Compiler(consoleFrame, "builf_temp");
 		String buildRes = compiler.build();
 		if (buildRes.equals("")) {
-			logOutPut.setText(logOutPut.getText() + "\n" + "±àÒë³É¹¦£¡");
+			logOutPut.setText(logOutPut.getText() + "\n" + "ç¼–è¯‘æˆåŠŸï¼");
 			return true;
 		} else {
 			logOutPut.setText(logOutPut.getText() + "\n" + buildRes);
@@ -156,7 +156,7 @@ public class MainWin extends JFrame {
 	}
 
 	/**
-	 * ÅäÖÃ²Ëµ¥Ïî£¬²¢Ìí¼ÓÏàÓ¦µÄ¼àÌıÆ÷
+	 * é…ç½®èœå•é¡¹ï¼Œå¹¶æ·»åŠ ç›¸åº”çš„ç›‘å¬å™¨
 	 */
 	private void configMenu() {
 
@@ -193,7 +193,7 @@ public class MainWin extends JFrame {
 		menuBar.add(debug);
 		menuBar.add(help);
 
-		// TODO Ìí¼ÓÎÄ¼ş±£´æ¼àÌı
+		// TODO æ·»åŠ æ–‡ä»¶ä¿å­˜ç›‘å¬
 		saveItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (fileEditing == null) {
@@ -204,7 +204,7 @@ public class MainWin extends JFrame {
 					if (dirPath == null || fileName == null)
 						return;
 					fileEditing = new File(dirPath, fileName);
-					setTitle(fileName + " - PL0±àÒëÆ÷");
+					setTitle(fileName + " - PL0ç¼–è¯‘å™¨");
 				}
 
 				try {
@@ -216,12 +216,12 @@ public class MainWin extends JFrame {
 
 					bufw.close();
 				} catch (IOException ex) {
-					throw new RuntimeException("ÎÄ¼ş±£´æÊ§°Ü£¡");
+					throw new RuntimeException("æ–‡ä»¶ä¿å­˜å¤±è´¥ï¼");
 				}
 			}
 		});
 
-		// TODO Ìí¼ÓÁí´æÎª¼àÌı
+		// TODO æ·»åŠ å¦å­˜ä¸ºç›‘å¬
 		saveAsItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -232,7 +232,7 @@ public class MainWin extends JFrame {
 				if (dirPath == null || fileName == null)
 					return;
 				fileEditing = new File(dirPath, fileName);
-				setTitle(fileName + " - PL0±àÒëÆ÷");
+				setTitle(fileName + " - PL0ç¼–è¯‘å™¨");
 
 				try {
 					BufferedWriter bufw = new BufferedWriter(new FileWriter(fileEditing));
@@ -243,39 +243,39 @@ public class MainWin extends JFrame {
 
 					bufw.close();
 				} catch (IOException ex) {
-					throw new RuntimeException("ÎÄ¼ş±£´æÊ§°Ü£¡");
+					throw new RuntimeException("æ–‡ä»¶ä¿å­˜å¤±è´¥ï¼");
 				}
 			}
 
 		});
 
-		// TODO Ìí¼ÓĞÂ½¨ÎÄ¼ş¼àÌı
+		// TODO æ·»åŠ æ–°å»ºæ–‡ä»¶ç›‘å¬
 		newItem.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				mainTextPane.setText("");// Çå¿ÕÎÄ±¾
+				mainTextPane.setText("");// æ¸…ç©ºæ–‡æœ¬
 				fileEditing = null;
-				setTitle("ĞÂ½¨ÎÄ¼ş" + " - PL0±àÒëÆ÷");
+				setTitle("æ–°å»ºæ–‡ä»¶" + " - PL0ç¼–è¯‘å™¨");
 			}
 		});
 
-		// TODO Ìí¼Ó´ò¿ªÎÄ¼ş¼àÌı
+		// TODO æ·»åŠ æ‰“å¼€æ–‡ä»¶ç›‘å¬
 		openItem.addActionListener(new ActionListener() {
-			// ÉèÖÃ´ò¿ªÎÄ¼ş¹¦ÄÜ
+			// è®¾ç½®æ‰“å¼€æ–‡ä»¶åŠŸèƒ½
 			public void actionPerformed(ActionEvent e) {
 				openDia.setVisible(true);
-				String dirPath = openDia.getDirectory();// »ñÈ¡ÎÄ¼şÂ·¾¶
-				String fileName = openDia.getFile();// »ñÈ¡ÎÄ¼şÃû³Æ
+				String dirPath = openDia.getDirectory();// è·å–æ–‡ä»¶è·¯å¾„
+				String fileName = openDia.getFile();// è·å–æ–‡ä»¶åç§°
 				// System.out.println(dirPath +"++"+ fileName);
 
-				// Èç¹û´ò¿ªÂ·¾¶ »ò Ä¿Â¼Îª¿Õ Ôò·µ»Ø¿Õ
+				// å¦‚æœæ‰“å¼€è·¯å¾„ æˆ– ç›®å½•ä¸ºç©º åˆ™è¿”å›ç©º
 				if (dirPath == null || fileName == null)
 					return;
 
-				mainTextPane.setText("");// Çå¿ÕÎÄ±¾
+				mainTextPane.setText("");// æ¸…ç©ºæ–‡æœ¬
 
 				fileEditing = new File(dirPath, fileName);
-				setTitle(fileName + " - PL0±àÒëÆ÷");
+				setTitle(fileName + " - PL0ç¼–è¯‘å™¨");
 
 				try {
 					BufferedReader bufr = new BufferedReader(new FileReader(fileEditing));
@@ -288,28 +288,28 @@ public class MainWin extends JFrame {
 					mainTextPane.syntaxParseAll();
 					bufr.close();
 				} catch (IOException ex) {
-					throw new RuntimeException("ÎÄ¼ş¶ÁÈ¡Ê§°Ü£¡");
+					throw new RuntimeException("æ–‡ä»¶è¯»å–å¤±è´¥ï¼");
 				}
 
 			}
 		});
 
-		// TODO Ìí¼ÓÍË³ö°´¼ü¼àÌı
+		// TODO æ·»åŠ é€€å‡ºæŒ‰é”®ç›‘å¬
 		exitItem.addActionListener(new ActionListener() {
-			// ÉèÖÃÍË³ö¹¦ÄÜ
+			// è®¾ç½®é€€å‡ºåŠŸèƒ½
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0);
 			}
 		});
 
-		// TODO Ìí¼ÓÖ÷´°Ìå¹Ø±Õ¼àÌı
+		// TODO æ·»åŠ ä¸»çª—ä½“å…³é—­ç›‘å¬
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				System.exit(0);
 			}
 		});
 
-		// TODO Ìí¼Ó¹¹½¨¼àÌı
+		// TODO æ·»åŠ æ„å»ºç›‘å¬
 		buildItem.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -317,23 +317,23 @@ public class MainWin extends JFrame {
 			}
 		});
 
-		// TODO Ìí¼ÓÌí¼ÓÖ´ĞĞ¼àÌı
+		// TODO æ·»åŠ æ·»åŠ æ‰§è¡Œç›‘å¬
 		execItem.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				try {
 					consoleFrame.clear();
-					consoleFrame.outString("³ÌĞò¿ªÊ¼ÔËĞĞ\n");
+					consoleFrame.outString("ç¨‹åºå¼€å§‹è¿è¡Œ\n");
 					compiler.exec();
 					consoleFrame.setVisible(true);
 				} catch (NullPointerException e2) {
-					logOutPut.setText(logOutPut.getText() + "\n´íÎó£ºÔËĞĞÇ°ÇëÏÈ±àÒëÒ»´Î£¡");
+					logOutPut.setText(logOutPut.getText() + "\né”™è¯¯ï¼šè¿è¡Œå‰è¯·å…ˆç¼–è¯‘ä¸€æ¬¡ï¼");
 				}
 
 			}
 		});
 
-		//TODO ¿ØÖÆÌ¨ÄÚÈİÇå¿Õ¼àÌı
+		//TODO æ§åˆ¶å°å†…å®¹æ¸…ç©ºç›‘å¬
 		clearItem.addActionListener(new ActionListener() {
 
 			@Override
@@ -342,7 +342,7 @@ public class MainWin extends JFrame {
 			}
 		});
 
-		//TODO Æô¶¯µ÷ÊÔ¼àÌı
+		//TODO å¯åŠ¨è°ƒè¯•ç›‘å¬
 		debugController.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -360,6 +360,6 @@ public class MainWin extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new MainWin("PL0±àÒëÆ÷");
+		new MainWin("PL0ç¼–è¯‘å™¨");
 	}
 }

@@ -2,7 +2,7 @@ package com.e23.compiler;
 
 public class ConstItem extends Item {
 
-	private int 		val;		//const ÊıÖµ
+	private int 		val;		//const æ•°å€¼
 	
 
 	public ConstItem(ObjectKind kind, String name, int val) throws CompilerException{
@@ -22,7 +22,7 @@ public class ConstItem extends Item {
 
 
 	/**
-	 * ÊµÏÖConstItemµÄÉî¸´ÖÆ
+	 * å®ç°ConstItemçš„æ·±å¤åˆ¶
 	 * @Override
 	 */
 	protected Item clone() {

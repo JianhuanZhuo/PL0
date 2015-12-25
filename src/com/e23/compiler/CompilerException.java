@@ -50,25 +50,25 @@ public class CompilerException extends Exception {
 	}
 
 	/**
-	 * »ñµÃ¸ÃÒì³£µÄÏêÏ¸´íÎóĞÅÏ¢
+	 * è·å¾—è¯¥å¼‚å¸¸çš„è¯¦ç»†é”™è¯¯ä¿¡æ¯
 	 * 
-	 * @return ÏêÏ¸´íÎóĞÅÏ¢
+	 * @return è¯¦ç»†é”™è¯¯ä¿¡æ¯
 	 */
 	public String ErrorMessage() {
 		return "EEROR " + errorNum + ":  " + err_msg[errorNum];
 	}
 
 	/**
-	 * »ñµÃÒì³£µÄ´íÎóºÅ
+	 * è·å¾—å¼‚å¸¸çš„é”™è¯¯å·
 	 * 
-	 * @return ´íÎóºÅ
+	 * @return é”™è¯¯å·
 	 */
 	public int getErrorNum() {
 		return errorNum;
 	}
 
 	/**
-	 * »ñµÃÖ¸¶¨´íÎóºÅµÄ¾ßÌå´íÎóĞÅÏ¢
+	 * è·å¾—æŒ‡å®šé”™è¯¯å·çš„å…·ä½“é”™è¯¯ä¿¡æ¯
 	 * 
 	 * @param errorNum
 	 * @return

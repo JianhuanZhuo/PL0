@@ -17,56 +17,56 @@ import javax.swing.text.StyledDocument;
 public class MainTextPane extends JTextPane {
 
 	/**
-	 * ´®ĞĞ°æ±¾ID
+	 * ä¸²è¡Œç‰ˆæœ¬ID
 	 */
 	private static final long serialVersionUID = 6570307684186770261L;
 
 	protected StyledDocument doc;
 	protected SyntaxFormatter formatter = new SyntaxFormatter("PL0style.stx");
-	// ¶¨Òå¸ÃÎÄµµµÄÆÕÍ¨ÎÄ±¾µÄÍâ¹ÛÊôĞÔ
+	// å®šä¹‰è¯¥æ–‡æ¡£çš„æ™®é€šæ–‡æœ¬çš„å¤–è§‚å±æ€§
 	private SimpleAttributeSet normalAttr = formatter.getNormalAttributeSet();
 	private SimpleAttributeSet quotAttr = new SimpleAttributeSet();
-	// ±£´æÎÄµµ¸Ä±äµÄ¿ªÊ¼Î»ÖÃ
+	// ä¿å­˜æ–‡æ¡£æ”¹å˜çš„å¼€å§‹ä½ç½®
 	private int docChangeStart = 0;
-	// ±£´æÎÄµµ¸Ä±äµÄ³¤¶È
+	// ä¿å­˜æ–‡æ¡£æ”¹å˜çš„é•¿åº¦
 	private int docChangeLength = 0;
 
 	public MainTextPane() {
 		StyleConstants.setForeground(quotAttr, new Color(255, 0, 255));
 		StyleConstants.setFontSize(quotAttr, 16);
 		this.doc = super.getStyledDocument();
-		// ÉèÖÃ¸ÃÎÄµµµÄÒ³±ß¾à
+		// è®¾ç½®è¯¥æ–‡æ¡£çš„é¡µè¾¹è·
 		this.setMargin(new Insets(3, 40, 0, 0));
-		// Ìí¼Ó°´¼ü¼àÌıÆ÷£¬µ±°´¼üËÉ¿ªÊ±½øĞĞÓï·¨·ÖÎö
+		// æ·»åŠ æŒ‰é”®ç›‘å¬å™¨ï¼Œå½“æŒ‰é”®æ¾å¼€æ—¶è¿›è¡Œè¯­æ³•åˆ†æ
 		this.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent ke) {
 				syntaxParse();
 			}
 		});
-		// Ìí¼ÓÎÄµµ¼àÌıÆ÷
+		// æ·»åŠ æ–‡æ¡£ç›‘å¬å™¨
 		doc.addDocumentListener(new DocumentListener() {
-			// µ±DocumentµÄÊôĞÔ»òÊôĞÔ¼¯·¢ÉúÁË¸Ä±äÊ±´¥·¢¸Ã·½·¨
+			// å½“Documentçš„å±æ€§æˆ–å±æ€§é›†å‘ç”Ÿäº†æ”¹å˜æ—¶è§¦å‘è¯¥æ–¹æ³•
 			public void changedUpdate(DocumentEvent e) {
 			}
 
-			// µ±ÏòDocumentÖĞ²åÈëÎÄ±¾Ê±´¥·¢¸Ã·½·¨
+			// å½“å‘Documentä¸­æ’å…¥æ–‡æœ¬æ—¶è§¦å‘è¯¥æ–¹æ³•
 			public void insertUpdate(DocumentEvent e) {
 				docChangeStart = e.getOffset();
 				docChangeLength = e.getLength();
 			}
 
-			// µ±´ÓDocumentÖĞÉ¾³ıÎÄ±¾Ê±´¥·¢¸Ã·½·¨
+			// å½“ä»Documentä¸­åˆ é™¤æ–‡æœ¬æ—¶è§¦å‘è¯¥æ–¹æ³•
 			public void removeUpdate(DocumentEvent e) {
 			}
 		});
 	}
 
 	/**
-	 * ¼ì²éÎÄµµÈ«²¿ÄÚÈİµÄ×ÅÉ«
+	 * æ£€æŸ¥æ–‡æ¡£å…¨éƒ¨å†…å®¹çš„ç€è‰²
 	 */
 	public void syntaxParseAll() {
 
-		// »ñÈ¡ÎÄµµµÄ¸ùÔªËØ£¬¼´ÎÄµµÄÚµÄÈ«²¿ÄÚÈİ
+		// è·å–æ–‡æ¡£çš„æ ¹å…ƒç´ ï¼Œå³æ–‡æ¡£å†…çš„å…¨éƒ¨å†…å®¹
 		Element root = doc.getDefaultRootElement();
 		for (int i = 0; i < root.getElementCount(); i++) {
 			syntaxLine(i);
@@ -75,32 +75,32 @@ public class MainTextPane extends JTextPane {
 
 
 	/**
-	 * ¼ì²éÎÄµµÖ¸¶¨ĞĞµÄ×ÅÉ«
+	 * æ£€æŸ¥æ–‡æ¡£æŒ‡å®šè¡Œçš„ç€è‰²
 	 */
 	public void syntaxLine(int line) {
 
 		try {
-			// »ñÈ¡ÎÄµµµÄ¸ùÔªËØ£¬¼´ÎÄµµÄÚµÄÈ«²¿ÄÚÈİ
+			// è·å–æ–‡æ¡£çš„æ ¹å…ƒç´ ï¼Œå³æ–‡æ¡£å†…çš„å…¨éƒ¨å†…å®¹
 			Element root = doc.getDefaultRootElement();
-			// »ñÈ¡¹â±êËùÔÚÎ»ÖÃµÄĞĞ
+			// è·å–å…‰æ ‡æ‰€åœ¨ä½ç½®çš„è¡Œ
 			Element para = root.getElement(line);
-			// ¶¨Òå¹â±êËùÔÚĞĞµÄĞĞÍ·ÔÚÎÄµµÖĞÎ»ÖÃ
+			// å®šä¹‰å…‰æ ‡æ‰€åœ¨è¡Œçš„è¡Œå¤´åœ¨æ–‡æ¡£ä¸­ä½ç½®
 			int start = para.getStartOffset();
-			// ÈÃstartµÈÓÚstartÓëdocChangeStartÖĞ½ÏĞ¡Öµ¡£
+			// è®©startç­‰äºstartä¸docChangeStartä¸­è¾ƒå°å€¼ã€‚
 			start = start > docChangeStart ? docChangeStart : start;
-			// ¶¨Òå±»ĞŞ¸Ä²¿·ÖµÄ³¤¶È
+			// å®šä¹‰è¢«ä¿®æ”¹éƒ¨åˆ†çš„é•¿åº¦
 			int length = para.getEndOffset() - start;
 			length = length < docChangeLength ? docChangeLength + 1 : length;
-			// È¡³öËùÓĞ¿ÉÄÜ±»ĞŞ¸ÄµÄ×Ö·û´®
+			// å–å‡ºæ‰€æœ‰å¯èƒ½è¢«ä¿®æ”¹çš„å­—ç¬¦ä¸²
 			String s = doc.getText(start, length);
-			// ÒÔ¿Õ¸ñ¡¢µãºÅµÈ×÷Îª·Ö¸ô·û
+			// ä»¥ç©ºæ ¼ã€ç‚¹å·ç­‰ä½œä¸ºåˆ†éš”ç¬¦
 			String[] tokens = s.split("\\s+|\\.|\\(|\\)|\\{|\\}|\\[|\\]");
-			// ¶¨Òåµ±Ç°·ÖÎöµ¥´ÊµÄÔÚs×Ö·û´®ÖĞµÄ¿ªÊ¼Î»ÖÃ
+			// å®šä¹‰å½“å‰åˆ†æå•è¯çš„åœ¨så­—ç¬¦ä¸²ä¸­çš„å¼€å§‹ä½ç½®
 			int curStart = 0;
-			// ¶¨Òåµ¥´ÊÊÇ·ñ´¦ÓÚÒıºÅÒÔÄÚ
+			// å®šä¹‰å•è¯æ˜¯å¦å¤„äºå¼•å·ä»¥å†…
 			boolean isQuot = false;
 			for (String token : tokens) {
-				// ÕÒ³öµ±Ç°·ÖÎöµ¥´ÊÔÚs×Ö·û´®ÖĞµÄÎ»ÖÃ
+				// æ‰¾å‡ºå½“å‰åˆ†æå•è¯åœ¨så­—ç¬¦ä¸²ä¸­çš„ä½ç½®
 				int tokenPos = s.indexOf(token, curStart);
 				if (isQuot && (token.endsWith("\"") || token.endsWith("\'"))) {
 					doc.setCharacterAttributes(start + tokenPos, token.length(), quotAttr, false);
@@ -115,10 +115,10 @@ public class MainTextPane extends JTextPane {
 					doc.setCharacterAttributes(start + tokenPos, token.length(), quotAttr, false);
 					isQuot = true;
 				} else {
-					// Ê¹ÓÃ¸ñÊ½Æ÷¶Ôµ±Ç°µ¥´ÊÉèÖÃÑÕÉ«
+					// ä½¿ç”¨æ ¼å¼å™¨å¯¹å½“å‰å•è¯è®¾ç½®é¢œè‰²
 					formatter.setHighLight(doc, token, start + tokenPos, token.length());
 				}
-				// ¿ªÊ¼·ÖÎöÏÂÒ»¸öµ¥´Ê
+				// å¼€å§‹åˆ†æä¸‹ä¸€ä¸ªå•è¯
 				curStart = tokenPos + token.length();
 			}
 
@@ -128,31 +128,31 @@ public class MainTextPane extends JTextPane {
 	}
 
 	/**
-	 * ¼ì²é¹â±êËùÔÚĞĞµÄ×÷É«
+	 * æ£€æŸ¥å…‰æ ‡æ‰€åœ¨è¡Œçš„ä½œè‰²
 	 */
 	public void syntaxParse() {
 
-		// »ñÈ¡ÎÄµµµÄ¸ùÔªËØ£¬¼´ÎÄµµÄÚµÄÈ«²¿ÄÚÈİ
+		// è·å–æ–‡æ¡£çš„æ ¹å…ƒç´ ï¼Œå³æ–‡æ¡£å†…çš„å…¨éƒ¨å†…å®¹
 		Element root = doc.getDefaultRootElement();
-		// »ñÈ¡ÎÄµµÖĞ¹â±ê²åÈë·ûµÄÎ»ÖÃ
+		// è·å–æ–‡æ¡£ä¸­å…‰æ ‡æ’å…¥ç¬¦çš„ä½ç½®
 		int cursorPos = this.getCaretPosition();
 		int line = root.getElementIndex(cursorPos);
 		syntaxLine(line);
 	}
 
-	// ÖØ»­¸Ã×é¼ş£¬ÉèÖÃĞĞºÅ
+	// é‡ç”»è¯¥ç»„ä»¶ï¼Œè®¾ç½®è¡Œå·
 	public void paint(Graphics g) {
 		super.paint(g);
 		Element root = doc.getDefaultRootElement();
-		// »ñµÃĞĞºÅ
+		// è·å¾—è¡Œå·
 		int line = root.getElementIndex(doc.getLength());
-		// ÉèÖÃÑÕÉ«
+		// è®¾ç½®é¢œè‰²
 		g.setColor(new Color(230, 230, 230));
-		// »æÖÆÏÔÊ¾ĞĞÊıµÄ¾ØĞÎ¿ò
+		// ç»˜åˆ¶æ˜¾ç¤ºè¡Œæ•°çš„çŸ©å½¢æ¡†
 		g.fillRect(0, 0, this.getMargin().left - 10, getSize().height);
-		// ÉèÖÃĞĞºÅµÄÑÕÉ«
+		// è®¾ç½®è¡Œå·çš„é¢œè‰²
 		g.setColor(new Color(40, 40, 40));
-		// Ã¿ĞĞ»æÖÆÒ»¸öĞĞºÅ
+		// æ¯è¡Œç»˜åˆ¶ä¸€ä¸ªè¡Œå·
 		for (int count = 0, j = 1; count <= line; count++, j++) {
 			g.drawString(String.valueOf(j), 3, (int) ((count + 1) * 1.375 * StyleConstants.getFontSize(normalAttr)));
 		}

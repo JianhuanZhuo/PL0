@@ -13,27 +13,27 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 /**
- * Óï·¨¸ñÊ½Æ÷ ÓÃÓÚ¶¨ÒåÒ»¸öÓï·¨ÑùÊ½¸ñÊ½¶¨ÒåµÄÀà
+ * è¯­æ³•æ ¼å¼å™¨ ç”¨äºå®šä¹‰ä¸€ä¸ªè¯­æ³•æ ·å¼æ ¼å¼å®šä¹‰çš„ç±»
  * 
  * @author ZhuoJianHuan
- * @date 2015Äê6ÔÂ22ÈÕ
+ * @date 2015å¹´6æœˆ22æ—¥
  */
 public class SyntaxFormatter {
 
 	/**
-	 * ÒÔÒ»¸öMap±£´æ¹Ø¼ü×ÖºÍÑÕÉ«µÄ¶ÔÓ¦¹ØÏµ
+	 * ä»¥ä¸€ä¸ªMapä¿å­˜å…³é”®å­—å’Œé¢œè‰²çš„å¯¹åº”å…³ç³»
 	 */
-	private Map<SimpleAttributeSet, ArrayList<String>> attMap = new HashMap<SimpleAttributeSet, ArrayList<String>>();
+	private Map<SimpleAttributeSet, ArrayList<String>> attMap = new HashMap<>();
 
 	/**
-	 * ¶¨ÒåÎÄµµµÄÕı³£ÎÄ±¾µÄÍâ¹ÛÊôĞÔ
+	 * å®šä¹‰æ–‡æ¡£çš„æ­£å¸¸æ–‡æœ¬çš„å¤–è§‚å±æ€§
 	 */
 	SimpleAttributeSet normalAttr = new SimpleAttributeSet();
 
 	/**
-	 * Óï·¨¸÷Ê±ÆÚµÄ¹¹Ôìº¯Êı <br>
-	 * ¸ÃÎÄ¼şÒ»°ãÒÔ.stxÎªÎÄ¼şºó×º<br>
-	 * ÎÄ¼şÄÚÈİÎª:
+	 * è¯­æ³•å„æ—¶æœŸçš„æ„é€ å‡½æ•° <br>
+	 * è¯¥æ–‡ä»¶ä¸€èˆ¬ä»¥.stxä¸ºæ–‡ä»¶åç¼€<br>
+	 * æ–‡ä»¶å†…å®¹ä¸º:
 	 * 
 	 * <pre>
 	 * <B>#FF0000</B>
@@ -44,48 +44,48 @@ public class SyntaxFormatter {
 	 * Object
 	 * </pre>
 	 * 
-	 * µÚÒ»ĞĞ±íÊ¾Óû±íÏÖµÄÑÕÉ«£¬µÚ¶şĞĞ±íÊ¾Ö¸¶¨µÄ¹Ø¼ü×Ö
+	 * ç¬¬ä¸€è¡Œè¡¨ç¤ºæ¬²è¡¨ç°çš„é¢œè‰²ï¼Œç¬¬äºŒè¡Œè¡¨ç¤ºæŒ‡å®šçš„å…³é”®å­—
 	 * 
 	 * @param syntaxFile
 	 */
 	public SyntaxFormatter(String syntaxFile) {
-		// ÉèÖÃÕı³£ÎÄ±¾µÄÑÕÉ«¡¢´óĞ¡
+		// è®¾ç½®æ­£å¸¸æ–‡æœ¬çš„é¢œè‰²ã€å¤§å°
 		StyleConstants.setForeground(normalAttr, Color.BLACK);
 		StyleConstants.setFontSize(normalAttr, 16);
 		
-		//TODO ÉèÖÃ
+		//TODO è®¾ç½®
 		
-		//TODO ´´½¨Ò»¸öScanner¶ÔÏó£¬¸ºÔğ¸ù¾İÓï·¨ÎÄ¼ş¼ÓÔØÑÕÉ«ĞÅÏ¢
+		//TODO åˆ›å»ºä¸€ä¸ªScannerå¯¹è±¡ï¼Œè´Ÿè´£æ ¹æ®è¯­æ³•æ–‡ä»¶åŠ è½½é¢œè‰²ä¿¡æ¯
 		Scanner scaner = null;
 		try {
 			scaner = new Scanner(new File(syntaxFile));
 
 			int color = -1;
-			ArrayList<String> keywords = new ArrayList<String>();
-			// ²»¶Ï¶ÁÈ¡Óï·¨ÎÄ¼şµÄÄÚÈİĞĞ
+			ArrayList<String> keywords = new ArrayList<>();
+			// ä¸æ–­è¯»å–è¯­æ³•æ–‡ä»¶çš„å†…å®¹è¡Œ
 			while (scaner.hasNextLine()) {
 				String line = scaner.nextLine();
-				// Èç¹ûµ±Ç°ĞĞÒÔ#¿ªÍ·
+				// å¦‚æœå½“å‰è¡Œä»¥#å¼€å¤´
 				if (line.startsWith("#")) {
 					if (keywords.size() > 0 && color > -1) {
-						// È¡³öµ±Ç°ĞĞµÄÑÕÉ«Öµ£¬²¢·â×°³ÉSimpleAttributeSet¶ÔÏó
+						// å–å‡ºå½“å‰è¡Œçš„é¢œè‰²å€¼ï¼Œå¹¶å°è£…æˆSimpleAttributeSetå¯¹è±¡
 						SimpleAttributeSet att = new SimpleAttributeSet();
 						StyleConstants.setForeground(att, new Color(color));
 						StyleConstants.setFontSize(att, 16);
-						// ½«µ±Ç°ÑÕÉ«ºÍ¹Ø¼ü×ÖList¶ÔÓ¦ÆğÀ´
+						// å°†å½“å‰é¢œè‰²å’Œå…³é”®å­—Listå¯¹åº”èµ·æ¥
 						attMap.put(att, keywords);
 					}
-					// ÖØĞÂ´´½¨ĞÂµÄ¹Ø¼ü×ÖList£¬ÎªÏÂÒ»¸öÓï·¨¸ñÊ½×¼±¸
-					keywords = new ArrayList<String>();
+					// é‡æ–°åˆ›å»ºæ–°çš„å…³é”®å­—Listï¼Œä¸ºä¸‹ä¸€ä¸ªè¯­æ³•æ ¼å¼å‡†å¤‡
+					keywords = new ArrayList<>();
 					color = Integer.parseInt(line.substring(1), 16);
 				} else {
-					// ¶ÔÓÚÆÕÍ¨ĞĞ£¬Ã¿ĞĞÄÚÈİÌí¼Óµ½¹Ø¼ü×ÖListÀï
+					// å¯¹äºæ™®é€šè¡Œï¼Œæ¯è¡Œå†…å®¹æ·»åŠ åˆ°å…³é”®å­—Listé‡Œ
 					if (line.trim().length() > 0) {
 						keywords.add(line.trim());
 					}
 				}
 			}
-			// °ÑËùÓĞ¹Ø¼ü×ÖºÍÑÕÉ«¶ÔÓ¦ÆğÀ´
+			// æŠŠæ‰€æœ‰å…³é”®å­—å’Œé¢œè‰²å¯¹åº”èµ·æ¥
 			if (keywords.size() > 0 && color > -1) {
 				SimpleAttributeSet att = new SimpleAttributeSet();
 				StyleConstants.setForeground(att, new Color(color));
@@ -93,55 +93,55 @@ public class SyntaxFormatter {
 				attMap.put(att, keywords);
 			}
 		} catch (FileNotFoundException e) {
-			throw new RuntimeException("¶ªÊ§Óï·¨ÎÄ¼ş£º" + e.getMessage());
+			throw new RuntimeException("ä¸¢å¤±è¯­æ³•æ–‡ä»¶ï¼š" + e.getMessage());
 		} finally {
 			scaner.close();
 		}
 	}
 
 	/**
-	 * ·µ»Ø¸Ã¸ñÊ½Æ÷ÀïÕı³£ÎÄ±¾µÄÍâ¹ÛÊôĞÔ ³ıÈ¥ÌØÊâ¶¨ÒåµÄ¹Ø¼ü×Ö¡¢±í´ïÊ½Ö®ÍâµÄÎÄ±¾ÊÓÎªÕı³£ÎÄ±¾
+	 * è¿”å›è¯¥æ ¼å¼å™¨é‡Œæ­£å¸¸æ–‡æœ¬çš„å¤–è§‚å±æ€§ é™¤å»ç‰¹æ®Šå®šä¹‰çš„å…³é”®å­—ã€è¡¨è¾¾å¼ä¹‹å¤–çš„æ–‡æœ¬è§†ä¸ºæ­£å¸¸æ–‡æœ¬
 	 * 
-	 * @return Õı³£ÎÄ±¾µÄÍâ¹ÛÊôĞÔ¼¯
+	 * @return æ­£å¸¸æ–‡æœ¬çš„å¤–è§‚å±æ€§é›†
 	 */
 	public SimpleAttributeSet getNormalAttributeSet() {
 		return normalAttr;
 	}
 
 	/**
-	 * ÉèÖÃÓï·¨¸ßÁÁ
+	 * è®¾ç½®è¯­æ³•é«˜äº®
 	 * 
 	 * @param doc
-	 *            Ö¸¶¨µÄ¶ÎÂä
+	 *            æŒ‡å®šçš„æ®µè½
 	 * @param token
-	 *            ¶ÎÂäÖĞµÄÌØ¶¨¹Ø¼ü×Ö
+	 *            æ®µè½ä¸­çš„ç‰¹å®šå…³é”®å­—
 	 * @param start
-	 *            Ö¸¶¨¸ñÊ½´¦ÀíµÄÆğÊ¼Î»ÖÃ
+	 *            æŒ‡å®šæ ¼å¼å¤„ç†çš„èµ·å§‹ä½ç½®
 	 * @param length
-	 *            Ö¸¶¨¸ñÊ½´¦ÀíµÄ³¤¶È
+	 *            æŒ‡å®šæ ¼å¼å¤„ç†çš„é•¿åº¦
 	 */
 	public void setHighLight(StyledDocument doc, String token, int start, int length) {
-		// ±£´æĞèÒª¶Ôµ±Ç°µ¥´Ê¶ÔÓ¦µÄÍâ¹ÛÊôĞÔ
+		// ä¿å­˜éœ€è¦å¯¹å½“å‰å•è¯å¯¹åº”çš„å¤–è§‚å±æ€§
 		SimpleAttributeSet currentAttributeSet = null;
 		outer: for (SimpleAttributeSet att : attMap.keySet()) {
-			// È¡³öµ±Ç°ÑÕÉ«¶ÔÓ¦µÄËùÓĞ¹Ø¼ü×Ö
+			// å–å‡ºå½“å‰é¢œè‰²å¯¹åº”çš„æ‰€æœ‰å…³é”®å­—
 			ArrayList<String> keywords = attMap.get(att);
-			// ±éÀúËùÓĞ¹Ø¼ü×Ö
+			// éå†æ‰€æœ‰å…³é”®å­—
 			for (String keyword : keywords) {
-				// Èç¹û¸Ã¹Ø¼ü×ÖÓëµ±Ç°µ¥´ÊÏàÍ¬
+				// å¦‚æœè¯¥å…³é”®å­—ä¸å½“å‰å•è¯ç›¸åŒ
 				if (keyword.equals(token)) {
-					// Ìø³öÑ­»·£¬²¢ÉèÖÃµ±Ç°µ¥´Ê¶ÔÓ¦µÄÍâ¹ÛÊôĞÔ
+					// è·³å‡ºå¾ªç¯ï¼Œå¹¶è®¾ç½®å½“å‰å•è¯å¯¹åº”çš„å¤–è§‚å±æ€§
 					currentAttributeSet = att;
 					break outer;
 				}
 			}
 		}
-		// Èç¹ûµ±Ç°µ¥´Ê¶ÔÓ¦µÄÍâ¹ÛÊôĞÔ²»Îª¿Õ
+		// å¦‚æœå½“å‰å•è¯å¯¹åº”çš„å¤–è§‚å±æ€§ä¸ä¸ºç©º
 		if (currentAttributeSet != null) {
-			// ÉèÖÃµ±Ç°µ¥´ÊµÄÑÕÉ«
+			// è®¾ç½®å½“å‰å•è¯çš„é¢œè‰²
 			doc.setCharacterAttributes(start, length, currentAttributeSet, false);
 		}
-		// ·ñÔòÊ¹ÓÃÆÕÍ¨Íâ¹ÛÀ´ÉèÖÃ¸Ãµ¥´Ê
+		// å¦åˆ™ä½¿ç”¨æ™®é€šå¤–è§‚æ¥è®¾ç½®è¯¥å•è¯
 		else {
 			doc.setCharacterAttributes(start, length, normalAttr, false);
 		}

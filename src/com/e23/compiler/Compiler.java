@@ -5,22 +5,22 @@ import com.e23.compiler.Item.ObjectKind;
 public class Compiler {
 	
 	/**
-	 * ´úÂë½âÎöÆ÷
+	 * ä»£ç è§£æå™¨
 	 */
 	private Parser parser;
 	
 	/**
-	 * »ã±à´úÂë±í
+	 * æ±‡ç¼–ä»£ç è¡¨
 	 */
 	private Code code;
 	
 	/**
-	 * ¶ÔÏóĞÅÏ¢±í
+	 * å¯¹è±¡ä¿¡æ¯è¡¨
 	 */
 	private Table table;
 	
 	/**
-	 * ´íÎóĞÅÏ¢±í
+	 * é”™è¯¯ä¿¡æ¯è¡¨
 	 */
 	private ErrorMessage errorMessage;
 	
@@ -30,7 +30,7 @@ public class Compiler {
 	private consoleOutput consoleOutput;
 	
 	/**
-	 * Ö´ĞĞ½âÎöÆ÷
+	 * æ‰§è¡Œè§£æå™¨
 	 */
 	private Interpret interpret;
 	
@@ -48,7 +48,7 @@ public class Compiler {
 	
 	
 	/**
-	 * ¹¹½¨²¢Éú³É»ã±à´úÂë
+	 * æ„å»ºå¹¶ç”Ÿæˆæ±‡ç¼–ä»£ç 
 	 */
 	public String build() {
 		parser.blockPaser(Symbol.BLOCK_END_LIST, new ProcItem(ObjectKind.PROC, null, 0, 0));
@@ -56,14 +56,14 @@ public class Compiler {
 	}
 	
 	/**
-	 * Ö´ĞĞ
+	 * æ‰§è¡Œ
 	 */
 	public void exec() {
 		if (errorMessage.noError()) {
 			interpret.configConsole(consoleOutput);
 			interpret.exec();
 		}else {
-			consoleOutput.append("±àÒë¹ı³ÌÖĞÓĞ´íÎó£¡Çë¼ì²é¡£");
+			consoleOutput.append("ç¼–è¯‘è¿‡ç¨‹ä¸­æœ‰é”™è¯¯ï¼è¯·æ£€æŸ¥ã€‚");
 			consoleOutput.append(errorMessage.listError());
 		}
 	}
@@ -71,7 +71,7 @@ public class Compiler {
 	
 	
 	/**
-	 * µ÷ÊÔ
+	 * è°ƒè¯•
 	 */
 	public void debug() {
 		

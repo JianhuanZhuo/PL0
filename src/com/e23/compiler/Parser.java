@@ -6,34 +6,34 @@ import com.e23.compiler.Item.ObjectKind;
 public class Parser {
 
 	/**
-	 * »ã±à´úÂë±íÒıÓÃ
+	 * æ±‡ç¼–ä»£ç è¡¨å¼•ç”¨
 	 */
 	private Code code;
 
 	/**
-	 * ¶ÔÏóĞÅÏ¢±íÒıÓÃ
+	 * å¯¹è±¡ä¿¡æ¯è¡¨å¼•ç”¨
 	 */
 	private Table table;
 
 	/**
-	 * ´Ê·¨·ÖÎö
+	 * è¯æ³•åˆ†æ
 	 */
 	private Lexer lexer;
 
 	/**
-	 * ´íÎó¼ÇÂ¼¶ÔÏóÒıÓÃ
+	 * é”™è¯¯è®°å½•å¯¹è±¡å¼•ç”¨
 	 */
 	private ErrorMessage errorMessage;
 
 	/**
-	 * ´úÂë½âÎöÆ÷µÄ¹¹Ôì·½·¨
+	 * ä»£ç è§£æå™¨çš„æ„é€ æ–¹æ³•
 	 * 
 	 * @param filePath
-	 *            Óû½âÎöÎÄ¼şµÄÂ·¾¶
+	 *            æ¬²è§£ææ–‡ä»¶çš„è·¯å¾„
 	 * @param code
-	 *            ´úÂë¶ÔÏóÒıÓÃ
+	 *            ä»£ç å¯¹è±¡å¼•ç”¨
 	 * @param table
-	 *            ¶ÔÏóĞÅÏ¢±íÒıÓÃ
+	 *            å¯¹è±¡ä¿¡æ¯è¡¨å¼•ç”¨
 	 * @param errorMessage
 	 */
 	public Parser(String filePath, Code code, Table table, ErrorMessage errorMessage) {
@@ -45,36 +45,36 @@ public class Parser {
 	}
 
 	/**
-	 * ·Ö³ÌĞò½âÎö
+	 * åˆ†ç¨‹åºè§£æ
 	 */
 	public void blockPaser(SymbolSet<Integer> endSybolsList, ProcItem procBase) {
 
 		Instruction jmpBase = new Instruction(FuncCode.jmp, 0, 0);
 		try {
-			// TODO Éú³ÉÒ»¸öÌø×ªµØÖ·
+			// TODO ç”Ÿæˆä¸€ä¸ªè·³è½¬åœ°å€
 			code.gen(jmpBase);
 		} catch (CompilerException e) {
 			e.printStackTrace();
 		}
 
 		table.setDx(3);
-		// TODO ¼ì²é²ãÊı
+		// TODO æ£€æŸ¥å±‚æ•°
 
-		// TODO ·Ö³ÌĞò½âÎö
+		// TODO åˆ†ç¨‹åºè§£æ
 		do {
-			// TODO ³£Á¿ËµÃ÷²¿·Ö½âÎö
+			// TODO å¸¸é‡è¯´æ˜éƒ¨åˆ†è§£æ
 			if (Symbol.CONST_SYMBOL == lexer.lastSymbol().getSymbolType()) {
 				lexer.getSymbol();
 				do {
 					constdeclearation();
 
-					// TODO ¿ÉÑ¡µÄ¶îÍâÉùÃ÷
+					// TODO å¯é€‰çš„é¢å¤–å£°æ˜
 					while (Symbol.COMMA == lexer.lastSymbol().getSymbolType()) {
 						lexer.getSymbol();
 						constdeclearation();
 					}
 
-					// TODO ·ÖºÅ½áÊø¼ì²é
+					// TODO åˆ†å·ç»“æŸæ£€æŸ¥
 					if (Symbol.SEMICOLON == lexer.lastSymbol().getSymbolType()) {
 						lexer.getSymbol();
 					} else {
@@ -83,19 +83,19 @@ public class Parser {
 				} while (Symbol.IDENTIFIER == lexer.lastSymbol().getSymbolType());
 			}// end of if(sym==constsym)
 
-			// TODO ±äÁ¿ËµÃ÷²¿·Ö½âÎö
+			// TODO å˜é‡è¯´æ˜éƒ¨åˆ†è§£æ
 			if (Symbol.VAR_SYMBOL == lexer.lastSymbol().getSymbolType()) {
 				lexer.getSymbol();
 				do {
 					vardeclearation();
 
-					// TODO ¿ÉÑ¡µÄ¶îÍâÉùÃ÷
+					// TODO å¯é€‰çš„é¢å¤–å£°æ˜
 					while (Symbol.COMMA == lexer.lastSymbol().getSymbolType()) {
 						lexer.getSymbol();
 						vardeclearation();
 					}
 
-					// TODO ·ÖºÅ½áÊø¼ì²é
+					// TODO åˆ†å·ç»“æŸæ£€æŸ¥
 					if (Symbol.SEMICOLON == lexer.lastSymbol().getSymbolType()) {
 						lexer.getSymbol();
 					} else {
@@ -106,15 +106,15 @@ public class Parser {
 
 			table.listTable();
 
-			// TODO ¹ı³ÌËµÃ÷²¿·Ö½âÎö
+			// TODO è¿‡ç¨‹è¯´æ˜éƒ¨åˆ†è§£æ
 			while (Symbol.PROCEDURE_SYMBOL == lexer.lastSymbol().getSymbolType()) {
 
 				lexer.getSymbol();
 				ProcItem procItem = null;
 
-				// 2.3.1. µÇ¼Ç¹ı³ÌÃû
+				// 2.3.1. ç™»è®°è¿‡ç¨‹å
 				if (Symbol.IDENTIFIER == lexer.lastSymbol().getSymbolType()) {
-					// TODO ÕâÀï¿ÉÒÔ×öµÃ¸üºÃ
+					// TODO è¿™é‡Œå¯ä»¥åšå¾—æ›´å¥½
 					try {
 						procItem = new ProcItem(ObjectKind.PROC, lexer.getLastName(), table.getLevel(), 0);
 						table.enter(procItem);
@@ -132,17 +132,17 @@ public class Parser {
 					error(5);
 				}
 
-				// 2.3.2. µİ¹é¹ı³Ì£¬ÆäÇ°ĞèÒª±£´æµ±Ç°µÄtxÓëdx
+				// 2.3.2. é€’å½’è¿‡ç¨‹ï¼Œå…¶å‰éœ€è¦ä¿å­˜å½“å‰çš„txä¸dx
 				Table tableCopy = table.getTable();
 				@SuppressWarnings("unchecked")
 				SymbolSet<Integer> blockList = (SymbolSet<Integer>) endSybolsList.clone();
 				blockList.add(Symbol.SEMICOLON);
 				blockPaser(blockList, procItem);
-				// 2.3.3. µİ¹é½áÊø£¬¸´Ô­txÓëdx
+				// 2.3.3. é€’å½’ç»“æŸï¼Œå¤åŸtxä¸dx
 				table = tableCopy;
 				table.reduceLevel();
 
-				// TODO Óï¾ä½áÊø´íÎó¼ì²é
+				// TODO è¯­å¥ç»“æŸé”™è¯¯æ£€æŸ¥
 				if (Symbol.SEMICOLON == lexer.lastSymbol().getSymbolType()) {
 					lexer.getSymbol();
 					test(Symbol.PROC_DECL_END_List, endSybolsList, 6);
@@ -154,17 +154,17 @@ public class Parser {
 			test(Symbol.PROC_ALL_END_List, Symbol.DECL_BEG_LIST, 7);
 		} while (lexer.lastSymbol().isDeclBegSys());
 
-		// TODO »ØÌî¹ı³ÌµØÖ·
+		// TODO å›å¡«è¿‡ç¨‹åœ°å€
 		jmpBase.seta(code.getIndex());
 		procBase.setAddr(code.getIndex());
 
-		// TODO Óï¾ä²¿·Ö·ÖÎö
+		// TODO è¯­å¥éƒ¨åˆ†åˆ†æ
 		try {
 			code.gen(new Instruction(FuncCode.Int, 0, table.getDx()));
 			statePaser(endSybolsList.with(Symbol.STAT_BEG_LIST).with(Symbol.END_SYMBOL).with(Symbol.SEMICOLON));
 			code.gen(new Instruction(FuncCode.opr, 0, 0));
 			test(endSybolsList, Symbol.NULL_List, 8);
-			// TODO ´òÓ¡Ä¿±ê´úÂë
+			// TODO æ‰“å°ç›®æ ‡ä»£ç 
 			code.listCode();
 			table.listTable();
 		} catch (CompilerException e) {
@@ -174,12 +174,12 @@ public class Parser {
 	}
 
 	/**
-	 * Óï¾ä½âÎö
+	 * è¯­å¥è§£æ
 	 */
 	void statePaser(SymbolSet<Integer> endSybolsList) {
 		Item targetItem = null;
 
-		// TODO ¸³ÖµÓï¾ä½âÎö
+		// TODO èµ‹å€¼è¯­å¥è§£æ
 		if (lexer.checkSymbolType(Symbol.IDENTIFIER)) {
 			try {
 				targetItem = (VarItem) table.position(lexer.lastSymbol().getName());
@@ -197,10 +197,10 @@ public class Parser {
 				error(13);
 			}
 
-			// TODO ¸³Öµ·ûºÅºóµÄ±í´ïÊ½½âÎö
+			// TODO èµ‹å€¼ç¬¦å·åçš„è¡¨è¾¾å¼è§£æ
 			expressionPaser(endSybolsList);
 
-			// TODO ²åÈë¸³ÖµÓï¾ä
+			// TODO æ’å…¥èµ‹å€¼è¯­å¥
 			if (null != targetItem) {
 				try {
 					code.gen(new Instruction(FuncCode.sto, table.getLevel() - ((VarItem) targetItem).getLev(),
@@ -212,7 +212,7 @@ public class Parser {
 			}
 
 		}
-		// TODO ¹ı³Ìµ÷ÓÃÓï¾ä
+		// TODO è¿‡ç¨‹è°ƒç”¨è¯­å¥
 		else if (lexer.checkSymbolType(Symbol.CALL_SYMBOL)) {
 			lexer.getSymbol();
 			if (!lexer.checkSymbolType(Symbol.IDENTIFIER)) {
@@ -239,7 +239,7 @@ public class Parser {
 				lexer.getSymbol();
 			}
 		}
-		// TODO ifÓï¾ä½âÎö
+		// TODO ifè¯­å¥è§£æ
 		else if (lexer.checkSymbolType(Symbol.IF_SYMBOL)) {
 			lexer.getSymbol();
 			conditionPaser(endSybolsList.with(Symbol.THEN_SYMBOL).with(Symbol.DO_SYMBOL));
@@ -259,31 +259,7 @@ public class Parser {
 			statePaser(endSybolsList);
 			jpcInst.seta(code.getIndex());
 		}
-		
-
-//		// TODO ifÓï¾ä½âÎö
-//		else if (lexer.checkSymbolType(Symbol.IF_SYMBOL)) {
-//			lexer.getSymbol();
-//			conditionPaser(endSybolsList.with(Symbol.THEN_SYMBOL).with(Symbol.DO_SYMBOL));
-//
-//			if (lexer.checkSymbolType(Symbol.THEN_SYMBOL)) {
-//				lexer.getSymbol();
-//			} else {
-//				error(16);
-//			}
-//			Instruction jpcInst = new Instruction(FuncCode.jpc, 0, 0);
-//			try {
-//				code.gen(jpcInst);
-//			} catch (CompilerException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			statePaser(endSybolsList);
-//			jpcInst.seta(code.getIndex());
-//		}
-		
-		
-		// TODO ¸´ºÏÓï¾ä½âÎö
+		// TODO å¤åˆè¯­å¥è§£æ
 		else if (lexer.checkSymbolType(Symbol.BEGIN_SYMBOL)) {
 			lexer.getSymbol();
 			statePaser(endSybolsList.with(Symbol.SEMICOLON).with(Symbol.END_SYMBOL));
@@ -303,11 +279,11 @@ public class Parser {
 				error(17);
 			}
 		}
-		// TODO whileÓï¾ä½âÎö
+		// TODO whileè¯­å¥è§£æ
 		else if (lexer.checkSymbolType(Symbol.WHILE_SYMBOL)) {
 
-			Instruction jcpConditInstruction; // Ìõ¼şÌø×ªÖ¸Áî
-			Instruction jmpReturnInstruction; // Ñ­»·Ìø×ªÖ¸Áî
+			Instruction jcpConditInstruction; // æ¡ä»¶è·³è½¬æŒ‡ä»¤
+			Instruction jmpReturnInstruction; // å¾ªç¯è·³è½¬æŒ‡ä»¤
 
 			jmpReturnInstruction = new Instruction(FuncCode.jmp, 0, code.getIndex());
 			jcpConditInstruction = new Instruction(FuncCode.jpc, 0, 0);
@@ -331,14 +307,14 @@ public class Parser {
 			}
 		}
 
-		// TODO writeÓï¾ä½âÎö
+		// TODO writeè¯­å¥è§£æ
 		else if (lexer.checkSymbolType(Symbol.WRITE_SYMBOL)) {
 			lexer.getSymbol();
 			if (lexer.checkSymbolType(Symbol.LEFT_PARENTHESIS)) {
 				lexer.getSymbol();
 				if (lexer.checkSymbolType(Symbol.IDENTIFIER)) {
 
-					// TODO ´òÓ¡Ö¸ÁîÉú³É
+					// TODO æ‰“å°æŒ‡ä»¤ç”Ÿæˆ
 					VarItem item = null;
 					try {
 						item = (VarItem) table.position(lexer.getLastName());
@@ -376,13 +352,13 @@ public class Parser {
 	}
 
 	/**
-	 * ±í´ïÊ½½âÎöº¯Êı
+	 * è¡¨è¾¾å¼è§£æå‡½æ•°
 	 * 
 	 * @param endSybolsList
 	 */
 	private void expressionPaser(SymbolSet<Integer> endSybolsList) {
 
-		int addop; // Ç°×º·û
+		int addop; // å‰ç¼€ç¬¦
 
 		if (lexer.checkSymbolType(Symbol.PLUS) || lexer.checkSymbolType(Symbol.MINUS)) {
 			addop = lexer.lastSymbol().getSymbolType();
@@ -419,7 +395,7 @@ public class Parser {
 	}
 
 	/**
-	 * Ìõ¼ş±í´ïÊ½½âÎöº¯Êı
+	 * æ¡ä»¶è¡¨è¾¾å¼è§£æå‡½æ•°
 	 * 
 	 * @param endSybolsList
 	 */
@@ -485,7 +461,7 @@ public class Parser {
 	}
 
 	/**
-	 * Ïî½âÎöº¯Êı
+	 * é¡¹è§£æå‡½æ•°
 	 * 
 	 * @param endSybolsList
 	 */
@@ -513,7 +489,7 @@ public class Parser {
 	}
 
 	/**
-	 * Òò×Ó½âÎöº¯Êı
+	 * å› å­è§£æå‡½æ•°
 	 * 
 	 * @param endSybolsList
 	 */
@@ -587,14 +563,14 @@ public class Parser {
 	}
 
 	/**
-	 * ³£Á¿ËµÃ÷²¿·Ö½âÎö
+	 * å¸¸é‡è¯´æ˜éƒ¨åˆ†è§£æ
 	 */
 	private void constdeclearation() {
 
 		if (Symbol.IDENTIFIER == lexer.lastSymbol().getSymbolType()) {
 			lexer.getSymbol();
-			// TODO ´Ë´¦µÄbecomes±íÊ¾»ñµÃµÄÊÇÒ»¸ö:=£¬Õâ¸öÒ»¸öÈİ´í£¿µ«ÓÖËµÕâ¸öÊÇ´íÎóµÄ£¿
-			// TODO »¹ÊÇËµÕâ¸öÊÇÒ»¸ö´íÎó¼ì²é£¬ÎªÁËµÃ³ö1ºÅÀàĞÍ´íÎó
+			// TODO æ­¤å¤„çš„becomesè¡¨ç¤ºè·å¾—çš„æ˜¯ä¸€ä¸ª:=ï¼Œè¿™ä¸ªä¸€ä¸ªå®¹é”™ï¼Ÿä½†åˆè¯´è¿™ä¸ªæ˜¯é”™è¯¯çš„ï¼Ÿ
+			// TODO è¿˜æ˜¯è¯´è¿™ä¸ªæ˜¯ä¸€ä¸ªé”™è¯¯æ£€æŸ¥ï¼Œä¸ºäº†å¾—å‡º1å·ç±»å‹é”™è¯¯
 			if (Symbol.EQUAL == lexer.lastSymbol().getSymbolType()
 					|| Symbol.BECOMES == lexer.lastSymbol().getSymbolType()) {
 //				if (Symbol.BECOMES == lexer.lastSymbol().getSymbolType()) {
@@ -623,12 +599,12 @@ public class Parser {
 	}
 
 	/**
-	 * ±äÁ¿ÉùÃ÷²¿·Ö½âÎö´¦Àíº¯Êı
+	 * å˜é‡å£°æ˜éƒ¨åˆ†è§£æå¤„ç†å‡½æ•°
 	 */
 	private void vardeclearation() {
 
 		if (Symbol.IDENTIFIER == lexer.lastSymbol().getSymbolType()) {
-			// TODO ½«±äÁ¿¶ÔÏó¼ÓÈëTable±í
+			// TODO å°†å˜é‡å¯¹è±¡åŠ å…¥Tableè¡¨
 			try {
 				table.enter(new VarItem(ObjectKind.VAR, lexer.lastSymbol().getName(), table.getLevel(), table.getDx()));
 			} catch (CompilerException e) {
@@ -642,11 +618,11 @@ public class Parser {
 	}
 
 	/**
-	 * Óï¾äÎ²¼ì²é
+	 * è¯­å¥å°¾æ£€æŸ¥
 	 */
 	private void test(SymbolSet<Integer> endSybolsList, SymbolSet<Integer> aidSybolsList, int errorNum) {
 
-		// TODO ½áÊø·ûºÅ¼ì²é
+		// TODO ç»“æŸç¬¦å·æ£€æŸ¥
 		for (Integer integer : endSybolsList) {
 			if (integer.intValue() == lexer.lastSymbol().getSymbolType()) {
 				return;
@@ -655,7 +631,7 @@ public class Parser {
 
 		error(errorNum);
 
-		// TODO ËõĞ¡´íÎó·¶Î§
+		// TODO ç¼©å°é”™è¯¯èŒƒå›´
 		@SuppressWarnings("unchecked")
 		SymbolSet<Integer> tempList = ((SymbolSet<Integer>) endSybolsList.clone());
 		tempList.addAll(aidSybolsList);
@@ -671,10 +647,10 @@ public class Parser {
 	}
 
 	/***
-	 * ±¨¸æ´íÎó£¬½«±»ÊÕ¼¯ÖÁ´íÎó¹ÜÀíÆ÷
+	 * æŠ¥å‘Šé”™è¯¯ï¼Œå°†è¢«æ”¶é›†è‡³é”™è¯¯ç®¡ç†å™¨
 	 * 
 	 * @param errorNum
-	 *            ´íÎóºÅ
+	 *            é”™è¯¯å·
 	 */
 	private void error(int errorNum) {
 		errorMessage.add(lexer.getLineNum(), CompilerException.getErrorString(errorNum));

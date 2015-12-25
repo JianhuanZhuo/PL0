@@ -8,19 +8,20 @@ import java.util.Arrays;
 
 public class Lexer {
 
-	private BufferedReader sourceBuffer; // �����Դ�����Buffer
-	private char currentChar = ' '; // ��ǰ��ȡ���ַ�
+	private BufferedReader sourceBuffer; // 读入的源代码的Buffer
+	private char currentChar = ' '; // 当前读取的字符
 
-	private String currentLineString; // ��ǰ��ȡ��һ��Դ����
-	private int currentLineStringLength = 0; // ��ǰ��ȡ��һ��Դ����ĵĳ���
-	private int currentLineStringIndex = 0; // ��ȡ����ĳ�������ַ��±�
+	private String currentLineString; // 当前读取的一行源代码
+	private int currentLineStringLength = 0; // 当前读取的一行源代码的的长度
+	private int currentLineStringIndex = 0; // 读取到的某个具体字符下标
 
 	private Symbol lastSymbol;
 	private String lastName;
+	// ?????????????????????????????????????????????????????????????????????????????????????????????????????
 	static public int lineNum = 0;
 
-	// �򵥵Ĳ���������ȡ��һ���ַ������ȷ�����͵��ַ�
-	// Ҳ���� . , ; = + - ( ) * /
+	// 简单的操作符，读取到一个字符后就能确定类型的字符
+	// 也就是 . , ; = + - ( ) * /
 	private int[] simpleOperators;
 
 	public String getLastName() {
@@ -31,18 +32,19 @@ public class Lexer {
 	 * Constructor
 	 * 
 	 * @param filePath
-	 *            Դ������ļ�·��
+	 *            源代码的文件路径
 	 */
 	public Lexer(String filePath) {
 		try {
 			sourceBuffer = new BufferedReader(new FileReader(filePath));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			System.out.println("���� �ļ�������");
+			System.out.println("错误！ 文件不存在");
 		}
 
-		simpleOperators = new int[256]; 
-		Arrays.fill(simpleOperators, Symbol.NUL); 
+		// 初始化简单操作符
+		simpleOperators = new int[256]; // 因为char的范围是[0, 255]，所以数组大小最大只需256
+		Arrays.fill(simpleOperators, Symbol.NUL); // 对于其他不可识别的字符，全都设置为[NULL]
 		simpleOperators['.'] = Symbol.PERIOD;
 		simpleOperators[','] = Symbol.COMMA;
 		simpleOperators[';'] = Symbol.SEMICOLON;
@@ -56,7 +58,7 @@ public class Lexer {
 	}
 
 	/**
-	 * �������һ�ε�Symbol������
+	 * 获得最新一次的Symbol，单词
 	 * 
 	 * @return
 	 */
@@ -69,39 +71,39 @@ public class Lexer {
 	}
 
 	/**
-	 * ������µ�symbol�����Ƿ������Ƿ�Ϊָ������
+	 * 检查最新的symbol单词是否类型是否为指定类型
 	 * 
 	 * @param requestType
-	 *            ָ������
-	 * @return �Ƿ���true������Ϊfalse
+	 *            指定类型
+	 * @return 是返回true，否则为false
 	 */
 	public boolean checkSymbolType(int requestType) {
 		return (requestType == lastSymbol.getSymbolType());
 	}
 
 	/**
-	 * �ʷ������л�ȡһ������
+	 * 词法分析中获取一个单词
 	 * 
 	 * @return Symbol
 	 */
 	public Symbol getSymbol() {
 
-		// ÿ�ζ���ǰ��ȡһ���ַ�
+		// 每次都提前读取一个字符
 
-		// �����ո�
+		// 跳过空格
 		while (isSpace()) {
 			getChar();
 		}
 
 		if (isLetter()) {
-			// �����ֻ��߱�ʶ��
+			// 保留字或者标识符
 			lastSymbol = getKeywordOrIdentifier();
 			lastName = lastSymbol.getName();
 		} else if (isDigit()) {
-			// �޷�������
+			// 无符号整数
 			lastSymbol = getNumber();
 		} else {
-			// �ֽ�� ���� �Ƿ��ַ�
+			// 分界符 或者 非法字符
 			lastSymbol = getOperator();
 		}
 
@@ -109,36 +111,36 @@ public class Lexer {
 	}
 
 	/**
-	 * ��ȡ��һ���ַ���Ϊ�����ȡ����IO��ʵ��ÿ�ζ�ȡһ��
+	 * 读取下一个字符。为增大读取磁盘IO，实际每次读取一行
 	 * 
 	 */
 	private void getChar() {
-		if (currentLineStringIndex == currentLineStringLength) { // �����������ĩβ�����ٶ�ȡһ��
+		if (currentLineStringIndex == currentLineStringLength) { // 如果读到了行末尾，则再读取一行
 			try {
 				String readString = "";
 
-				// ��������
+				// 跳过空行
 				while (readString.equals("")) {
 
 					readString = sourceBuffer.readLine();
 
 					if (readString == null) {
-						// �ļ���ȫ����ȡ����Ҫ������ȡ������
+						// 文件已全部读取，还要继续读取，出错
 						System.out.println("EOF, ERROR!");
 						System.exit(0);
 					}
 					lineNum++;
 					System.out.println(readString);
-					// ȥ����ͷ��β�Ŀհ׷�
+					// 去除开头结尾的空白符
 					readString = readString.trim();
 				}
 
 				currentLineString = readString;
 
-				// ���ַ����е�[tab]�滻��[�ո�]
+				// 将字符串中的[tab]替换成[空格]
 				currentLineString = currentLineString.replaceAll("\t", " ");
 
-				// Ϊ��ֱֹ������[���з�]����������[�ո�]����[���з�]
+				// 为防止直接跳过[换行符]，在最后加上[空格]代替[换行符]
 				currentLineString += " ";
 
 				currentLineStringLength = currentLineString.length();
@@ -147,12 +149,12 @@ public class Lexer {
 				e.printStackTrace();
 			}
 		}
-		currentChar = currentLineString.charAt(currentLineStringIndex); // ��ȡ��һ���ַ�
-		currentLineStringIndex++; // �±�����һ��λ��
+		currentChar = currentLineString.charAt(currentLineStringIndex); // 获取下一个字符
+		currentLineStringIndex++; // 下标下移一个位置
 	}
 
 	/**
-	 * �жϵ�ǰ��ȡ���ַ��Ƿ���[�ո�]
+	 * 判断当前读取的字符是否是[空格]
 	 * 
 	 * @return boolean
 	 */
@@ -161,7 +163,7 @@ public class Lexer {
 	}
 
 	/**
-	 * �жϵ�ǰ��ȡ���ַ��Ƿ���[����]
+	 * 判断当前读取的字符是否是[数字]
 	 * 
 	 * @return boolean
 	 */
@@ -170,7 +172,7 @@ public class Lexer {
 	}
 
 	/**
-	 * �жϵ�ǰ��ȡ���ַ��Ƿ���[��ĸ]
+	 * 判断当前读取的字符是否是[字母]
 	 * 
 	 * @return boolean
 	 */
@@ -179,27 +181,27 @@ public class Lexer {
 	}
 
 	/**
-	 * ��ȡ���š�����ʶ�����߱�����
+	 * 获取符号——标识符或者保留字
 	 * 
 	 * @return Symbol
 	 */
 	private Symbol getKeywordOrIdentifier() {
 		Symbol symbol;
-		String token = ""; // ʶ��ĵ���
+		String token = ""; // 识别的单词
 
-		// ���ַ�ƴ�ӳ��ַ���
+		// 将字符拼接成字符串
 		while (isLetter() || isDigit()) {
 			token += currentChar;
 			getChar();
 		}
 
-		// ���ֲ��ұ�����
+		// 二分查找保留字
 		int index = Arrays.binarySearch(Symbol.WORD, token);
 
-		if (index < 0) { // δ�ڱ������������ҵ�token��˵��token�Ǳ�ʶ��
+		if (index < 0) { // 未在保留字数组中找到token，说明token是标识符
 			symbol = new Symbol(Symbol.IDENTIFIER);
 			symbol.setName(token);
-		} else { // �ڱ������������ҵ�token��˵��token�Ǳ�����
+		} else { // 在保留字数组中找到token，说明token是保留字
 			symbol = new Symbol(Symbol.WORD_SYMBOL[index]);
 		}
 
@@ -207,27 +209,27 @@ public class Lexer {
 	}
 
 	/**
-	 * ��ȡ���š����޷�������
+	 * 获取符号——无符号整数
 	 * 
 	 * @return Symbol
 	 */
 	private Symbol getNumber() {
 
 		Symbol symbol = new Symbol(Symbol.NUMBER);
-		// TODO ʵ��
+		// TODO 实现
 		int value = 0;
 		do {
-			value = value * 10 + (currentChar - '0'); // �����޷���������ֵ
+			value = value * 10 + (currentChar - '0'); // 计算无符号整数的值
 			getChar();
 		} while (isDigit());
 
-		symbol.setNumber(value); // �����޷���������ֵ
+		symbol.setNumber(value); // 设置无符号整数的值
 
 		return symbol;
 	}
 
 	/**
-	 * ��ȡ���š����ֽ���������
+	 * 获取符号——分界符或操作符
 	 * 
 	 * @return Symbol
 	 */
@@ -237,43 +239,44 @@ public class Lexer {
 		switch (currentChar) {
 			case ':':
 				getChar();
-				if (currentChar == '=') { // ��ֵ���� :=
+				if (currentChar == '=') { // 赋值符号 :=
 					symbol = new Symbol(Symbol.BECOMES);
 					getChar();
 				} else {
+					// ERROR，设置symbol为null
 					symbol = new Symbol(Symbol.NUL);
 				}
 				break;
 			case '<':
 				getChar();
 				switch (currentChar) {
-					case '>': // ������ <>
+					case '>': // 不等于 <>
 						symbol = new Symbol(Symbol.NOT_EQUAL);
 						getChar();
 						break;
-					case '=': // С�ڵ��� <=
+					case '=': // 小于等于 <=
 						symbol = new Symbol(Symbol.LESS_OR_EQUAL);
 						getChar();
 						break;
-					default: // С��
+					default: // 小于
 						symbol = new Symbol(Symbol.LESS);
 						break;
 				}
 				break;
 			case '>':
 				getChar();
-				if (currentChar == '=') { // ���ڵ��� >=
+				if (currentChar == '=') { // 大于等于 >=
 					symbol = new Symbol(Symbol.GREATER_OR_EQUAL);
 					getChar();
-				} else { // ����
+				} else { // 大于
 					symbol = new Symbol(Symbol.GREATER);
 				}
 				break;
 			default:
-				// ֱ������simpleOperators[]������伴��
+				// 直接利用simpleOperators[]数组填充即可
 				symbol = new Symbol(simpleOperators[currentChar]);
 
-				// ��ǰ��ȡ��һ���ַ�
+				// 提前读取下一个字符
 				getChar();
 				break;
 		}

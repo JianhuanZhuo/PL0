@@ -4,32 +4,32 @@ package com.e23.compiler;
 public class Interpret {
 
 	/**
-	 * ÓûÖ´ĞĞµÄ´úÂë
+	 * æ¬²æ‰§è¡Œçš„ä»£ç 
 	 */
 	private Code code;
 
 	/**
-	 * ÔËĞĞÊ±Õ»
+	 * è¿è¡Œæ—¶æ ˆ
 	 */
 	private RunningStack runningStack;
 
 	/**
-	 * Ö¸¶¨²ãµÄ»ùÖ·
+	 * æŒ‡å®šå±‚çš„åŸºå€
 	 */
 	private Integer base;
 
 	/**
-	 * ³ÌĞòÖ¸Õë
+	 * ç¨‹åºæŒ‡é’ˆ
 	 */
 	private int program;
 
 	/**
-	 * µ±Ç°³ÌĞòÖ¸Áî
+	 * å½“å‰ç¨‹åºæŒ‡ä»¤
 	 */
 	private Instruction instruction;
 
 	/**
-	 * ¿ØÖÆÊä³ö
+	 * æ§åˆ¶è¾“å‡º
 	 */
 	private consoleOutput consoleOutput;
 	
@@ -42,11 +42,11 @@ public class Interpret {
 	}
 	
 	/**
-	 * Ö±½ÓÖ´ĞĞ
+	 * ç›´æ¥æ‰§è¡Œ
 	 */
 	public void exec() {
 
-		// TODO ³õÊ¼»¯×´Ì¬
+		// TODO åˆå§‹åŒ–çŠ¶æ€
 		runningStack = new RunningStack();
 		program = 0;
 
@@ -63,7 +63,7 @@ public class Interpret {
 			do {
 				instruction = code.getInstruction(program);
 				program++;
-//				System.out.println("Ö´ĞĞ=¡· "+instruction.toString());
+//				System.out.println("æ‰§è¡Œ=ã€‹ "+instruction.toString());
 				execInstruction();
 			} while (0 != program);
 		} catch (Exception e) {
@@ -73,7 +73,7 @@ public class Interpret {
 	}
 
 	/**
-	 * µ¥Ö¸ÁîÖ´ĞĞº¯Êı
+	 * å•æŒ‡ä»¤æ‰§è¡Œå‡½æ•°
 	 */
 	private void execInstruction() {
 
@@ -87,18 +87,18 @@ public class Interpret {
 			case opr:
 				switch (instruction.getA()) { // operator
 					case 0: {
-						// TODO ´´½¨¹ı³ÌÈıµ¥Ôª
+						// TODO åˆ›å»ºè¿‡ç¨‹ä¸‰å•å…ƒ
 						Integer SL = runningStack.get(runningStack.indexOf(base) + 0);
 						Integer DL = runningStack.get(runningStack.indexOf(base) + 1);
 						Integer RA = runningStack.get(runningStack.indexOf(base) + 2);
 
-						// TODO ¸üĞÂ³ÌĞòÖ¸Õë
+						// TODO æ›´æ–°ç¨‹åºæŒ‡é’ˆ
 						program = RA;
 
-						// TODO ¸üĞÂ»ùÖ·
+						// TODO æ›´æ–°åŸºå€
 						base = runningStack.get(DL);
 
-						// TODO µ¯Õ»ÖÁÕ»µ×
+						// TODO å¼¹æ ˆè‡³æ ˆåº•
 						while (SL != runningStack.pop());
 
 					}
@@ -174,21 +174,21 @@ public class Interpret {
 				break;
 
 			case sto:
-				//System.out.println("Öµ£º= " + runningStack.peek());
+				//System.out.println("å€¼ï¼š= " + runningStack.peek());
 				tempInt = baseCount(instruction.getL()) + instruction.getA();
 				runningStack.set(tempInt, runningStack.pop());
 				break;
 
 			case cal: // generate new block mark
 			{
-				// TODO ´´½¨¹ı³ÌÈıµ¥Ôª
+				// TODO åˆ›å»ºè¿‡ç¨‹ä¸‰å•å…ƒ
 				Integer SL = Integer.valueOf(baseCount(instruction.getL()));
 				Integer DL = Integer.valueOf(base);
 				Integer RA = Integer.valueOf(program);
 				runningStack.push(SL);
 				runningStack.push(DL);
 				runningStack.push(RA);
-				// TODO ¸üĞÂbaseÖ¸ÕëÓë³ÌĞòÖ¸Õë
+				// TODO æ›´æ–°baseæŒ‡é’ˆä¸ç¨‹åºæŒ‡é’ˆ
 				base = SL;
 				program = instruction.getA();
 			}
@@ -212,11 +212,11 @@ public class Interpret {
 	}
 
 	/**
-	 * »ñµÃ¾àµ±Ç°²ãÕ»µ×ÓĞl²ã²îµÄµØÖ·£¬Ë÷Òı
+	 * è·å¾—è·å½“å‰å±‚æ ˆåº•æœ‰lå±‚å·®çš„åœ°å€ï¼Œç´¢å¼•
 	 * 
 	 * @param l
-	 *            ²ã²îÖµ
-	 * @return Ä¿±êµØÖ·
+	 *            å±‚å·®å€¼
+	 * @return ç›®æ ‡åœ°å€
 	 */
 	private int baseCount(int l) {
 

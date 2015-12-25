@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Map.Entry;
+import java.util.Vector;
 
 import compiler.lexer.automata.SDPDA_LL1;
 import compiler.lexer.automata.Symbol;
@@ -63,54 +64,31 @@ public class Lexer implements LexerServer {
 		gs = CFGFormlize.formalize(gs);
 		constantG.add(gs);
 		GrammarItemList_LL1 gl = new GrammarItemList_LL1(constantG.getItemList());
-
+		Vector<Symbol> right = new Vector<>();
+		GrammarItem_G2 e = new GrammarItem_G2(new Symbol("token"), right);
+		gl.add(e);
 		for (int i = 0; i < gs.length; i++) {
 			System.out.println(gs[i]);
 		}
-		gl.calcEmptySet();
-		System.out.println("Empty set:");
-		for (Entry<Symbol, Boolean> e : gl.getEmptySet().entrySet()) {
-			System.out.println(e.getKey() + " " + e.getValue());
-		}
+		System.out.println(gl.meetLL1());
 
-		gl.calcFirstSet();
-		System.out.println("\nFirst set:");
-		for (Entry<Symbol, FirstSet> f : gl.getFirstS().entrySet()) {
-			System.out.println(f.getValue());
-		}
-
-		System.out.println("\nFirst set:");
-		for (Entry<Symbol, FirstSet> f : gl.getFirstS().entrySet()) {
-			System.out.println(f.getKey());
-			FirstSet fs = f.getValue();
-			for (Symbol s : fs.getFirstSet()) {
-				System.out.println("\t" + s);
-			}
-		}
-
-		System.out.println("\nFollow set:");
-		gl.calcFollowSet();
-		for (Entry<Symbol, FollowSet> e : gl.getFollowS().entrySet()) {
-			System.out.println(e.getValue());
-		}
-
-		System.out.println("\nSelect set:");
-		gl.calcSelect();
-		for (Entry<GrammarItem_G2, SelectSet> e : gl.getSelectS().entrySet()) {
-			System.out.println(e.getValue());
-		}
-		System.out.println("check intersertion ：" + gl.calcIntersertion());
-		
 		sdpda_LL1.translateLL1(gl);
 		sdpda_LL1.restart();
-		Symbol s;
-		while ((s = prep.getSymbol()) != null) {
+		Symbol s = prep.getSymbol();
+		boolean c = false;
+		while (s != null) {
 			if (sdpda_LL1.step(s)) {
 				System.out.println();
 				sdpda_LL1.restart();
-				continue;
+				if (c) {
+					s = prep.getSymbol();
+				}
+				c = true;
+			} else {
+				c = false;
+				System.out.print(s.getName());
+				s = prep.getSymbol();
 			}
-			System.out.print(s.getName());
 		}
 	}
 
@@ -120,7 +98,7 @@ public class Lexer implements LexerServer {
 
 	@Override
 	public Token getPreToken() {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 

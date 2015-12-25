@@ -2,9 +2,9 @@ package com.e23.compiler;
 
 public class ProcItem extends Item {
 
-	private int		lev;	//²ãÊı
+	private int		lev;	//å±‚æ•°
 
-	private int		addr;	//µØÖ·
+	private int		addr;	//åœ°å€
 	
 	public ProcItem(ObjectKind kind, String name, int lev, int addr) {
 		super(kind, name);
@@ -13,7 +13,7 @@ public class ProcItem extends Item {
 	}
 
 	/**
-	 * ÊµÏÖProcItemµÄÉî¸´ÖÆ
+	 * å®ç°ProcItemçš„æ·±å¤åˆ¶
 	 * @Override
 	 */
 	protected Item clone() {
@@ -21,8 +21,8 @@ public class ProcItem extends Item {
 	}
 
 	/**
-	 * addrÊôĞÔÉèÖÃÆ÷
-	 *	@param addr addrÓûÉèÖÃµÄĞÂÖµ
+	 * addrå±æ€§è®¾ç½®å™¨
+	 *	@param addr addræ¬²è®¾ç½®çš„æ–°å€¼
 	 */
 	public void setAddr(int addr) {
 		this.addr	= addr;

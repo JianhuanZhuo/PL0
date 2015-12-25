@@ -107,16 +107,18 @@ public class Symbol implements Cloneable, Comparable<Symbol> {
 	public void formlize() {
 		if (!isVN) {
 			if ('\\' == name.charAt(0)) {
-				switch (name.charAt(1)) {
-				case 'N':
-					name = new String("" + new Character((char) 0x18));
-					break;
-				case '#':
-					name = new String("" + new Character((char) 0x19));
-					break;
-				default:
-					name = name.substring(1);
-					break;
+				if (name.length() > 1) {
+					switch (name.charAt(1)) {
+					case 'N':
+						name = new String("" + new Character((char) 0x18));
+						break;
+					case '#':
+						name = new String("" + new Character((char) 0x19));
+						break;
+					default:
+						name = name.substring(1);
+						break;
+					}
 				}
 			}
 		}

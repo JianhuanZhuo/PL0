@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Code {
 
 	private Table table;
-	private static final long CODE_MAX = 2000;	
+	private static final long CODE_MAX = 2000;	//指令最大长度
 	
 	private ArrayList<Instruction> items;
 	
@@ -18,8 +18,8 @@ public class Code {
 	}
 
 	/**
-	 * ��ָ��item������뵽ָ�����
-	 *	@param item �¼����ָ��
+	 * 将指令item代码加入到指令表中
+	 *	@param item 新加入的指令
 	 */
 	public void gen(Instruction item) throws CompilerException{
 		if (items.size() > CODE_MAX) {
@@ -40,8 +40,8 @@ public class Code {
 	}
 	
 	/**
-	 * ���ָ��������ָ��
-	 *	@return ָ��
+	 * 获得指定索引的指令
+	 *	@return 指令
 	 */
 	public Instruction getInstruction(int index){
 		return items.get(index);

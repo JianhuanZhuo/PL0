@@ -26,7 +26,7 @@ public class SDPDA extends Automata {
 	/**
 	 * 下推栈
 	 */
-	PushDownStack pdStack;
+	protected PushDownStack pdStack;
 
 	/**
 	 * 初始化它的转换规则<br />
@@ -57,7 +57,7 @@ public class SDPDA extends Automata {
 				nextPushStackTop = new ArrayList<>();
 				nextPushStackTop.add(new Symbol("\\#"));
 			}
-			r.nextStackTop = nextPushStackTop;
+			r.setNextStackTop(nextPushStackTop);
 			// TODO 添加该规则
 			rules.add(r);
 		}
@@ -134,7 +134,7 @@ public class SDPDA extends Automata {
 	public void replaceStack(SDPDARule r, Symbol input) {
 		// TODO 下推栈状态替换
 		pdStack.pop();
-		for (Iterator<Symbol> iterator = r.nextStackTop.iterator(); iterator.hasNext();) {
+		for (Iterator<Symbol> iterator = r.getNextStackTop().iterator(); iterator.hasNext();) {
 			Symbol symbolInList = (Symbol) iterator.next();
 			pdStack.push(symbolInList);
 		}

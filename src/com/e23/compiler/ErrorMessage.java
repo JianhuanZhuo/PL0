@@ -23,7 +23,7 @@ public class ErrorMessage {
 	}
 	
 	/**
-	 * ÓÃÓÚ´æ´¢´íÎóÁĞ±íµÄÊı¾İ½á¹¹
+	 * ç”¨äºå­˜å‚¨é”™è¯¯åˆ—è¡¨çš„æ•°æ®ç»“æ„
 	 */
 	private ArrayList<ErrorItem> errorTable;
 	
@@ -37,8 +37,8 @@ public class ErrorMessage {
 	}
 	
 	/**
-	 * ÊÇ·ñÎŞ´íÎóµÄÒ»´Î¼ì²é£¬
-	 *	@return ±àÒë¹ı³ÌÖĞÓĞ´íÎó£¬·µ»Øtrue£¬·ñÔò·µ»Øfalse
+	 * æ˜¯å¦æ— é”™è¯¯çš„ä¸€æ¬¡æ£€æŸ¥ï¼Œ
+	 *	@return ç¼–è¯‘è¿‡ç¨‹ä¸­æœ‰é”™è¯¯ï¼Œè¿”å›trueï¼Œå¦åˆ™è¿”å›false
 	 */
 	public boolean noError() {
 		return errorTable.isEmpty();

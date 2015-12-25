@@ -3,12 +3,12 @@ package com.e23.compiler;
 
 public class VarItem extends Item {
 
-	private int			lev;	//����
-	private int 		addr;	//��ַ
+	private int			lev;	//层数
+	private int 		addr;	//地址
 	
 
 	/**
-	 * ָ�����͡���ʶ�����㼶����ַ����һ��VarItem
+	 * 指定类型、标识符、层级、地址构造一个VarItem
 	 *	@param kind
 	 *	@param name
 	 *	@param lev
@@ -52,7 +52,7 @@ public class VarItem extends Item {
 
 
 	/**
-	 * ʵ��VarItem�����
+	 * 实现VarItem的深复制
 	 * @Override
 	 */
 	protected Item clone() {

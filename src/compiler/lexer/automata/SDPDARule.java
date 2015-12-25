@@ -13,7 +13,7 @@ public class SDPDARule implements Comparable<SDPDARule> {
 
 	protected Symbol nowStackTop;
 	protected Symbol matchSymbol;
-	protected List<Symbol> nextStackTop;
+	private List<Symbol> nextStackTop;
 
 	/**
 	 * 按当前下推栈栈顶符号、输入符号进行比较
@@ -29,10 +29,18 @@ public class SDPDARule implements Comparable<SDPDARule> {
 	
 	@Override
 	public String toString() {
-		String res = "stackTop: "+nowStackTop+"\n\tmatchSymbol: "+matchSymbol+"\n\tnextStackTop: ";
-		for (Symbol s : nextStackTop) {
+		String res = "\tstackTop: "+nowStackTop+"\n\tmatchSymbol: "+matchSymbol+"\n\tnextStackTop: ";
+		for (Symbol s : getNextStackTop()) {
 			res += " "+s;
 		}
 		return res+"\n";
+	}
+
+	public List<Symbol> getNextStackTop() {
+		return nextStackTop;
+	}
+
+	public void setNextStackTop(List<Symbol> nextStackTop) {
+		this.nextStackTop = nextStackTop;
 	}
 }

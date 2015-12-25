@@ -4,8 +4,8 @@ package com.e23.compiler;
 public class Symbol {
 
 
-    public static final int SYMBOL_NUMBER = 35;       // µ¥´ÊµÄ×ÜÊı
-    public static final int NUMBER_MAX = 1000000;     // PL/0ÖĞÔÊĞíµÄÎŞ·ûºÅÕûÊıµÄ×î´óÖµ
+    public static final int SYMBOL_NUMBER = 35;       // å•è¯çš„æ€»æ•°
+    public static final int NUMBER_MAX = 1000000;     // PL/0ä¸­å…è®¸çš„æ— ç¬¦å·æ•´æ•°çš„æœ€å¤§å€¼
 
     public static final SymbolSet<Integer> STAT_BEG_LIST 		= new SymbolSet<Integer>(4);
     public static final SymbolSet<Integer> DECL_BEG_LIST 		= new SymbolSet<Integer>(3);
@@ -18,31 +18,31 @@ public class Symbol {
 
     static
     {
-    	//TODO ÉùÃ÷ÆğÊ¼·ûºÅ¼¯ºÏ
+    	//TODO å£°æ˜èµ·å§‹ç¬¦å·é›†åˆ
     	DECL_BEG_LIST.add(Symbol.CONST_SYMBOL);
     	DECL_BEG_LIST.add(Symbol.VAR_SYMBOL);
     	DECL_BEG_LIST.add(Symbol.PROCEDURE_SYMBOL);
     	
-    	//TODO Óï¾äÆğÊ¼·ûºÅ¼¯ºÏ
+    	//TODO è¯­å¥èµ·å§‹ç¬¦å·é›†åˆ
     	STAT_BEG_LIST.add(Symbol.BEGIN_SYMBOL);
     	STAT_BEG_LIST.add(Symbol.CALL_SYMBOL);
     	STAT_BEG_LIST.add(Symbol.IF_SYMBOL);
     	STAT_BEG_LIST.add(Symbol.WHILE_SYMBOL);
     	
-    	//TODO Òò×ÓÆğÊ¼·ûºÅ¼¯ºÏ
+    	//TODO å› å­èµ·å§‹ç¬¦å·é›†åˆ
     	FACT_BEG_LIST.add(Symbol.IDENTIFIER);
     	FACT_BEG_LIST.add(Symbol.NUMBER);
     	FACT_BEG_LIST.add(Symbol.LEFT_PARENTHESIS);
     	
-    	//TODO ¹ı³ÌËµÃ÷·ûºÅ¼¯ºÏ
+    	//TODO è¿‡ç¨‹è¯´æ˜ç¬¦å·é›†åˆ
     	PROC_ALL_END_List.addAll(Symbol.STAT_BEG_LIST);
     	PROC_ALL_END_List.add(Symbol.IDENTIFIER);
     	
-    	//TODO ¹ı³Ì½áÎ²·ûºÅ¼¯ºÏ
+    	//TODO è¿‡ç¨‹ç»“å°¾ç¬¦å·é›†åˆ
     	PROC_DECL_END_List.addAll(Symbol.PROC_ALL_END_List);
     	PROC_DECL_END_List.add(Symbol.PROCEDURE_SYMBOL);
     	
-    	//TODO ±È½Ï²Ù×÷·û¼¯ºÏ
+    	//TODO æ¯”è¾ƒæ“ä½œç¬¦é›†åˆ
     	EXPRE_List.add(Symbol.EQUAL);
     	EXPRE_List.add(Symbol.NOT_EQUAL);
 		EXPRE_List.add(Symbol.LESS);
@@ -50,7 +50,7 @@ public class Symbol {
 		EXPRE_List.add(Symbol.LESS_OR_EQUAL);
 		EXPRE_List.add(Symbol.GREATER_OR_EQUAL);
 
-		//TODO ·Ö³ÌĞò½áÊø·ûºÅ¼¯ºÏ
+		//TODO åˆ†ç¨‹åºç»“æŸç¬¦å·é›†åˆ
 		BLOCK_END_LIST.addAll(Symbol.DECL_BEG_LIST);
 		BLOCK_END_LIST.addAll(Symbol.STAT_BEG_LIST);
 		BLOCK_END_LIST.add(Symbol.PERIOD);
@@ -58,45 +58,45 @@ public class Symbol {
     
     
     /**------------------------------------
-     * ·Ö½ç·û»ò²Ù×÷·û
+     * åˆ†ç•Œç¬¦æˆ–æ“ä½œç¬¦
      * . , ; = := + - ( ) * / <> < <= > > >=
      * -------------------------------------
      */
     public static final int NUL = 0;                  // NULL
-    public static final int PLUS = 1;                 // ¼ÓºÅ+
-    public static final int MINUS = 2;                // ¼õºÅ-
-    public static final int MULTIPLY = 3;             // ³ËºÅ*
-    public static final int DIVIDE = 4;               // ³ıºÅ/
-    public static final int EQUAL = 5;                // µÈÓÚºÅ=(equal)
-    public static final int NOT_EQUAL = 6;            // ²»µÈÓÚ<>(not equal)
-    public static final int LESS = 7;                 // Ğ¡ÓÚ<(less)
-    public static final int GREATER_OR_EQUAL = 8;     // ´óÓÚµÈÓÚ>=(greater or equal)
-    public static final int GREATER = 9;              // ´óÓÚ>(greater)
-    public static final int LESS_OR_EQUAL = 10;       // Ğ¡ÓÚµÈÓÚ<=(less or equal)
-    public static final int LEFT_PARENTHESIS = 11;    // ×óÀ¨ºÅ(
-    public static final int RIGHT_PARENTHESIS = 12;   // ÓÒÀ¨ºÅ )
-    public static final int COMMA = 13;               // ¶ººÅ,
-    public static final int SEMICOLON = 14;           // ·ÖºÅ;
-    public static final int PERIOD = 15;              // ¾äºÅ.
-    public static final int BECOMES = 16;             // ¸³Öµ·ûºÅ :=
+    public static final int PLUS = 1;                 // åŠ å·+
+    public static final int MINUS = 2;                // å‡å·-
+    public static final int MULTIPLY = 3;             // ä¹˜å·*
+    public static final int DIVIDE = 4;               // é™¤å·/
+    public static final int EQUAL = 5;                // ç­‰äºå·=(equal)
+    public static final int NOT_EQUAL = 6;            // ä¸ç­‰äº<>(not equal)
+    public static final int LESS = 7;                 // å°äº<(less)
+    public static final int GREATER_OR_EQUAL = 8;     // å¤§äºç­‰äº>=(greater or equal)
+    public static final int GREATER = 9;              // å¤§äº>(greater)
+    public static final int LESS_OR_EQUAL = 10;       // å°äºç­‰äº<=(less or equal)
+    public static final int LEFT_PARENTHESIS = 11;    // å·¦æ‹¬å·(
+    public static final int RIGHT_PARENTHESIS = 12;   // å³æ‹¬å· )
+    public static final int COMMA = 13;               // é€—å·,
+    public static final int SEMICOLON = 14;           // åˆ†å·;
+    public static final int PERIOD = 15;              // å¥å·.
+    public static final int BECOMES = 16;             // èµ‹å€¼ç¬¦å· :=
 
 
     /**------------------------------------
-     * ±êÊ¶·û <±êÊ¶·û> ::= <×ÖÄ¸>{<×ÖÄ¸>|<Êı×Ö>}
+     * æ ‡è¯†ç¬¦ <æ ‡è¯†ç¬¦> ::= <å­—æ¯>{<å­—æ¯>|<æ•°å­—>}
      * -------------------------------------
      */
     public static final int IDENTIFIER = 17;
 
 
     /**------------------------------------
-     * ³£ÊıÖĞÖ»ÓĞÎŞ·ûºÅÕûÊı <ÎŞ·ûºÅÕûÊı> ::= <Êı×Ö>{<Êı×Ö>}
+     * å¸¸æ•°ä¸­åªæœ‰æ— ç¬¦å·æ•´æ•° <æ— ç¬¦å·æ•´æ•°> ::= <æ•°å­—>{<æ•°å­—>}
      * -------------------------------------
      */
     public static final int NUMBER = 18;
 
 
     /**------------------------------------
-     * ±£Áô×Ö
+     * ä¿ç•™å­—
      * const, var, procedure, odd,
      * if, then, else, while,
      * do, call, begin, end,
@@ -120,7 +120,7 @@ public class Symbol {
     public static final int READ_SYMBOL 		= 33;
     public static final int WRITE_SYMBOL 		= 34;
 
-    // ÉèÖÃ±£Áô×ÖÃû×Ö£¬°´ÕÕ×ÖÄ¸Ë³Ğò£¬±ãÓÚ¶ş·Ö²éÕÒ
+    // è®¾ç½®ä¿ç•™å­—åå­—ï¼ŒæŒ‰ç…§å­—æ¯é¡ºåºï¼Œä¾¿äºäºŒåˆ†æŸ¥æ‰¾
     public static final String[] WORD = new String[] {  
             "begin", "call", "const", "do",
             "else", "end", "if", "odd",
@@ -128,7 +128,7 @@ public class Symbol {
             "until", "var", "while", "write"
     };
 
-    // ±£Áô×Ö¶ÔÓ¦µÄ·ûºÅÖµ
+    // ä¿ç•™å­—å¯¹åº”çš„ç¬¦å·å€¼
     public static final int[] WORD_SYMBOL = new int[] {  
             BEGIN_SYMBOL, CALL_SYMBOL, CONST_SYMBOL, DO_SYMBOL,
             ELSE_SYMBOL, END_SYMBOL, IF_SYMBOL, ODD_SYMBOL,
@@ -136,11 +136,11 @@ public class Symbol {
             UNTIL_SYMBOL, VAR_SYMBOL, WHILE_SYMBOL, WRITE_SYMBOL
     };
 
-    private int symbolType;  // ·ûºÅµÄÀàĞÍ£¬¼´Ç°Ãæ35ÖÖÖĞµÄÒ»ÖÖ
+    private int symbolType;  // ç¬¦å·çš„ç±»å‹ï¼Œå³å‰é¢35ç§ä¸­çš„ä¸€ç§
 
-    private int number = 0; // Èç¹û·ûºÅÊÇÎŞ·ûºÅÕûÊı£¬Ôò¼ÇÂ¼ÆäÖµ
+    private int number = 0; // å¦‚æœç¬¦å·æ˜¯æ— ç¬¦å·æ•´æ•°ï¼Œåˆ™è®°å½•å…¶å€¼
 
-    private String name = ""; // Èç¹û·ûºÅÊÇ±êÊ¶·û£¬Ôò¼ÇÂ¼ÆäÃû×Ö
+    private String name = ""; // å¦‚æœç¬¦å·æ˜¯æ ‡è¯†ç¬¦ï¼Œåˆ™è®°å½•å…¶åå­—
 
     public Symbol(int symbolType) {
         this.symbolType = symbolType;
@@ -148,8 +148,8 @@ public class Symbol {
 
 
     /**
-     * ¼ì²éSymbolÊÇ·ñÎªÉùÃ÷¿ªÊ¼µÄ·ûºÅ
-     *	@return SymbolÎªÉùÃ÷¿ªÊ¼Îªtrue£¬·´Ôòfalse
+     * æ£€æŸ¥Symbolæ˜¯å¦ä¸ºå£°æ˜å¼€å§‹çš„ç¬¦å·
+     *	@return Symbolä¸ºå£°æ˜å¼€å§‹ä¸ºtrueï¼Œååˆ™false
      */
     public boolean isDeclBegSys() {
 		if (CONST_SYMBOL == symbolType || VAR_SYMBOL == symbolType || PROCEDURE_SYMBOL == symbolType) {

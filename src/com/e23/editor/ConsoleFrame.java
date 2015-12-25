@@ -17,7 +17,7 @@ public class ConsoleFrame extends JFrame implements consoleOutput{
 	private JTextArea contents = new JTextArea();
 	
 	public ConsoleFrame(){
-		super("¿ØÖÆÌ¨Êä³ö");
+		super("æ§åˆ¶å°è¾“å‡º");
 		
 		contents.setBackground(Color.BLACK);
 		contents.setForeground(Color.WHITE);
@@ -32,7 +32,7 @@ public class ConsoleFrame extends JFrame implements consoleOutput{
 	}
 	
 	/**
-	 * Œ¢Ö¸¶¨×Ö·û´®append×·¼ÓÖÁ¿ØÖÆÊä³ö
+	 * å°‡æŒ‡å®šå­—ç¬¦ä¸²appendè¿½åŠ è‡³æ§åˆ¶è¾“å‡º
 	 *	@param append
 	 */
 	public void append(String append) {
@@ -40,14 +40,14 @@ public class ConsoleFrame extends JFrame implements consoleOutput{
 	}
 	
 	/**
-	 * Çå¿Õ¿ØÖÆÊä³ö
+	 * æ¸…ç©ºæ§åˆ¶è¾“å‡º
 	 */
 	public void clear() {
 		contents.setText("");
 	}
 
 	/**
-	 * Êä³öÖ¸¶¨×Ö·û´®appendÖÁ¿ØÖÆÊä³ö
+	 * è¾“å‡ºæŒ‡å®šå­—ç¬¦ä¸²appendè‡³æ§åˆ¶è¾“å‡º
 	 */
 	public void outString(String string) {
 		contents.setText(string);		

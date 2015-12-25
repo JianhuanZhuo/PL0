@@ -12,7 +12,7 @@ import java.util.Set;
  * @param <Rule>
  *            继承有自然比较接口的规则接口，也就是说该规则集里的规则都是可比较的
  */
-public class RuleSet{
+public class RuleSet {
 
 	/**
 	 * 规则表
@@ -44,15 +44,31 @@ public class RuleSet{
 		SDPDARule res = null;
 		// TODO 检查是否存在规则缓存，无则生成它
 		if (null == arrayOfRules) {
-			
+
 			arrayOfRules = rules.toArray((new SDPDARule[rules.size()]));
-			
+
 			Arrays.sort(arrayOfRules);
 		}
 
 		// TODO 使用二分查找法查找合适的规则
-		int i = Arrays.binarySearch(arrayOfRules, r);
-		if (i > 0) {
+		/************************************************************************
+		 * 
+		 *
+		 * // int i = Arrays.binarySearch(arrayOfRules, r); // if (i > 0) {
+		 * //res = arrayOfRules[i]; // }
+		 * 
+		 * 此处暂时先这样吧
+		 * 
+		 */
+		int i;
+		for (i = 0; i < arrayOfRules.length; i++) {
+			SDPDARule sdpdaRule = arrayOfRules[i];
+			if (0 == sdpdaRule.compareTo(r)) {
+				break;
+			}
+		}
+
+		if (i < arrayOfRules.length) {
 			res = arrayOfRules[i];
 		}
 		return res;

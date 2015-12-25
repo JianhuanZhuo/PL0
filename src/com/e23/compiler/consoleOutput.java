@@ -3,12 +3,12 @@ package com.e23.compiler;
 public interface consoleOutput {
 	
 	/**
-	 * Êä³öÖ¸¶¨×Ö·û´®appendÖÁ¿ØÖÆÊä³ö
+	 * è¾“å‡ºæŒ‡å®šå­—ç¬¦ä¸²appendè‡³æ§åˆ¶è¾“å‡º
 	 */
 	public void outString(String string);
 	
 	/**
-	 * Œ¢Ö¸¶¨×Ö·û´®append×·¼ÓÖÁ¿ØÖÆÊä³ö
+	 * å°‡æŒ‡å®šå­—ç¬¦ä¸²appendè¿½åŠ è‡³æ§åˆ¶è¾“å‡º
 	 *	@param append
 	 */
 	public void append(String append);

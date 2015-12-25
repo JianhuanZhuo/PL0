@@ -18,9 +18,9 @@ public class SymbolSet<Object> extends ArrayList<Object> {
 
 
 	/**
-	 * ·µ»ØÒ»¸öÌí¼ÓÖ¸¶¨ÔªËØµÄ¼¯ºÏ
-	 *	@param addSymbol ÓûÌí¼ÓµÄÔªËØ
-	 *	@return ·µ»Ø¸Ä±äºóµÄ¼¯ºÏ
+	 * è¿”å›ä¸€ä¸ªæ·»åŠ æŒ‡å®šå…ƒç´ çš„é›†åˆ
+	 *	@param addSymbol æ¬²æ·»åŠ çš„å…ƒç´ 
+	 *	@return è¿”å›æ”¹å˜åçš„é›†åˆ
 	 */
 	@SuppressWarnings("unchecked")
 	public SymbolSet<Object> with(Integer addSymbol) {
@@ -32,9 +32,9 @@ public class SymbolSet<Object> extends ArrayList<Object> {
 
 
 	/**
-	 * ·µ»ØÒ»¸öÌí¼ÓÖ¸¶¨ÔªËØµÄ¼¯ºÏ
-	 *	@param addSymbol ÓûÌí¼ÓµÄÔªËØ
-	 *	@return ·µ»Ø¸Ä±äºóµÄ¼¯ºÏ
+	 * è¿”å›ä¸€ä¸ªæ·»åŠ æŒ‡å®šå…ƒç´ çš„é›†åˆ
+	 *	@param addSymbol æ¬²æ·»åŠ çš„å…ƒç´ 
+	 *	@return è¿”å›æ”¹å˜åçš„é›†åˆ
 	 */
 	@SuppressWarnings("unchecked")
 	public SymbolSet<Object> with(SymbolSet<Object> addSymbols) {
@@ -44,9 +44,9 @@ public class SymbolSet<Object> extends ArrayList<Object> {
 	}
 	
 	/**
-	 * ¼ì²é¼¯ºÏÄÚÊÇ·ñ´æÔÚÖ¸¶¨·ûºÅ£¬ÕâÊÇÒ»¸ö²»°²È«µÄ·½°¸£¬ºóÆÚĞèÒª½øĞĞÓÅ»¯
-	 *	@param checkSymbol Óû¼ì²éµÄ·ûºÅ
-	 *	@return ´æÔÚ·µ»Øtrue£¬·ñÔò·µ»Øfalse
+	 * æ£€æŸ¥é›†åˆå†…æ˜¯å¦å­˜åœ¨æŒ‡å®šç¬¦å·ï¼Œè¿™æ˜¯ä¸€ä¸ªä¸å®‰å…¨çš„æ–¹æ¡ˆï¼ŒåæœŸéœ€è¦è¿›è¡Œä¼˜åŒ–
+	 *	@param checkSymbol æ¬²æ£€æŸ¥çš„ç¬¦å·
+	 *	@return å­˜åœ¨è¿”å›trueï¼Œå¦åˆ™è¿”å›false
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean inInteger(int checkSymbol) {

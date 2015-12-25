@@ -123,7 +123,7 @@ public class PO {
 		//l(object.toString());
 		// TODO add the date time
 		String dataTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss_SS").format(System.currentTimeMillis());
-		String logMsg = dataTime + ":\n\t" + object.toString();
+		String logMsg = "\n\n"+dataTime + ":\n\t" + object.toString();
 		// TODO write into the log file
 		File f = new File(p.logFileName);
 
@@ -152,7 +152,7 @@ public class PO {
 		Profile p = getOrderProfile();
 		// TODO add the date time
 		String dataTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss_SS").format(System.currentTimeMillis());
-		logMsg = dataTime + ":\n\t" + logMsg;
+		logMsg = "\n\n"+dataTime + ":\n\t" + logMsg;
 		// TODO write into the log file
 		File f = new File(p.logFileName);
 

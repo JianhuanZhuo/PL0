@@ -16,6 +16,6 @@ public class SDPDARule_LL1 extends SDPDARule {
 	
 	@Override
 	public String toString() {
-		return super.toString()+"\tisNullAccept"+isNullAccept;
+		return super.toString()+"\tisNullAccept : "+isNullAccept;
 	}
 }
