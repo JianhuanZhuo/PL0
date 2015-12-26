@@ -19,4 +19,9 @@ public class Token_number extends Token {
 	public int getValue() {
 		return value;
 	}
+	
+	@Override
+	public String toString() {
+		return Classifier.getCategoryName(category)+" "+value;
+	}
 }

@@ -1,6 +1,6 @@
 package compiler.lexer.automata;
 
-import compiler.paser.syntaxTree.SyntaxNode;
+import compiler.parser.syntaxTree.SyntaxNode;
 
 public class Symbol implements Cloneable, Comparable<Symbol> {
 

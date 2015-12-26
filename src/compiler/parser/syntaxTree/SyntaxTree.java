@@ -1,4 +1,4 @@
-package compiler.paser.syntaxTree;
+package compiler.parser.syntaxTree;
 
 public class SyntaxTree {
 

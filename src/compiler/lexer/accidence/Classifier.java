@@ -1,9 +1,6 @@
 package compiler.lexer.accidence;
 
-import java.util.Set;
-
 import compiler.lexer.automata.SDPDARule;
-import compiler.lexer.automata.SDPDARule_LL1;
 import compiler.lexer.automata.SDPDA_LL1;
 import compiler.lexer.automata.Symbol;
 

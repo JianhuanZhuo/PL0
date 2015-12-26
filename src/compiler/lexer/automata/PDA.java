@@ -9,8 +9,8 @@ import java.util.Vector;
 
 import compiler.lexer.gammar.GNFGrammar;
 import compiler.lexer.gammar.GrammarItem_G2;
-import compiler.paser.syntaxTree.SyntaxNode;
-import compiler.paser.syntaxTree.SyntaxTree;
+import compiler.parser.syntaxTree.SyntaxNode;
+import compiler.parser.syntaxTree.SyntaxTree;
 
 /**
  * PDA, PushDown Automata <br />

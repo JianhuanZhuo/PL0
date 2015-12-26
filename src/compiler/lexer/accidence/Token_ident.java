@@ -12,4 +12,9 @@ public class Token_ident extends Token {
 	public String getIdent() {
 		return ident;
 	}
+	
+	@Override
+	public String toString() {
+		return Classifier.getCategoryName(category)+" "+ident;
+	}
 }

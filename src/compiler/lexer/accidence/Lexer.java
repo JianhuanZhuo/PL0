@@ -179,6 +179,6 @@ public class Lexer implements LexerServer {
 
 	@Override
 	public void restart() {
-		// TODO Auto-generated method stub
+		nowIndex = 0;
 	}
 }
