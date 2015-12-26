@@ -46,10 +46,15 @@ import compiler.lexer.automata.Symbol;
  */
 public class Token extends Symbol{
 
-	public Token(String name) {
-		super(name);
-		// TODO Auto-generated constructor stub
-	}
-	//类型
+	public int category;
 	
+	public Token(int category, String name) {
+		super(name);
+		this.category = category;
+	}
+	
+	@Override
+	public String toString() {
+		return Classifier.getCategoryName(category)+" "+getName();
+	}
 }

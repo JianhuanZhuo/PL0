@@ -1,4 +1,4 @@
-package compiler.lexer.accidence;
+package com.e23.temporary;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -63,7 +63,6 @@ public class Preprocessor {
 					if (readString == null) {
 						// 文件已全部读取，还要继续读取，出错
 						System.err.println("EOF, ERROR!");
-						currentChar = 0;
 						return 0;
 					}
 					lineNum++;

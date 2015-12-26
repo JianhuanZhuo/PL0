@@ -106,20 +106,28 @@ public class Symbol implements Cloneable, Comparable<Symbol> {
 
 	public void formlize() {
 		if (!isVN) {
-			if ('\\' == name.charAt(0)) {
-				if (name.length() > 1) {
-					switch (name.charAt(1)) {
-					case 'N':
-						name = new String("" + new Character((char) 0x18));
-						break;
-					case '#':
-						name = new String("" + new Character((char) 0x19));
-						break;
-					default:
-						name = name.substring(1);
-						break;
+			try {
+				if ('\\' == name.charAt(0)) {
+					if (name.length() > 1) {
+						switch (name.charAt(1)) {
+						case 'N':
+							name = new String("" + new Character((char) 0x18));
+							break;
+						case '#':
+							name = new String("" + new Character((char) 0x19));
+							break;
+						default:
+							name = name.substring(1);
+							break;
+						}
 					}
 				}
+			} catch (StringIndexOutOfBoundsException e) {
+				// TODO: handle exception
+				System.err.println("String index out of range: "+ name);
+				System.err.println("legth : "+ name.length());
+				System.err.println("exit!!!");
+				System.exit(0);
 			}
 		}
 	}

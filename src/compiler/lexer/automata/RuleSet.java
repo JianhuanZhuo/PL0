@@ -63,9 +63,16 @@ public class RuleSet {
 		int i;
 		for (i = 0; i < arrayOfRules.length; i++) {
 			SDPDARule sdpdaRule = arrayOfRules[i];
+			if (sdpdaRule.matchSymbol.equals(new Symbol("="))) {
+				if (sdpdaRule.matchSymbol.equals(new Symbol("="))) {
+//					System.out.println(sdpdaRule);
+				}
+				new Integer(0);
+			}
 			if (0 == sdpdaRule.compareTo(r)) {
 				break;
 			}
+			
 		}
 
 		if (i < arrayOfRules.length) {

@@ -68,4 +68,8 @@ public class PushDownStack {
 	public boolean isEmpty() {
 		return symbolStack.isEmpty();
 	}
+	
+	public Symbol getStartSymbol() {
+		return startSymbol;
+	}
 }

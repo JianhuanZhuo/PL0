@@ -52,6 +52,15 @@ public class SDPDA_LL1 extends SDPDA {
 				r.setNextStackTop(item.getRightList_Forss());
 				rules.add(r);
 			}
+			
+			//TODO 添加非终结符的匹配
+			for (Symbol vt : gLL1.getVTSet()) {
+				SDPDARule_LL1 r = new SDPDARule_LL1();
+				r.nowStackTop = vt;
+				r.matchSymbol = vt;
+				r.setNextStackTop(new ArrayList<>());
+				rules.add(r);
+			}
 		}
 
 		// TODO GNF文法转PDA无异常，则将临时PDA自动机更新入this对象的属性中

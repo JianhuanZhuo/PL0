@@ -43,4 +43,8 @@ public class SDPDARule implements Comparable<SDPDARule> {
 	public void setNextStackTop(List<Symbol> nextStackTop) {
 		this.nextStackTop = nextStackTop;
 	}
+	
+	public Symbol getNowStackTop() {
+		return nowStackTop;
+	}
 }

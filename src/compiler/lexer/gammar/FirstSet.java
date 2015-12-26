@@ -131,8 +131,12 @@ public class FirstSet {
 	public String toString() {
 		String res = s + " :\n";
 		if (s.getIsVN()) {
-			for (FirstSet f : firstSet) {
-				res += "\t" + f.getSymbol() + "\n";
+			if (firstSet==null) {
+				res += "null";
+			}else {
+				for (FirstSet f : firstSet) {
+					res += "\t" + f.getSymbol() + "\n";
+				}
 			}
 		}
 		return res;

@@ -69,7 +69,6 @@ public class GrammarItem_G2{
 	 * @return 右部表为空，返回null，否则返回该表
 	 */
 	public List<Symbol> getRightList() {
-		
 		if (0 != right.size()) {
 			return new ArrayList<>(right.subList(0, right.size()));
 		} else {

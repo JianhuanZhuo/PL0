@@ -20,7 +20,7 @@ import compiler.lexer.automata.Symbol;
 public class GrammarItemList_LL1 extends GrammarItemList_G2 {
 
 	public static final int END_OF_GRAMMAR = 0x19;
-	
+
 	public GrammarItemList_LL1() {
 	}
 
@@ -137,7 +137,7 @@ public class GrammarItemList_LL1 extends GrammarItemList_G2 {
 		for (Symbol vN : vNSet) {
 			FirstSet f = new FirstSet(vN);
 			// System.out.println("VN : " + vN);
-			if (getEmptySet().get(vN)) {
+			if (getEmptySet().get(vN) != null && getEmptySet().get(vN)) {
 				f.add(nullFirstSet);
 			}
 			getFirstS().put(vN, f);
@@ -146,7 +146,7 @@ public class GrammarItemList_LL1 extends GrammarItemList_G2 {
 		getFirstS().put(nullSym, nullFirstSet);
 
 		// TODO 对于非终结符，其First集是其本身
-		Set<Symbol> NTSet = getNTSet();
+		Set<Symbol> NTSet = getVTSet();
 		for (Symbol s : NTSet) {
 			getFirstS().put(s, new FirstSet(s));
 		}
@@ -162,11 +162,29 @@ public class GrammarItemList_LL1 extends GrammarItemList_G2 {
 				if (firstRight.getIsVN()) {
 					getFirstS().get(g.getLeft()).add(getFirstS().get(firstRight));
 					// 无法推出空，则结束该产生式的扫描
-					if (!getEmptySet().get(firstRight)) {
-						break;
+					Boolean ableToNULL = getEmptySet().get(firstRight);
+					try {
+						if (ableToNULL == null || !ableToNULL) {
+							break;
+						}
+					} catch (Exception e) {
+						throw new RuntimeException("this VN symbol " + firstRight + " can't look up empty!");
 					}
 				} else {
-					getFirstS().get(g.getLeft()).add(getFirstS().get(firstRight));
+					FirstSet t = getFirstS().get(g.getLeft());
+					FirstSet r = getFirstS().get(firstRight);
+					if (r == null) {
+						throw new RuntimeException("No good! " + firstRight);
+					}
+					if (t == null) {
+						throw new RuntimeException("No good! " + g.getLeft());
+					}
+					try {
+						t.add(r);
+					} catch (Exception e) {
+						// TODO: handle exception
+						throw new RuntimeException("No good! " + t);
+					}
 					// 扫描到终结符，则结束该产生是的扫描
 					break;
 				}
@@ -255,6 +273,16 @@ public class GrammarItemList_LL1 extends GrammarItemList_G2 {
 				ss.add(getFollowS().get(g.getLeft()).getFollowSet());
 			}
 		}
+		
+
+		/**
+		 * DEBUG用的
+		 */
+		System.out.println("\nSelect set:");
+		for (Entry<GrammarItem_G2, SelectSet> e : selectS.entrySet()) {
+			System.out.println(e.getValue());
+		}
+		System.out.println("check intersertion ：" + calcIntersertion());
 	}
 
 	/**
@@ -312,8 +340,8 @@ public class GrammarItemList_LL1 extends GrammarItemList_G2 {
 
 		String[] gs = CFGFormlize.loadGrammarsFile("Token_LL1_correct");
 		CFGrammar constantG = new CFGrammar("token");
-//		String[] gs = CFGFormlize.loadGrammarsFile("LL1_Test");
-//		CFGrammar constantG = new CFGrammar("S");
+		// String[] gs = CFGFormlize.loadGrammarsFile("LL1_Test");
+		// CFGrammar constantG = new CFGrammar("S");
 		gs = CFGFormlize.formalize(gs);
 
 		for (int i = 0; i < gs.length; i++) {

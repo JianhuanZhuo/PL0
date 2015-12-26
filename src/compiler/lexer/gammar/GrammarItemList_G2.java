@@ -306,13 +306,18 @@ public class GrammarItemList_G2 {
 	 * 
 	 * @return 该文法的终结符符号集合
 	 */
-	public Set<Symbol> getNTSet() {
+	public Set<Symbol> getVTSet() {
 		Set<Symbol> VTNameSet = new HashSet<>();
 		for (GrammarItem_G2 g : grammarItemList) {
-			for (Symbol s : g.getRightList()) {
-				if (!s.getIsVN()) {
-					VTNameSet.add(s);
+			try {
+				for (Symbol s : g.getRightList()) {
+					if (!s.getIsVN()) {
+						VTNameSet.add(s);
+					}
 				}
+			} catch (NullPointerException e) {
+				System.out.println(g);
+				throw new RuntimeException("xx");
 			}
 		}
 		return VTNameSet;

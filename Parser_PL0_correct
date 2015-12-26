@@ -1,7 +1,7 @@
 <program> 				->	<block>.
 <block> 				->	<const-declaration><var-declaration><procedure-declaration><statement>
 <const-declaration> 	->	const<ident>=<number>(,<ident>=<number>|\N);|\N
-<var-declaration> 		->	int<ident><var-declaration-left>;| \N
+<var-declaration> 		->	var<ident><var-declaration-left>;| \N
 <var-declaration-left>	->	,<ident><var-declaration-left>|\N
 <procedure-declaration> ->	procedure<ident>;<block>;| \N
 <statement> 			->	<ident>:=<expression>
