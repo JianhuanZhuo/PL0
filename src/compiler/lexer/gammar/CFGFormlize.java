@@ -367,7 +367,9 @@ public class CFGFormlize {
 				}
 			}
 		} catch (Exception e) {
+			System.err.println("error occurs when load grammar file!");
 			e.printStackTrace();
+			System.exit(-1);
 		} finally {
 			try {
 				bfReader.close();

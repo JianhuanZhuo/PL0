@@ -1,0 +1,27 @@
+<program> 				->	<block><@.$>
+<block> 				->	<const-declaration><var-declaration><procedure-declaration><statement>
+<const-declaration> 	->	<keyword-const><ident><@=$><number>(<@,$><ident><@=$><number>|\N)<@;$>|\N
+<var-declaration> 		->	<keyword-var><ident><var-declaration-left><@;$>| \N
+<var-declaration-left>	->	<@,$><ident><var-declaration-left>|\N
+<procedure-declaration> ->	<keyword-procedure><ident><@;$><block><@;$>| \N
+<statement> 			->	<ident><@:=$><expression>
+<statement> 			->	<keyword-call><ident>
+<statement> 			->	<keyword-begin><statement><statement-left><keyword-end>
+<statement> 			->	<keyword-if><condition><keyword-then><statement>(<keyword-else><statement>|\N)
+<statement> 			->	<keyword-while><condition><keyword-do><statement>
+<statement> 			->	<keyword-read><ident>
+<statement> 			->	<keyword-write><expression>
+<statement> 			->	\N
+<statement-left>		->	<@;$><statement>|\N
+<condition> 			->	<keyword-odd><expression>|<expression> <rel-op> <expression>
+<rel-op> 				-> 	<@=$>| <@<$><rel-op-left-more> | <@>$><rel-op-right-equal>
+<rel-op-right-equal>	->	\N
+<rel-op-right-equal>	->	<@=$>
+<rel-op-left-more>		->	\N
+<rel-op-left-more>		->	<@>$>
+<rel-op-left-more>		->	<@=$>
+<expression>			->	(<@+$>|<@-$>) <term><expression-left>
+<expression-left>		->	(<@+$>|<@-$>) <term><expression-left>|\N
+<term> 					->	<factor><term-left>
+<term-left>				->	(<@*$>|<@/$>)<factor><term-left>|\N
+<factor> 				->	<ident> | <number> | <@($> <expression> <@)$>

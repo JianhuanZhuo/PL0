@@ -18,19 +18,19 @@ import compiler.lexer.automata.Symbol;
  * @author keepf
  *
  */
-public class CFGrammar extends Grammar {
+public class CFGrammar  extends Grammar {
 
 	public static final String Grammar_PartName_Ident = "ident";
 	public static final String Grammar_PartName_RightPart = "rightPart";
 	public static final String Grammar_MatchExpression = "^\\s*\\<(?<" + Grammar_PartName_Ident
-			+ ">[\\w-]+?)\\>\\s*-\\>\\s*(?<" + Grammar_PartName_RightPart + ">[^\\n]+?)\\s*$";
+			+ ">[\\S]+?)\\>\\s*-\\>\\s*(?<" + Grammar_PartName_RightPart + ">[^\\n]+?)\\s*$";
 
 	private GrammarItemList_G2 grammarItemList;
 
 //	public static Pattern CFGRightPattern = Pattern.compile(
 //			"(\\<(?<VN>[\\w-]+?)\\>)|(?<VT>(\\\\[N\\(\\)\\[\\]\\*\\+\\|\\<\\>])|([\\S&&[^\\(\\)\\[\\]\\*\\+\\|\\<\\>]]))");
 	public static Pattern CFGRightPattern = Pattern.compile(
-			"(\\<(?<VN>[\\w-]+?)\\>)|(?<VT>(\\\\[N\\(\\)\\[\\]\\*\\+\\|\\<\\>])|([\\S&&[^\\(\\)\\[\\]\\*\\+\\|\\<\\>]]))");
+			"(\\<(?<VN>[\\S]+?)\\>)|(?<VT>(\\\\[N\\(\\)\\[\\]\\*\\+\\|\\<\\>])|([\\S&&[^\\(\\)\\[\\]\\*\\+\\|\\<\\>]]))");
 
 	public CFGrammar() {
 	}
@@ -83,8 +83,6 @@ public class CFGrammar extends Grammar {
 		tempList.setStartSymbol(new Symbol(getStart(), true));
 		return tempList;
 	}
-	
-	
 
 	/**
 	 * 该文法将

@@ -155,6 +155,9 @@ public class GrammarItemList_LL1 extends GrammarItemList_G2 {
 			GrammarItem_G2 g = (GrammarItem_G2) iterator.next();
 			// TODO 这需要用到take右部符号的操作，由于复制只达到文法项集合级别的浅复制，所以需要进行一次深复制。
 			g = g.copy();
+			if (g.getLeft().equals(new Symbol("statement", true))) {
+				System.out.println("");
+			}
 			// 添加左部的符号直到非空
 			Symbol firstRight;
 			while ((firstRight = g.takeRightFirstSymbol()) != null) {
@@ -200,10 +203,15 @@ public class GrammarItemList_LL1 extends GrammarItemList_G2 {
 
 		Set<Symbol> vNSet = gramTempList.getVNSet();
 		for (Symbol s : vNSet) {
+			System.out.println(s);
+		}
+		for (Symbol s : vNSet) {
 			getFollowS().put(s, new FollowSet(s));
 		}
+
 		// 添加起始符号到#的指向
 		getFollowS().get(start).add(new FirstSet(new Symbol("\\#")));
+
 		for (Iterator<GrammarItem_G2> iterator = gramTempList.iterator(); iterator.hasNext();) {
 			GrammarItem_G2 g = (GrammarItem_G2) iterator.next();
 			// TODO 这需要用到take右部符号的操作，由于复制只达到文法项集合级别的浅复制，所以需要进行一次深复制。
@@ -213,20 +221,32 @@ public class GrammarItemList_LL1 extends GrammarItemList_G2 {
 			Symbol r = g.getRightFirstSymbol();
 			Symbol l = g.getLeft();
 			while (null != t) {
-				if (null == r) {
-					// 尾部处理
-					if (null != t && t.getIsVN() && !t.equals(new Symbol("\\N"))) {
-						// 在末尾的那个非终结符的Follow集中添加该产生式的Follow集
-						getFollowS().get(t).add(getFollowS().get(l));
+				try {
+					if (null == r) {
+						// 尾部处理
+						if (null != t && t.getIsVN() && !t.equals(new Symbol("\\N"))) {
+							// 在末尾的那个非终结符的Follow集中添加该产生式的Follow集
+							getFollowS().get(t).add(getFollowS().get(l));
+						}
+
+					} else if (t.getIsVN()) {
+						// 在前一个符号的Follow集中添加下一个符号First集
+
+						getFollowS().get(t).add(getFirstS().get(r));
+
+						// 可推出空的拼接处理
+						if (t.getIsVN() && r.getIsVN() && getEmptySet().get(r) != null
+								&& getEmptySet().get(r) == true) {
+							// 在前一符号的Follow集中添加下一个符号的Follow集
+							getFollowS().get(t).add(getFollowS().get(r));
+						}
 					}
-				} else if (t.getIsVN()) {
-					// 在前一个符号的Follow集中添加下一个符号First集
-					getFollowS().get(t).add(getFirstS().get(r));
-					// 可推出空的拼接处理
-					if (t.getIsVN() && r.getIsVN() && getEmptySet().get(r) != null && getEmptySet().get(r) == true) {
-						// 在前一符号的Follow集中添加下一个符号的Follow集
-						getFollowS().get(t).add(getFollowS().get(r));
-					}
+				} catch (Exception e) {
+					System.out.println("g.takeRightFirstSymbol() : " + t);
+					System.out.println("g.getRightFirstSymbol() : " + r);
+					System.out.println("g.getLeft() : " + l);
+					System.out.println("getFollowS().get(t) : " + getFollowS().get(t));
+					System.out.println("getFollowS().get(l) : " + getFollowS().get(l));
 				}
 				t = g.takeRightFirstSymbol();
 				r = g.getRightFirstSymbol();
@@ -273,7 +293,6 @@ public class GrammarItemList_LL1 extends GrammarItemList_G2 {
 				ss.add(getFollowS().get(g.getLeft()).getFollowSet());
 			}
 		}
-		
 
 		/**
 		 * DEBUG用的
@@ -338,10 +357,10 @@ public class GrammarItemList_LL1 extends GrammarItemList_G2 {
 
 	public static void main(String[] args) {
 
-		String[] gs = CFGFormlize.loadGrammarsFile("Token_LL1_correct");
-		CFGrammar constantG = new CFGrammar("token");
-		// String[] gs = CFGFormlize.loadGrammarsFile("LL1_Test");
-		// CFGrammar constantG = new CFGrammar("S");
+		// String[] gs = CFGFormlize.loadGrammarsFile("Token_LL1_correct");
+		// CFGrammar constantG = new CFGrammar("token");
+		String[] gs = CFGFormlize.loadGrammarsFile("LL1_Test");
+		CFGrammar constantG = new CFGrammar("S");
 		gs = CFGFormlize.formalize(gs);
 
 		for (int i = 0; i < gs.length; i++) {
@@ -349,7 +368,7 @@ public class GrammarItemList_LL1 extends GrammarItemList_G2 {
 		}
 		constantG.add(gs);
 		System.out.println("constantG : " + constantG);
-		System.out.println(constantG.getItemList());
+		System.out.println("constantG.getItemList()\n" + constantG.getItemList());
 		GrammarItemList_LL1 gl = new GrammarItemList_LL1(constantG.getItemList());
 		// gl.refactor();
 		// System.out.println(gl);

@@ -25,7 +25,7 @@ public class GNFGrammar extends CFGrammar {
 	public static final String Grammar_PartName_VT = "VT";
 	public static final String Grammar_PartName_VN = "VN";
 	public static final String Grammar_MatchExpression = "^\\s*\\<(?<" + Grammar_PartName_Ident
-			+ ">[\\w-]+)\\>\\s*-\\>\\s*?(?<" + Grammar_PartName_VT
+			+ ">[\\S]+)\\>\\s*-\\>\\s*?(?<" + Grammar_PartName_VT
 			+ ">(\\\\[\\(\\)\\[\\]\\*\\+\\|\\<\\>])|([\\S&&[^\\(\\)\\[\\]\\*\\+\\|\\<\\>]]))(?<" + Grammar_PartName_VN
 			+ ">[^\\n]+)?\\s*";
 

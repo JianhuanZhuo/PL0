@@ -1,0 +1,33 @@
+<program> 				->	<block>.
+<block> 				->	<const-declaration><var-declaration><procedure-declaration><statement>
+<const-declaration> 	->	const<ident>=<number>(,<ident>=<number>|\N);|\N
+<var-declaration> 		->	var<ident><var-declaration-left>;| \N
+<var-declaration-left>	->	,<ident><var-declaration-left>|\N
+<procedure-declaration> ->	procedure<ident>;<block>;| \N
+<statement> 			->	<ident>:=<expression>
+<statement> 			->	call<ident>
+<statement> 			->	begin<statement><statement-left>end
+<statement> 			->	if<condition>then<statement>(else<statement>|\N)
+<statement> 			->	while<condition>do<statement>
+<statement> 			->	read<ident>
+<statement> 			->	write<expression>
+<statement> 			->	\N
+<statement-left>		->	;<statement>|\N
+<condition> 			->	odd<expression>|<expression> <rel-op> <expression>
+<rel-op> 				-> 	=| \<<rel-op-left-more> | \><rel-op-right-equal>
+<rel-op-right-equal>	->	\N
+<rel-op-right-equal>	->	=
+<rel-op-left-more>		->	\N
+<rel-op-left-more>		->	\>
+<rel-op-left-more>		->	=
+<expression>			->	(\+|-) <term><expression-left>
+<expression-left>		->	(\+|-) <term><expression-left>|\N
+<term> 					->	<factor><term-left>
+<term-left>				->	(\*|/)<factor><term-left>|\N
+<factor> 				->	<ident> | <number> | \( <expression> \)
+<number> 				->	<digit><number-left>
+<number-left>			-> 	<digit><number-left>|\N
+<ident> 				->	<letter><ident-left>
+<ident-left>			->	(<letter> | <digit>)<ident-left>|\N
+<digit> 				->	[0-9]
+<letter>				->	[a-z]|[A-Z]
